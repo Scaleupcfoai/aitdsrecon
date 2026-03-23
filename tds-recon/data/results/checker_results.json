@@ -1,0 +1,149 @@
+{
+  "run_timestamp": "2026-03-23T13:12:11.148802",
+  "summary": {
+    "total_findings": 8,
+    "by_check": {
+      "section_validation": 5,
+      "rate_validation": 0,
+      "base_amount_validation": 0,
+      "threshold_validation": 0,
+      "missing_tds": 3
+    },
+    "by_severity": {
+      "error": 3,
+      "warning": 5,
+      "info": 0
+    },
+    "matches_checked": 56,
+    "sections_in_scope": [
+      "194A",
+      "194C"
+    ]
+  },
+  "findings": [
+    {
+      "check": "section_validation",
+      "severity": "warning",
+      "vendor": "ANDREAL INNOVATION PVT LTD",
+      "pan": "ABACA2255R",
+      "form26_section": "194C",
+      "expense_heads": [
+        "Advertisement"
+      ],
+      "expected_sections": [
+        "194C",
+        "194J(b)"
+      ],
+      "status": "review",
+      "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "check": "section_validation",
+      "severity": "warning",
+      "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+      "pan": "AAFCA4805K",
+      "form26_section": "194C",
+      "expense_heads": [
+        "Advertisement"
+      ],
+      "expected_sections": [
+        "194C",
+        "194J(b)"
+      ],
+      "status": "review",
+      "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "check": "section_validation",
+      "severity": "warning",
+      "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+      "pan": "AAFCA4805K",
+      "form26_section": "194C",
+      "expense_heads": [
+        "Advertisement"
+      ],
+      "expected_sections": [
+        "194C",
+        "194J(b)"
+      ],
+      "status": "review",
+      "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "check": "section_validation",
+      "severity": "warning",
+      "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+      "pan": "AAFCA4805K",
+      "form26_section": "194C",
+      "expense_heads": [
+        "Advertisement"
+      ],
+      "expected_sections": [
+        "194C",
+        "194J(b)"
+      ],
+      "status": "review",
+      "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "check": "section_validation",
+      "severity": "warning",
+      "vendor": "ANDREAL INNOVATION PVT LTD",
+      "pan": "ABACA2255R",
+      "form26_section": "194C",
+      "expense_heads": [
+        "Advertisement"
+      ],
+      "expected_sections": [
+        "194C",
+        "194J(b)"
+      ],
+      "status": "review",
+      "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "check": "missing_tds",
+      "severity": "error",
+      "vendor": "Kamal Kishor Bagri",
+      "vendor_normalized": "kamal kishor bagri",
+      "expected_section": "194H",
+      "aggregate_amount": 16845.0,
+      "threshold": 15000,
+      "num_tally_entries": 3,
+      "expense_heads": [
+        "Brokerage and Commission",
+        "Brokerage and Commission_18%"
+      ],
+      "message": "No Form 26 entry found for Kamal Kishor Bagri under 194H. Tally shows \u20b916,845 in Brokerage and Commission, Brokerage and Commission_18%. TDS may be missing."
+    },
+    {
+      "check": "missing_tds",
+      "severity": "error",
+      "vendor": "Kochar Tradelink LLP",
+      "vendor_normalized": "kochar tradelink",
+      "expected_section": "194H",
+      "aggregate_amount": 83675.0,
+      "threshold": 15000,
+      "num_tally_entries": 3,
+      "expense_heads": [
+        "Brokerage and Commission",
+        "Brokerage and Commission_18%"
+      ],
+      "message": "No Form 26 entry found for Kochar Tradelink LLP under 194H. Tally shows \u20b983,675 in Brokerage and Commission, Brokerage and Commission_18%. TDS may be missing."
+    },
+    {
+      "check": "missing_tds",
+      "severity": "error",
+      "vendor": "Pukesh Sharma",
+      "vendor_normalized": "pukesh sharma",
+      "expected_section": "194H",
+      "aggregate_amount": 20877.0,
+      "threshold": 15000,
+      "num_tally_entries": 3,
+      "expense_heads": [
+        "Brokerage and Commission"
+      ],
+      "message": "No Form 26 entry found for Pukesh Sharma under 194H. Tally shows \u20b920,877 in Brokerage and Commission. TDS may be missing."
+    }
+  ]
+}

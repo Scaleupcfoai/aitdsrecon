@@ -1,0 +1,5733 @@
+{
+  "run_timestamp": "2026-03-23T13:12:11.132874",
+  "sections_processed": [
+    "194A",
+    "194C"
+  ],
+  "learned_rules": {
+    "rules_loaded": 60,
+    "rules_applied": 0,
+    "ignored_vendors": 0,
+    "exempt_vendors": 0,
+    "below_threshold_vendors": 60,
+    "below_threshold_entries": 225
+  },
+  "summary": {
+    "form26_total": 56,
+    "form26_matched": 56,
+    "form26_unmatched": 0,
+    "matches_by_pass": {
+      "pass0_learned_rules": 0,
+      "pass1_exact": 28,
+      "pass2_gst_adjusted": 1,
+      "pass3_exempt": 8,
+      "pass4_fuzzy": 9,
+      "pass5_aggregated": 18
+    },
+    "total_matches": 56
+  },
+  "matches": [
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Adi Debnath",
+        "vendor_id": "34",
+        "pan": "AAAAA0001A",
+        "section": "194A",
+        "amount_paid": 82461,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 8246,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 8246,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Adi Debnath",
+          "amount": 82461.0,
+          "voucher_no": "85"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Adi Debnath' = 'Adi Debnath'",
+        "amount_match": "82461 = 82461.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Adi Debnath",
+        "vendor_id": "34",
+        "pan": "AAAAA0001A",
+        "section": "194A",
+        "amount_paid": 85749,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 8575,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 8575,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Adi Debnath",
+          "amount": 85749.0,
+          "voucher_no": "236"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Adi Debnath' = 'Adi Debnath'",
+        "amount_match": "85749 = 85749.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Adi Debnath",
+        "vendor_id": "34",
+        "pan": "AAAAA0001A",
+        "section": "194A",
+        "amount_paid": 88131,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 8813,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 8813,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Adi Debnath",
+          "amount": 88131.0,
+          "voucher_no": "435"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Adi Debnath' = 'Adi Debnath'",
+        "amount_match": "88131 = 88131.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Asha Negi",
+        "vendor_id": "99",
+        "pan": "AAAAA0002A",
+        "section": "194A",
+        "amount_paid": 124533,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 12453,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 12453,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Asha Negi",
+          "amount": 124533.0,
+          "voucher_no": "86"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Asha Negi' = 'Asha Negi'",
+        "amount_match": "124533 = 124533.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Asha Negi",
+        "vendor_id": "99",
+        "pan": "AAAAA0002A",
+        "section": "194A",
+        "amount_paid": 129304,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 12930,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 12930,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Asha Negi",
+          "amount": 129304.0,
+          "voucher_no": "237"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Asha Negi' = 'Asha Negi'",
+        "amount_match": "129304 = 129304.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Asha Negi",
+        "vendor_id": "99",
+        "pan": "AAAAA0002A",
+        "section": "194A",
+        "amount_paid": 132707,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 13271,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 13271,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Asha Negi",
+          "amount": 132707.0,
+          "voucher_no": "436"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Asha Negi' = 'Asha Negi'",
+        "amount_match": "132707 = 132707.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Manisha Kumari",
+        "vendor_id": "87",
+        "pan": "AAAAA0003A",
+        "section": "194A",
+        "amount_paid": 244017,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 24402,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 24402,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Manisha Kumari",
+          "amount": 244017.0,
+          "voucher_no": "87"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Manisha Kumari' = 'Manisha Kumari'",
+        "amount_match": "244017 = 244017.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Manisha Kumari",
+        "vendor_id": "87",
+        "pan": "AAAAA0003A",
+        "section": "194A",
+        "amount_paid": 253504,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 25350,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 25350,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Manisha Kumari",
+          "amount": 253504.0,
+          "voucher_no": "238"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Manisha Kumari' = 'Manisha Kumari'",
+        "amount_match": "253504 = 253504.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Manisha Kumari",
+        "vendor_id": "87",
+        "pan": "AAAAA0003A",
+        "section": "194A",
+        "amount_paid": 260310,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 26031,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 26031,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Manisha Kumari",
+          "amount": 260310.0,
+          "voucher_no": "437"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Manisha Kumari' = 'Manisha Kumari'",
+        "amount_match": "260310 = 260310.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Suresh Sethia",
+        "vendor_id": "87",
+        "pan": "AAAAA0004A",
+        "section": "194A",
+        "amount_paid": 472888,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 47289,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 47289,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Suresh Sethia",
+          "amount": 472888.0,
+          "voucher_no": "88"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Suresh Sethia' = 'Suresh Sethia'",
+        "amount_match": "472888 = 472888.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Suresh Sethia",
+        "vendor_id": "87",
+        "pan": "AAAAA0004A",
+        "section": "194A",
+        "amount_paid": 491696,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 49170,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 49170,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Suresh Sethia",
+          "amount": 491696.0,
+          "voucher_no": "239"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Suresh Sethia' = 'Suresh Sethia'",
+        "amount_match": "491696 = 491696.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Suresh Sethia",
+        "vendor_id": "87",
+        "pan": "AAAAA0004A",
+        "section": "194A",
+        "amount_paid": 505307,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 50531,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 50531,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Suresh Sethia",
+          "amount": 505307.0,
+          "voucher_no": "438"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Suresh Sethia' = 'Suresh Sethia'",
+        "amount_match": "505307 = 505307.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rupa Khaitan",
+        "vendor_id": "110",
+        "pan": "AAAAA0007A",
+        "section": "194A",
+        "amount_paid": 19858,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 1986,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 1986,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Rupa Khaitan",
+          "amount": 19858.0,
+          "voucher_no": "89"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Rupa Khaitan' = 'Rupa Khaitan'",
+        "amount_match": "19858 = 19858.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rupa Khaitan",
+        "vendor_id": "110",
+        "pan": "AAAAA0007A",
+        "section": "194A",
+        "amount_paid": 20416,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 2042,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 2042,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Rupa Khaitan",
+          "amount": 20416.0,
+          "voucher_no": "240"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Rupa Khaitan' = 'Rupa Khaitan'",
+        "amount_match": "20416 = 20416.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rupa Khaitan",
+        "vendor_id": "110",
+        "pan": "AAAAA0007A",
+        "section": "194A",
+        "amount_paid": 20757,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 2076,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 2076,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Rupa Khaitan",
+          "amount": 20757.0,
+          "voucher_no": "439"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Rupa Khaitan' = 'Rupa Khaitan'",
+        "amount_match": "20757 = 20757.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Akash Nagar",
+        "vendor_id": "127",
+        "pan": "AAAAA0005A",
+        "section": "194A",
+        "amount_paid": 474682,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 47468,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 47468,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Akash Nagar",
+          "amount": 474682.0,
+          "voucher_no": "241"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Akash Nagar' = 'Akash Nagar'",
+        "amount_match": "474682 = 474682.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Akash Nagar",
+        "vendor_id": "127",
+        "pan": "AAAAA0005A",
+        "section": "194A",
+        "amount_paid": 488293,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 48829,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 48829,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Akash Nagar",
+          "amount": 488293.0,
+          "voucher_no": "440"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Akash Nagar' = 'Akash Nagar'",
+        "amount_match": "488293 = 488293.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Akash Nagar",
+        "vendor_id": "127",
+        "pan": "AAAAA0005A",
+        "section": "194A",
+        "amount_paid": 456060,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 45606,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 45606,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Akash Nagar",
+          "amount": 456060.0,
+          "voucher_no": "90"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Akash Nagar' = 'Akash Nagar'",
+        "amount_match": "456060 = 456060.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rahul Shah",
+        "vendor_id": "88",
+        "pan": "AAAAA0006A",
+        "section": "194A",
+        "amount_paid": 206667,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 20666,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 20666,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Rahul Shah",
+          "amount": 206667.0,
+          "voucher_no": "91"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Rahul Shah' = 'Rahul Shah'",
+        "amount_match": "206667 = 206667.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rahul Shah",
+        "vendor_id": "88",
+        "pan": "AAAAA0006A",
+        "section": "194A",
+        "amount_paid": 214373,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 21437,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 21437,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Rahul Shah",
+          "amount": 214373.0,
+          "voucher_no": "242"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Rahul Shah' = 'Rahul Shah'",
+        "amount_match": "214373 = 214373.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rahul Shah",
+        "vendor_id": "88",
+        "pan": "AAAAA0006A",
+        "section": "194A",
+        "amount_paid": 220838,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 22084,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 22084,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Rahul Shah",
+          "amount": 220838.0,
+          "voucher_no": "441"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Rahul Shah' = 'Rahul Shah'",
+        "amount_match": "220838 = 220838.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Karan Kothari",
+        "vendor_id": "62",
+        "pan": "AAAAA0008A",
+        "section": "194A",
+        "amount_paid": 142708,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 14271,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 14271,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Karan Kothari",
+          "amount": 142708.0,
+          "voucher_no": "92"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Karan Kothari' = 'Karan Kothari'",
+        "amount_match": "142708 = 142708.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Karan Kothari",
+        "vendor_id": "62",
+        "pan": "AAAAA0008A",
+        "section": "194A",
+        "amount_paid": 148019,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 14802,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 14802,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Karan Kothari",
+          "amount": 148019.0,
+          "voucher_no": "243"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Karan Kothari' = 'Karan Kothari'",
+        "amount_match": "148019 = 148019.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Karan Kothari",
+        "vendor_id": "62",
+        "pan": "AAAAA0008A",
+        "section": "194A",
+        "amount_paid": 152443,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 15244,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 15244,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Karan Kothari",
+          "amount": 152443.0,
+          "voucher_no": "442"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Karan Kothari' = 'Karan Kothari'",
+        "amount_match": "152443 = 152443.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Ramesh Lohia",
+        "vendor_id": "119",
+        "pan": "AAAAA0009A",
+        "section": "194A",
+        "amount_paid": 74720,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 7472,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 7472,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-06-30T00:00:00",
+          "party_name": "Ramesh Lohia",
+          "amount": 74720.0,
+          "voucher_no": "93"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Ramesh Lohia' = 'Ramesh Lohia'",
+        "amount_match": "74720 = 74720.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Ramesh Lohia",
+        "vendor_id": "119",
+        "pan": "AAAAA0009A",
+        "section": "194A",
+        "amount_paid": 77582,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 7758,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 7758,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Ramesh Lohia",
+          "amount": 77582.0,
+          "voucher_no": "244"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Ramesh Lohia' = 'Ramesh Lohia'",
+        "amount_match": "77582 = 77582.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Ramesh Lohia",
+        "vendor_id": "119",
+        "pan": "AAAAA0009A",
+        "section": "194A",
+        "amount_paid": 79624,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 7962,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 7962,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Ramesh Lohia",
+          "amount": 79624.0,
+          "voucher_no": "443"
+        }
+      ],
+      "match_details": {
+        "name_match": "'Ramesh Lohia' = 'Ramesh Lohia'",
+        "amount_match": "79624 = 79624.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 1,
+      "pass_name": "exact_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "AMRITA ICONS",
+        "vendor_id": "139",
+        "pan": "AYBPS6260R",
+        "section": "194C",
+        "amount_paid": 9600,
+        "amount_paid_date": "2025-01-31T00:00:00",
+        "income_tax": 96,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 1,
+        "tax_deducted": 96,
+        "tax_deducted_date": "2025-01-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-01-31T00:00:00",
+          "party_name": "Amrita Icons",
+          "amount": 9600.0,
+          "gross_amount": 11328.0,
+          "total_gst": 1728.0,
+          "amount_is_base": true,
+          "voucher_no": "165",
+          "expense_heads": {
+            "Packing Charges_18%": 9600.0
+          }
+        }
+      ],
+      "match_details": {
+        "name_match": "'AMRITA ICONS' = 'Amrita Icons'",
+        "amount_match": "9600 = 9600.0",
+        "date_diff_days": 0
+      }
+    },
+    {
+      "pass": 2,
+      "pass_name": "gst_adjusted_base",
+      "confidence": 0.95,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "ANDREAL INNOVATION PVT LTD",
+        "vendor_id": "143",
+        "pan": "ABACA2255R",
+        "section": "194C",
+        "amount_paid": 3333,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 67,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 67,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-31T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "219",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        }
+      ],
+      "match_details": {
+        "name_similarity": 0.5,
+        "form26_amount": 3333,
+        "tally_base_amount": 3333.0,
+        "tally_gross": 3933.0,
+        "tally_gst": 599.94
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Adi Debnath",
+        "vendor_id": "34",
+        "pan": "AAAAA0001A",
+        "section": "194A",
+        "amount_paid": 88212,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 8821,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 8821,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Adi Debnath",
+          "amount": 88212.0,
+          "voucher_no": "564"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Asha Negi",
+        "vendor_id": "99",
+        "pan": "AAAAA0002A",
+        "section": "194A",
+        "amount_paid": 133151,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 13315,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 13315,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Asha Negi",
+          "amount": 133151.0,
+          "voucher_no": "565"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Manisha Kumari",
+        "vendor_id": "87",
+        "pan": "AAAAA0003A",
+        "section": "194A",
+        "amount_paid": 261308,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 26131,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 26131,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Manisha Kumari",
+          "amount": 261308.0,
+          "voucher_no": "566"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Suresh Sethia",
+        "vendor_id": "87",
+        "pan": "AAAAA0004A",
+        "section": "194A",
+        "amount_paid": 509301,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 50930,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 50930,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Suresh Sethia",
+          "amount": 509301.0,
+          "voucher_no": "567"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rupa Khaitan",
+        "vendor_id": "110",
+        "pan": "AAAAA0007A",
+        "section": "194A",
+        "amount_paid": 20638,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 2064,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 2064,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Rupa Khaitan",
+          "amount": 20638.0,
+          "voucher_no": "568"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Akash Nagar",
+        "vendor_id": "127",
+        "pan": "AAAAA0005A",
+        "section": "194A",
+        "amount_paid": 490993,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 49099,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 49099,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Akash Nagar",
+          "amount": 490993.0,
+          "voucher_no": "569"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Rahul Shah",
+        "vendor_id": "88",
+        "pan": "AAAAA0006A",
+        "section": "194A",
+        "amount_paid": 205829,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 20593,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 20593,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Rahul Shah",
+          "amount": 205829.0,
+          "voucher_no": "570"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Karan Kothari",
+        "vendor_id": "62",
+        "pan": "AAAAA0008A",
+        "section": "194A",
+        "amount_paid": 153123,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 15312,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 15312,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Karan Kothari",
+          "amount": 153123.0,
+          "voucher_no": "571"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 4,
+      "pass_name": "fuzzy_match",
+      "confidence": 1.0,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "Ramesh Lohia",
+        "vendor_id": "119",
+        "pan": "AAAAA0009A",
+        "section": "194A",
+        "amount_paid": 79890,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 7989,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 10,
+        "tax_deducted": 7989,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_interest",
+          "date": "2025-03-19T00:00:00",
+          "party_name": "Ramesh Lohia",
+          "amount": 79890.0,
+          "voucher_no": "572"
+        }
+      ],
+      "match_details": {
+        "name_similarity": 1.0,
+        "amount_diff": 0.0,
+        "amount_diff_pct": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_cumulative",
+      "confidence": 0.85,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "AMRITA ICONS",
+        "vendor_id": "139",
+        "pan": "AYBPS6260R",
+        "section": "194C",
+        "amount_paid": 181380,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 1814,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 1,
+        "tax_deducted": 1814,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-05-28T00:00:00",
+          "party_name": "Amrita Icons",
+          "amount": 1650.0,
+          "gross_amount": 1947.0,
+          "total_gst": 297.0,
+          "amount_is_base": true,
+          "voucher_no": "31",
+          "expense_heads": {
+            "Packing Charges_18%": 1650.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-09-05T00:00:00",
+          "party_name": "Amrita Icons",
+          "amount": 179730.0,
+          "gross_amount": 212081.0,
+          "total_gst": 32351.4,
+          "amount_is_base": true,
+          "voucher_no": "72",
+          "expense_heads": {
+            "Freight Charges_18%": 600.0,
+            "Packing Charges_18%": 179130.0
+          }
+        }
+      ],
+      "match_details": {
+        "strategy": "cumulative_to_date",
+        "form26_amount": 181380,
+        "tally_sum": 181380.0,
+        "num_tally_entries": 2,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "AMRITA ICONS",
+        "vendor_id": "139",
+        "pan": "AYBPS6260R",
+        "section": "194C",
+        "amount_paid": 25266,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 253,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 1,
+        "tax_deducted": 253,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-06T00:00:00",
+          "party_name": "Amrita Icons",
+          "amount": 1650.0,
+          "gross_amount": 1947.0,
+          "total_gst": 297.0,
+          "amount_is_base": true,
+          "voucher_no": "187",
+          "expense_heads": {
+            "Packing Charges_18%": 1650.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-28T00:00:00",
+          "party_name": "Amrita Icons",
+          "amount": 23616.0,
+          "gross_amount": 27867.0,
+          "total_gst": 4250.88,
+          "amount_is_base": true,
+          "voucher_no": "210",
+          "expense_heads": {
+            "Packing Charges_18%": 23616.0
+          }
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 25266,
+        "tally_sum": 25266.0,
+        "num_tally_entries": 2,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_subset",
+      "confidence": 0.8,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "ANDERSON TECHNOLOGY PVT LTD",
+        "vendor_id": "142",
+        "pan": "AAFCA4805K",
+        "section": "194C",
+        "amount_paid": 134332,
+        "amount_paid_date": "2025-01-31T00:00:00",
+        "income_tax": 2687,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 2687,
+        "tax_deducted_date": "2025-01-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 70000.0,
+          "gross_amount": 82600.0,
+          "total_gst": 12600.0,
+          "amount_is_base": true,
+          "voucher_no": "92",
+          "expense_heads": {
+            "Advertisement": 70000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-10-31T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "113",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-10-31T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "114",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-11-30T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 15000.0,
+          "gross_amount": 17700.0,
+          "total_gst": 2700.0,
+          "amount_is_base": true,
+          "voucher_no": "132",
+          "expense_heads": {
+            "Advertisement": 15000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-11-30T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "133",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-12-31T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "156",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-01-16T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 36000.0,
+          "gross_amount": 42480.0,
+          "total_gst": 6480.0,
+          "amount_is_base": true,
+          "voucher_no": "159",
+          "expense_heads": {
+            "Advertisement": 36000.0
+          }
+        }
+      ],
+      "match_details": {
+        "strategy": "subset_sum_to_date",
+        "form26_amount": 134332,
+        "tally_sum": 134332.0,
+        "num_tally_entries": 7,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_subset",
+      "confidence": 0.8,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "ANDERSON TECHNOLOGY PVT LTD",
+        "vendor_id": "142",
+        "pan": "AAFCA4805K",
+        "section": "194C",
+        "amount_paid": 6666,
+        "amount_paid_date": "2025-02-28T00:00:00",
+        "income_tax": 133,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 133,
+        "tax_deducted_date": "2025-02-28T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-01-31T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "173",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-02-28T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 3333.0,
+          "gross_amount": 3933.0,
+          "total_gst": 599.94,
+          "amount_is_base": true,
+          "voucher_no": "178",
+          "expense_heads": {
+            "Advertisement": 3333.0
+          }
+        }
+      ],
+      "match_details": {
+        "strategy": "subset_sum_to_date",
+        "form26_amount": 6666,
+        "tally_sum": 6666.0,
+        "num_tally_entries": 2,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_all_available",
+      "confidence": 0.75,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "ANDERSON TECHNOLOGY PVT LTD",
+        "vendor_id": "142",
+        "pan": "AAFCA4805K",
+        "section": "194C",
+        "amount_paid": 55000,
+        "amount_paid_date": "2025-03-01T00:00:00",
+        "income_tax": 1100,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 1100,
+        "tax_deducted_date": "2025-03-01T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-02-28T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 40000.0,
+          "gross_amount": 47200.0,
+          "total_gst": 7200.0,
+          "amount_is_base": true,
+          "voucher_no": "194",
+          "expense_heads": {
+            "Advertisement": 40000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-20T00:00:00",
+          "party_name": "Anderson Technology Pvt. Ltd.",
+          "amount": 15000.0,
+          "gross_amount": 17700.0,
+          "total_gst": 2700.0,
+          "amount_is_base": true,
+          "voucher_no": "207",
+          "expense_heads": {
+            "Advertisement": 15000.0
+          }
+        }
+      ],
+      "match_details": {
+        "strategy": "all_available_for_vendor",
+        "form26_amount": 55000,
+        "tally_sum": 55000.0,
+        "num_tally_entries": 2,
+        "note": "F26 deposit date may precede invoice dates",
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_all_available",
+      "confidence": 0.75,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "ANDREAL INNOVATION PVT LTD",
+        "vendor_id": "143",
+        "pan": "ABACA2255R",
+        "section": "194C",
+        "amount_paid": 179000,
+        "amount_paid_date": "2025-03-01T00:00:00",
+        "income_tax": 3580,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 3580,
+        "tax_deducted_date": "2025-03-01T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-07-13T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 25000.0,
+          "gross_amount": 29500.0,
+          "total_gst": 4500.0,
+          "amount_is_base": true,
+          "voucher_no": "53",
+          "expense_heads": {
+            "Advertisement": 25000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-07-13T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 30000.0,
+          "gross_amount": 35400.0,
+          "total_gst": 5400.0,
+          "amount_is_base": true,
+          "voucher_no": "54",
+          "expense_heads": {
+            "Advertisement": 30000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2024-07-31T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 11500.0,
+          "gross_amount": 13570.0,
+          "total_gst": 2070.0,
+          "amount_is_base": true,
+          "voucher_no": "66",
+          "expense_heads": {
+            "Advertisement": 11500.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-02-04T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 15000.0,
+          "gross_amount": 17700.0,
+          "total_gst": 2700.0,
+          "amount_is_base": true,
+          "voucher_no": "163",
+          "expense_heads": {
+            "Advertisement": 15000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-15T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 40000.0,
+          "gross_amount": 47200.0,
+          "total_gst": 7200.0,
+          "amount_is_base": true,
+          "voucher_no": "203",
+          "expense_heads": {
+            "Advertisement": 40000.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-20T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 7500.0,
+          "gross_amount": 8850.0,
+          "total_gst": 1350.0,
+          "amount_is_base": true,
+          "voucher_no": "205",
+          "expense_heads": {
+            "Advertisement": 7500.0
+          }
+        },
+        {
+          "tally_source": "gst_exp",
+          "date": "2025-03-20T00:00:00",
+          "party_name": "Andreal Innovations Pvt. Ltd.",
+          "amount": 50000.0,
+          "gross_amount": 59000.0,
+          "total_gst": 9000.0,
+          "amount_is_base": true,
+          "voucher_no": "206",
+          "expense_heads": {
+            "Advertisement": 50000.0
+          }
+        }
+      ],
+      "match_details": {
+        "strategy": "all_available_for_vendor",
+        "form26_amount": 179000,
+        "tally_sum": 179000.0,
+        "num_tally_entries": 7,
+        "note": "F26 deposit date may precede invoice dates",
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 33675,
+        "amount_paid_date": "2024-04-30T00:00:00",
+        "income_tax": 674,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 674,
+        "tax_deducted_date": "2024-04-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-04-04T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 22483.0,
+          "amount_is_base": true,
+          "voucher_no": "1"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-04-04T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 11192.0,
+          "amount_is_base": true,
+          "voucher_no": "2"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 33675,
+        "tally_sum": 33675.0,
+        "num_tally_entries": 2,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 8847,
+        "amount_paid_date": "2024-05-31T00:00:00",
+        "income_tax": 177,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 177,
+        "tax_deducted_date": "2024-05-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-05-16T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 6638.0,
+          "amount_is_base": true,
+          "voucher_no": "23"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-05-30T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1641.0,
+          "amount_is_base": true,
+          "voucher_no": "32"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-05-30T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 568.0,
+          "amount_is_base": true,
+          "voucher_no": "33"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 8847,
+        "tally_sum": 8847.0,
+        "num_tally_entries": 3,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 44680,
+        "amount_paid_date": "2024-06-30T00:00:00",
+        "income_tax": 894,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 894,
+        "tax_deducted_date": "2024-06-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-06-18T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 557.0,
+          "amount_is_base": true,
+          "voucher_no": "53"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-06-18T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 42890.0,
+          "amount_is_base": true,
+          "voucher_no": "54"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-06-22T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1233.0,
+          "amount_is_base": true,
+          "voucher_no": "57"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 44680,
+        "tally_sum": 44680.0,
+        "num_tally_entries": 3,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 10601,
+        "amount_paid_date": "2024-07-31T00:00:00",
+        "income_tax": 213,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 213,
+        "tax_deducted_date": "2024-07-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-03T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 565.0,
+          "amount_is_base": true,
+          "voucher_no": "64"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-03T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 615.0,
+          "amount_is_base": true,
+          "voucher_no": "65"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-03T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 615.0,
+          "amount_is_base": true,
+          "voucher_no": "66"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-03T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 300.0,
+          "amount_is_base": true,
+          "voucher_no": "67"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-03T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 300.0,
+          "amount_is_base": true,
+          "voucher_no": "68"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-12T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 3802.0,
+          "amount_is_base": true,
+          "voucher_no": "104"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-12T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1939.0,
+          "amount_is_base": true,
+          "voucher_no": "105"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-12T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1779.0,
+          "amount_is_base": true,
+          "voucher_no": "106"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-07-25T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 686.0,
+          "amount_is_base": true,
+          "voucher_no": "135"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 10601,
+        "tally_sum": 10601.0,
+        "num_tally_entries": 9,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 40201,
+        "amount_paid_date": "2024-08-31T00:00:00",
+        "income_tax": 804,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 804,
+        "tax_deducted_date": "2024-08-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-02T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 626.0,
+          "amount_is_base": true,
+          "voucher_no": "145"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-05T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 420.0,
+          "amount_is_base": true,
+          "voucher_no": "148"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-05T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 300.0,
+          "amount_is_base": true,
+          "voucher_no": "149"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-16T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 10273.0,
+          "amount_is_base": true,
+          "voucher_no": "155"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-16T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1425.0,
+          "amount_is_base": true,
+          "voucher_no": "156"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-16T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 567.0,
+          "amount_is_base": true,
+          "voucher_no": "157"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 19595.0,
+          "amount_is_base": true,
+          "voucher_no": "170"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 445.0,
+          "amount_is_base": true,
+          "voucher_no": "177"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1380.0,
+          "amount_is_base": true,
+          "voucher_no": "178"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 561.0,
+          "amount_is_base": true,
+          "voucher_no": "179"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1369.0,
+          "amount_is_base": true,
+          "voucher_no": "180"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-08-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 3249.0,
+          "amount_is_base": true,
+          "voucher_no": "181"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 40201,
+        "tally_sum": 40210.0,
+        "num_tally_entries": 12,
+        "diff": -9.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 26085,
+        "amount_paid_date": "2024-09-30T00:00:00",
+        "income_tax": 522,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 522,
+        "tax_deducted_date": "2024-09-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-09-10T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 12301.0,
+          "amount_is_base": true,
+          "voucher_no": "191"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-09-24T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 718.0,
+          "amount_is_base": true,
+          "voucher_no": "209"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-09-24T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 616.0,
+          "amount_is_base": true,
+          "voucher_no": "210"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 10988.0,
+          "amount_is_base": true,
+          "voucher_no": "218"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-09-30T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1472.0,
+          "amount_is_base": true,
+          "voucher_no": "219"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 26085,
+        "tally_sum": 26095.0,
+        "num_tally_entries": 5,
+        "diff": -10.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 42830,
+        "amount_paid_date": "2024-10-31T00:00:00",
+        "income_tax": 857,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 857,
+        "tax_deducted_date": "2024-10-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-10-07T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 38638.0,
+          "amount_is_base": true,
+          "voucher_no": "259"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-10-07T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1592.0,
+          "amount_is_base": true,
+          "voucher_no": "260"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-10-07T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 914.0,
+          "amount_is_base": true,
+          "voucher_no": "261"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-10-19T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 763.0,
+          "amount_is_base": true,
+          "voucher_no": "277"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-10-19T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 923.0,
+          "amount_is_base": true,
+          "voucher_no": "278"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 42830,
+        "tally_sum": 42830.0,
+        "num_tally_entries": 5,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 47468,
+        "amount_paid_date": "2024-11-30T00:00:00",
+        "income_tax": 950,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 950,
+        "tax_deducted_date": "2024-11-30T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-02T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 318.0,
+          "amount_is_base": true,
+          "voucher_no": "301"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-02T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 6805.0,
+          "amount_is_base": true,
+          "voucher_no": "302"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-02T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 8994.0,
+          "amount_is_base": true,
+          "voucher_no": "303"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-02T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 619.0,
+          "amount_is_base": true,
+          "voucher_no": "304"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-12T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2296.0,
+          "amount_is_base": true,
+          "voucher_no": "329"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 615.0,
+          "amount_is_base": true,
+          "voucher_no": "341"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 3714.0,
+          "amount_is_base": true,
+          "voucher_no": "342"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2173.0,
+          "amount_is_base": true,
+          "voucher_no": "343"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2738.0,
+          "amount_is_base": true,
+          "voucher_no": "344"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2059.0,
+          "amount_is_base": true,
+          "voucher_no": "345"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 5920.0,
+          "amount_is_base": true,
+          "voucher_no": "346"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2091.0,
+          "amount_is_base": true,
+          "voucher_no": "347"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 7773.0,
+          "amount_is_base": true,
+          "voucher_no": "348"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-11-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1353.0,
+          "amount_is_base": true,
+          "voucher_no": "349"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 47468,
+        "tally_sum": 47468.0,
+        "num_tally_entries": 14,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 27508,
+        "amount_paid_date": "2024-12-31T00:00:00",
+        "income_tax": 551,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 551,
+        "tax_deducted_date": "2024-12-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2357.0,
+          "amount_is_base": true,
+          "voucher_no": "389"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 779.0,
+          "amount_is_base": true,
+          "voucher_no": "390"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 3026.0,
+          "amount_is_base": true,
+          "voucher_no": "391"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 3706.0,
+          "amount_is_base": true,
+          "voucher_no": "392"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 3687.0,
+          "amount_is_base": true,
+          "voucher_no": "393"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1411.0,
+          "amount_is_base": true,
+          "voucher_no": "394"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2183.0,
+          "amount_is_base": true,
+          "voucher_no": "395"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2191.0,
+          "amount_is_base": true,
+          "voucher_no": "396"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1421.0,
+          "amount_is_base": true,
+          "voucher_no": "397"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2255.0,
+          "amount_is_base": true,
+          "voucher_no": "398"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 309.0,
+          "amount_is_base": true,
+          "voucher_no": "399"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 1544.0,
+          "amount_is_base": true,
+          "voucher_no": "406"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2027.0,
+          "amount_is_base": true,
+          "voucher_no": "407"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2024-12-26T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 612.0,
+          "amount_is_base": true,
+          "voucher_no": "408"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 27508,
+        "tally_sum": 27508.0,
+        "num_tally_entries": 14,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 9742,
+        "amount_paid_date": "2025-01-31T00:00:00",
+        "income_tax": 195,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 195,
+        "tax_deducted_date": "2025-01-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-01-10T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2141.0,
+          "amount_is_base": true,
+          "voucher_no": "468"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-01-10T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2326.0,
+          "amount_is_base": true,
+          "voucher_no": "469"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-01-10T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 5275.0,
+          "amount_is_base": true,
+          "voucher_no": "470"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 9742,
+        "tally_sum": 9742.0,
+        "num_tally_entries": 3,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 18863,
+        "amount_paid_date": "2025-02-28T00:00:00",
+        "income_tax": 377,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 377,
+        "tax_deducted_date": "2025-02-28T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-02-07T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 15978.0,
+          "amount_is_base": true,
+          "voucher_no": "500"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-02-07T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2332.0,
+          "amount_is_base": true,
+          "voucher_no": "501"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-02-07T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 553.0,
+          "amount_is_base": true,
+          "voucher_no": "502"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 18863,
+        "tally_sum": 18863.0,
+        "num_tally_entries": 3,
+        "diff": 0.0
+      }
+    },
+    {
+      "pass": 5,
+      "pass_name": "aggregated_monthly",
+      "confidence": 0.9,
+      "form26_entry": {
+        "source": "form26",
+        "vendor_name": "INLAND WORLD LOGISTICS PVT LTD",
+        "vendor_id": "1",
+        "pan": "AAACI5607C",
+        "section": "194C",
+        "amount_paid": 21995,
+        "amount_paid_date": "2025-03-31T00:00:00",
+        "income_tax": 440,
+        "surcharge": 0,
+        "cess": 0,
+        "tax_rate_pct": 2,
+        "tax_deducted": 440,
+        "tax_deducted_date": "2025-03-31T00:00:00",
+        "non_deduction_reason": ""
+      },
+      "tally_entries": [
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-03-17T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 966.0,
+          "amount_is_base": true,
+          "voucher_no": "558"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-03-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 9240.0,
+          "amount_is_base": true,
+          "voucher_no": "606"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-03-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 8871.0,
+          "amount_is_base": true,
+          "voucher_no": "607"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-03-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 2339.0,
+          "amount_is_base": true,
+          "voucher_no": "608"
+        },
+        {
+          "tally_source": "journal_freight",
+          "date": "2025-03-31T00:00:00",
+          "party_name": "Inland World Logistics Pvt. Ltd.",
+          "amount": 579.0,
+          "amount_is_base": true,
+          "voucher_no": "609"
+        }
+      ],
+      "match_details": {
+        "strategy": "monthly_sum",
+        "form26_amount": 21995,
+        "tally_sum": 21995.0,
+        "num_tally_entries": 5,
+        "diff": 0.0
+      }
+    }
+  ],
+  "exemptions": [
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 0.8 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2024-11-30T00:00:00",
+        "party_name": "Facebook India Online Services Pvt. Ltd.",
+        "amount": 0.8,
+        "gross_amount": 0.94,
+        "total_gst": 0.14,
+        "amount_is_base": true,
+        "voucher_no": "137",
+        "expense_heads": {
+          "Advertisement": 0.8
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 12.16 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2024-12-31T00:00:00",
+        "party_name": "Shiprocket Pvt. Ltd. Delhi",
+        "amount": 12.16,
+        "gross_amount": 14.0,
+        "total_gst": 2.19,
+        "amount_is_base": true,
+        "voucher_no": "157",
+        "expense_heads": {
+          "Postage & Stamp_18%": 12.16
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 15.9 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2024-12-31T00:00:00",
+        "party_name": "Shiprocket Pvt. Ltd. Delhi",
+        "amount": 15.9,
+        "gross_amount": 19.0,
+        "total_gst": 2.86,
+        "amount_is_base": true,
+        "voucher_no": "158",
+        "expense_heads": {
+          "Postage & Stamp_18%": 15.9
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 15.9 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2025-01-31T00:00:00",
+        "party_name": "Shiprocket Pvt. Ltd. Delhi",
+        "amount": 15.9,
+        "gross_amount": 18.76,
+        "total_gst": 2.86,
+        "amount_is_base": true,
+        "voucher_no": "174",
+        "expense_heads": {
+          "Postage & Stamp_18%": 15.9
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 20.16 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2025-01-31T00:00:00",
+        "party_name": "Razorpay Software Pvt. Ltd.",
+        "amount": 20.16,
+        "gross_amount": 23.79,
+        "total_gst": 3.63,
+        "amount_is_base": true,
+        "voucher_no": "176",
+        "expense_heads": {
+          "Postage & Stamp_18%": 20.16
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 20.5 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2025-02-28T00:00:00",
+        "party_name": "Shiprocket Pvt. Ltd. Delhi",
+        "amount": 20.5,
+        "gross_amount": 24.19,
+        "total_gst": 3.69,
+        "amount_is_base": true,
+        "voucher_no": "195",
+        "expense_heads": {
+          "Postage & Stamp_18%": 20.5
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 72.56 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2025-02-28T00:00:00",
+        "party_name": "Shiprocket Pvt. Ltd. Delhi",
+        "amount": 72.56,
+        "gross_amount": 85.62,
+        "total_gst": 13.06,
+        "amount_is_base": true,
+        "voucher_no": "196",
+        "expense_heads": {
+          "Postage & Stamp_18%": 72.56
+        }
+      }
+    },
+    {
+      "pass": 3,
+      "pass_name": "exempt_filter",
+      "reason": "Amount 39.0 below minimum threshold",
+      "tally_entry": {
+        "tally_source": "gst_exp",
+        "date": "2025-03-31T00:00:00",
+        "party_name": "Shiprocket Pvt. Ltd. Delhi",
+        "amount": 39.0,
+        "gross_amount": 46.02,
+        "total_gst": 7.02,
+        "amount_is_base": true,
+        "voucher_no": "223",
+        "expense_heads": {
+          "Postage & Stamp_18%": 39.0
+        }
+      }
+    }
+  ],
+  "unmatched_form26": [],
+  "unmatched_tally_194a": [],
+  "unmatched_tally_194c": [
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-04-30T00:00:00",
+      "party_name": "Xpress Cargo",
+      "amount": 500.0,
+      "amount_is_base": true,
+      "voucher_no": "8"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-05-03T00:00:00",
+      "party_name": "Xpress Cargo",
+      "amount": 1000.0,
+      "amount_is_base": true,
+      "voucher_no": "10"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-06-07T00:00:00",
+      "party_name": "VRL Logistics Ltd.",
+      "amount": 5700.0,
+      "amount_is_base": true,
+      "voucher_no": "37"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-07-16T00:00:00",
+      "party_name": "Vimal Transport",
+      "amount": 6372.0,
+      "amount_is_base": true,
+      "voucher_no": "133"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-07-20T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 1385.0,
+      "amount_is_base": true,
+      "voucher_no": "137"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-07-23T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 412.0,
+      "amount_is_base": true,
+      "voucher_no": "152"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-07-31T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 380.0,
+      "amount_is_base": true,
+      "voucher_no": "150"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-08-22T00:00:00",
+      "party_name": "Vimal Transport",
+      "amount": 3339.0,
+      "amount_is_base": true,
+      "voucher_no": "187"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-08-31T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 350.0,
+      "amount_is_base": true,
+      "voucher_no": "186"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-09-14T00:00:00",
+      "party_name": "Vimal Transport",
+      "amount": 2441.0,
+      "amount_is_base": true,
+      "voucher_no": "217"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-09-25T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 923.0,
+      "amount_is_base": true,
+      "voucher_no": "221"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 3109.0,
+      "amount_is_base": true,
+      "voucher_no": "255"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Vimal Transport",
+      "amount": 5402.0,
+      "amount_is_base": true,
+      "voucher_no": "263"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-10-15T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 247.0,
+      "amount_is_base": true,
+      "voucher_no": "275"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-10-15T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 455.0,
+      "amount_is_base": true,
+      "voucher_no": "276"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-10-23T00:00:00",
+      "party_name": "Vimal Transport",
+      "amount": 1026.0,
+      "amount_is_base": true,
+      "voucher_no": "331"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-10-31T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 1144.0,
+      "amount_is_base": true,
+      "voucher_no": "307"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 18091.0,
+      "amount_is_base": true,
+      "voucher_no": "357"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-12-03T00:00:00",
+      "party_name": "Mahavir Cargo Carrier",
+      "amount": 310.0,
+      "amount_is_base": true,
+      "voucher_no": "476"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-12-18T00:00:00",
+      "party_name": "Patel Parcels Carrier Co.",
+      "amount": 964.0,
+      "amount_is_base": true,
+      "voucher_no": "404"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2024-12-31T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 4686.0,
+      "amount_is_base": true,
+      "voucher_no": "466"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-04T00:00:00",
+      "party_name": "Mahavir Cargo Carrier",
+      "amount": 387.0,
+      "amount_is_base": true,
+      "voucher_no": "485"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-07T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 525.0,
+      "amount_is_base": true,
+      "voucher_no": "554"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-14T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 1140.0,
+      "amount_is_base": true,
+      "voucher_no": "474"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-21T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 3552.0,
+      "amount_is_base": true,
+      "voucher_no": "486"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-21T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 408.0,
+      "amount_is_base": true,
+      "voucher_no": "487"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Vimal Transport",
+      "amount": 2408.0,
+      "amount_is_base": true,
+      "voucher_no": "496"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 3050.0,
+      "amount_is_base": true,
+      "voucher_no": "499"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-02-01T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 960.0,
+      "amount_is_base": true,
+      "voucher_no": "525"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-02-06T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 1050.0,
+      "amount_is_base": true,
+      "voucher_no": "526"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-02-07T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 315.0,
+      "amount_is_base": true,
+      "voucher_no": "527"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-02-18T00:00:00",
+      "party_name": "Mahavir Cargo Carrier",
+      "amount": 649.0,
+      "amount_is_base": true,
+      "voucher_no": "551"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-03-04T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 1350.0,
+      "amount_is_base": true,
+      "voucher_no": "529"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-03-20T00:00:00",
+      "party_name": "Patel Fleet Logistics Pvt. Ltd.",
+      "amount": 1920.0,
+      "amount_is_base": true,
+      "voucher_no": "625"
+    },
+    {
+      "tally_source": "journal_freight",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Kanhaiya Express Pvt. Ltd.",
+      "amount": 350.0,
+      "amount_is_base": true,
+      "voucher_no": "626"
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "1",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 249.0,
+      "gross_amount": 293.0,
+      "total_gst": 44.82,
+      "amount_is_base": true,
+      "voucher_no": "2",
+      "expense_heads": {
+        "Insurance Charges": 249.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 1217.0,
+      "gross_amount": 1437.0,
+      "total_gst": 219.06,
+      "amount_is_base": true,
+      "voucher_no": "3",
+      "expense_heads": {
+        "Insurance Charges": 1217.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 5489.0,
+      "gross_amount": 6477.0,
+      "total_gst": 988.02,
+      "amount_is_base": true,
+      "voucher_no": "4",
+      "expense_heads": {
+        "Insurance Charges": 5489.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 2100.0,
+      "gross_amount": 2478.0,
+      "total_gst": 378.0,
+      "amount_is_base": true,
+      "voucher_no": "5",
+      "expense_heads": {
+        "Insurance Charges": 2100.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 1108.0,
+      "gross_amount": 1308.0,
+      "total_gst": 199.44,
+      "amount_is_base": true,
+      "voucher_no": "6",
+      "expense_heads": {
+        "Insurance Charges": 1108.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 356.0,
+      "gross_amount": 420.0,
+      "total_gst": 64.08,
+      "amount_is_base": true,
+      "voucher_no": "7",
+      "expense_heads": {
+        "Insurance Charges": 356.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 904.0,
+      "gross_amount": 1066.0,
+      "total_gst": 162.72,
+      "amount_is_base": true,
+      "voucher_no": "8",
+      "expense_heads": {
+        "Insurance Charges": 904.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-05T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 90498.0,
+      "gross_amount": 106788.0,
+      "total_gst": 16289.64,
+      "amount_is_base": true,
+      "voucher_no": "9",
+      "expense_heads": {
+        "Insurance Charges": 90498.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "10",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-06T00:00:00",
+      "party_name": "V Trans (India) Ltd.",
+      "amount": 2699.0,
+      "gross_amount": 3023.0,
+      "total_gst": 323.88,
+      "amount_is_base": true,
+      "voucher_no": "11",
+      "expense_heads": {
+        "Freight Charges_12%": 2699.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-09T00:00:00",
+      "party_name": "The Bengal Plastic",
+      "amount": 480.0,
+      "gross_amount": 566.0,
+      "total_gst": 86.4,
+      "amount_is_base": true,
+      "voucher_no": "12",
+      "expense_heads": {
+        "Printing & Stationary_18%": 480.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-09T00:00:00",
+      "party_name": "Continental Solutions",
+      "amount": 3200.0,
+      "gross_amount": 3776.0,
+      "total_gst": 576.0,
+      "amount_is_base": true,
+      "voucher_no": "13",
+      "expense_heads": {
+        "Annual Maintenance Charges": 3200.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "14",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-19T00:00:00",
+      "party_name": "Kamal Kishor Bagri",
+      "amount": 7023.0,
+      "gross_amount": 8287.0,
+      "total_gst": 1264.14,
+      "amount_is_base": true,
+      "voucher_no": "15",
+      "expense_heads": {
+        "Brokerage and Commission_18%": 7023.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-26T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 5393.0,
+      "gross_amount": 6364.0,
+      "total_gst": 970.74,
+      "amount_is_base": true,
+      "voucher_no": "16",
+      "expense_heads": {
+        "Freight Charges_18%": 5393.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-27T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 4951.0,
+      "gross_amount": 5842.0,
+      "total_gst": 891.18,
+      "amount_is_base": true,
+      "voucher_no": "17",
+      "expense_heads": {
+        "Freight Charges_18%": 4951.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-30T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 225.4,
+      "gross_amount": 265.97,
+      "total_gst": 40.57,
+      "amount_is_base": true,
+      "voucher_no": "18",
+      "expense_heads": {
+        "Domain Expenses": 225.4
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-30T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 2496.0,
+      "gross_amount": 2945.28,
+      "total_gst": 449.28,
+      "amount_is_base": true,
+      "voucher_no": "27",
+      "expense_heads": {
+        "Advertisement": 2496.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-30T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 975.5,
+      "gross_amount": 1149.0,
+      "total_gst": 175.6,
+      "amount_is_base": true,
+      "voucher_no": "28",
+      "expense_heads": {
+        "Freight Charges_18%": 975.5
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-02T00:00:00",
+      "party_name": "Safexpress Pvt. Ltd.",
+      "amount": 930.0,
+      "gross_amount": 1097.0,
+      "total_gst": 167.4,
+      "amount_is_base": true,
+      "voucher_no": "19",
+      "expense_heads": {
+        "Freight Charges_18%": 930.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "20",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "21",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1760.0,
+      "gross_amount": 1971.0,
+      "total_gst": 211.2,
+      "amount_is_base": true,
+      "voucher_no": "22",
+      "expense_heads": {
+        "General Exp. GST_12%": 1760.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-10T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 2932.0,
+      "gross_amount": 3459.76,
+      "total_gst": 527.76,
+      "amount_is_base": true,
+      "voucher_no": "23",
+      "expense_heads": {
+        "Freight Charges_18%": 2932.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-10T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1054.96,
+      "gross_amount": 1245.0,
+      "total_gst": 189.9,
+      "amount_is_base": true,
+      "voucher_no": "24",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1054.96
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-10T00:00:00",
+      "party_name": "Skyking",
+      "amount": 2355.89,
+      "gross_amount": 2780.0,
+      "total_gst": 424.06,
+      "amount_is_base": true,
+      "voucher_no": "25",
+      "expense_heads": {
+        "Postage & Stamp_18%": 2355.89
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-13T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "26",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-16T00:00:00",
+      "party_name": "Amith Garments Services",
+      "amount": 20800.0,
+      "gross_amount": 24544.0,
+      "total_gst": 3744.0,
+      "amount_is_base": true,
+      "voucher_no": "29",
+      "expense_heads": {
+        "Packing Charges_18%": 20800.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-24T00:00:00",
+      "party_name": "Appario Retail Pvt. Ltd.",
+      "amount": 10669.5,
+      "gross_amount": 12590.0,
+      "total_gst": 1920.52,
+      "amount_is_base": true,
+      "voucher_no": "30",
+      "expense_heads": {
+        "Printer": 10669.5
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-29T00:00:00",
+      "party_name": "Arihant Systems",
+      "amount": 3350.0,
+      "gross_amount": 3953.0,
+      "total_gst": 603.0,
+      "amount_is_base": true,
+      "voucher_no": "32",
+      "expense_heads": {
+        "Computer Repair Charges": 3350.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "33",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-31T00:00:00",
+      "party_name": "SBI General Insurance Co. Ltd",
+      "amount": 9000.0,
+      "gross_amount": 10620.0,
+      "total_gst": 1620.0,
+      "amount_is_base": true,
+      "voucher_no": "43",
+      "expense_heads": {
+        "Marine Insurance Charges": 9000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "34",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-03T00:00:00",
+      "party_name": "Ranka Infotech",
+      "amount": 300.0,
+      "gross_amount": 354.0,
+      "total_gst": 54.0,
+      "amount_is_base": true,
+      "voucher_no": "35",
+      "expense_heads": {
+        "Printing & Stationary_18%": 300.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "36",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-06T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 745.67,
+      "gross_amount": 880.0,
+      "total_gst": 134.22,
+      "amount_is_base": true,
+      "voucher_no": "37",
+      "expense_heads": {
+        "Postage & Stamp_18%": 745.67
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-06T00:00:00",
+      "party_name": "Skyking",
+      "amount": 285.0,
+      "gross_amount": 336.0,
+      "total_gst": 51.3,
+      "amount_is_base": true,
+      "voucher_no": "38",
+      "expense_heads": {
+        "Postage & Stamp_18%": 285.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-06T00:00:00",
+      "party_name": "Kochar Tradelink LLP",
+      "amount": 38743.0,
+      "gross_amount": 45717.0,
+      "total_gst": 6973.74,
+      "amount_is_base": true,
+      "voucher_no": "39",
+      "expense_heads": {
+        "Brokerage and Commission_18%": 38743.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "40",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-12T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1595.0,
+      "gross_amount": 1786.0,
+      "total_gst": 191.4,
+      "amount_is_base": true,
+      "voucher_no": "41",
+      "expense_heads": {
+        "General Exp. GST_12%": 1595.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-13T00:00:00",
+      "party_name": "Natraj Stationery Stores",
+      "amount": 1880.0,
+      "gross_amount": 2106.0,
+      "total_gst": 225.6,
+      "amount_is_base": true,
+      "voucher_no": "42",
+      "expense_heads": {
+        "Printing & Stationary_12%": 1880.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-13T00:00:00",
+      "party_name": "Shreeji Plastics",
+      "amount": 19390.0,
+      "gross_amount": 22880.0,
+      "total_gst": 3490.2,
+      "amount_is_base": true,
+      "voucher_no": "44",
+      "expense_heads": {
+        "Packing Charges_18%": 19390.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-30T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "45",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "46",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "47",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1320.0,
+      "gross_amount": 1478.0,
+      "total_gst": 158.4,
+      "amount_is_base": true,
+      "voucher_no": "48",
+      "expense_heads": {
+        "General Exp. GST_12%": 1320.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 220.0,
+      "gross_amount": 246.0,
+      "total_gst": 26.4,
+      "amount_is_base": true,
+      "voucher_no": "49",
+      "expense_heads": {
+        "General Exp. GST_12%": 220.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "50",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-13T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 745.68,
+      "gross_amount": 880.0,
+      "total_gst": 134.22,
+      "amount_is_base": true,
+      "voucher_no": "52",
+      "expense_heads": {
+        "Postage & Stamp_18%": 745.68
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-13T00:00:00",
+      "party_name": "Skyking",
+      "amount": 470.0,
+      "gross_amount": 555.0,
+      "total_gst": 84.6,
+      "amount_is_base": true,
+      "voucher_no": "55",
+      "expense_heads": {
+        "Postage & Stamp_18%": 470.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-13T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 883.5,
+      "gross_amount": 1042.53,
+      "total_gst": 159.04,
+      "amount_is_base": true,
+      "voucher_no": "56",
+      "expense_heads": {
+        "Freight Charges_18%": 883.5
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-30T00:00:00",
+      "party_name": "Hyate Nawaz Mobile Pvt. Ltd.",
+      "amount": 39830.5,
+      "gross_amount": 47000.0,
+      "total_gst": 7169.5,
+      "amount_is_base": true,
+      "voucher_no": "57",
+      "expense_heads": {
+        "Computer": 39830.5
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "58",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-31T00:00:00",
+      "party_name": "Chiptronics Solutions",
+      "amount": 3380.02,
+      "gross_amount": 3988.0,
+      "total_gst": 608.4,
+      "amount_is_base": true,
+      "voucher_no": "64",
+      "expense_heads": {
+        "Shop Repair & Maintenance Exp._18%": 3380.02
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-31T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Kolkata",
+      "amount": 13272.0,
+      "gross_amount": 13936.0,
+      "total_gst": 663.6,
+      "amount_is_base": true,
+      "voucher_no": "65",
+      "expense_heads": {
+        "Travelling Expenses_5%": 13272.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-31T00:00:00",
+      "party_name": "Least Count Technology Solutions Pvt. Ltd.",
+      "amount": 1500.0,
+      "gross_amount": 1770.0,
+      "total_gst": 270.0,
+      "amount_is_base": true,
+      "voucher_no": "67",
+      "expense_heads": {
+        "Advertisement": 1500.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "59",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "60",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1740.0,
+      "gross_amount": 1949.0,
+      "total_gst": 208.8,
+      "amount_is_base": true,
+      "voucher_no": "61",
+      "expense_heads": {
+        "General Exp. GST_12%": 1740.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "62",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-12T00:00:00",
+      "party_name": "Arihant Systems",
+      "amount": 1695.0,
+      "gross_amount": 2000.0,
+      "total_gst": 305.1,
+      "amount_is_base": true,
+      "voucher_no": "63",
+      "expense_heads": {
+        "Software Expenses": 1695.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-17T00:00:00",
+      "party_name": "Ranka Infotech",
+      "amount": 300.0,
+      "gross_amount": 354.0,
+      "total_gst": 54.0,
+      "amount_is_base": true,
+      "voucher_no": "68",
+      "expense_heads": {
+        "Printing & Stationary_18%": 300.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-28T00:00:00",
+      "party_name": "Sree Shivam Cargo",
+      "amount": 600.0,
+      "gross_amount": 630.0,
+      "total_gst": 30.0,
+      "amount_is_base": true,
+      "voucher_no": "69",
+      "expense_heads": {
+        "Carriage Outward Paid GST 5%": 600.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "70",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-31T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 550.77,
+      "gross_amount": 650.0,
+      "total_gst": 99.14,
+      "amount_is_base": true,
+      "voucher_no": "81",
+      "expense_heads": {
+        "Postage & Stamp_18%": 550.77
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-31T00:00:00",
+      "party_name": "Skyking",
+      "amount": 1684.34,
+      "gross_amount": 1988.0,
+      "total_gst": 303.18,
+      "amount_is_base": true,
+      "voucher_no": "82",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1684.34
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-31T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 181.64,
+      "gross_amount": 214.34,
+      "total_gst": 32.7,
+      "amount_is_base": true,
+      "voucher_no": "83",
+      "expense_heads": {
+        "Advertisement": 181.64
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-31T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 496.92,
+      "gross_amount": 586.37,
+      "total_gst": 89.45,
+      "amount_is_base": true,
+      "voucher_no": "84",
+      "expense_heads": {
+        "Advertisement": 496.92
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "71",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "73",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1566.0,
+      "gross_amount": 1754.0,
+      "total_gst": 187.92,
+      "amount_is_base": true,
+      "voucher_no": "74",
+      "expense_heads": {
+        "General Exp. GST_12%": 1566.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 2545.0,
+      "gross_amount": 3003.1,
+      "total_gst": 458.1,
+      "amount_is_base": true,
+      "voucher_no": "75",
+      "expense_heads": {
+        "Telephone Charges_18%": 2545.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "76",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Sahib S Choudhary & Co.",
+      "amount": 30000.0,
+      "gross_amount": 35400.0,
+      "total_gst": 5400.0,
+      "amount_is_base": true,
+      "voucher_no": "77",
+      "expense_heads": {
+        "Audit Fees": 30000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Desire",
+      "amount": 2966.1,
+      "gross_amount": 3500.0,
+      "total_gst": 533.9,
+      "amount_is_base": true,
+      "voucher_no": "78",
+      "expense_heads": {
+        "Shop Repair & Maintenance Exp._18%": 2966.1
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1084.6,
+      "gross_amount": 1280.0,
+      "total_gst": 195.22,
+      "amount_is_base": true,
+      "voucher_no": "79",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1084.6
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Skyking",
+      "amount": 936.3,
+      "gross_amount": 1105.0,
+      "total_gst": 168.54,
+      "amount_is_base": true,
+      "voucher_no": "80",
+      "expense_heads": {
+        "Postage & Stamp_18%": 936.3
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-25T00:00:00",
+      "party_name": "Ranka Infotech",
+      "amount": 600.0,
+      "gross_amount": 708.0,
+      "total_gst": 108.0,
+      "amount_is_base": true,
+      "voucher_no": "85",
+      "expense_heads": {
+        "Printing & Stationary_18%": 600.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-27T00:00:00",
+      "party_name": "A2z Work Pvt. Ltd.",
+      "amount": 490.0,
+      "gross_amount": 578.0,
+      "total_gst": 88.2,
+      "amount_is_base": true,
+      "voucher_no": "86",
+      "expense_heads": {
+        "Printing & Stationary_18%": 490.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "87",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Least Count Technology Solutions Pvt. Ltd.",
+      "amount": 1500.0,
+      "gross_amount": 1770.0,
+      "total_gst": 270.0,
+      "amount_is_base": true,
+      "voucher_no": "93",
+      "expense_heads": {
+        "Advertisement": 1500.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "SBI General Insurance Co. Ltd",
+      "amount": 18000.0,
+      "gross_amount": 21240.0,
+      "total_gst": 3240.0,
+      "amount_is_base": true,
+      "voucher_no": "94",
+      "expense_heads": {
+        "Marine Insurance Charges": 18000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 552.33,
+      "gross_amount": 651.75,
+      "total_gst": 99.42,
+      "amount_is_base": true,
+      "voucher_no": "95",
+      "expense_heads": {
+        "Advertisement": 552.33
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 476.95,
+      "gross_amount": 562.8,
+      "total_gst": 85.85,
+      "amount_is_base": true,
+      "voucher_no": "96",
+      "expense_heads": {
+        "Advertisement": 476.95
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 316.16,
+      "gross_amount": 373.07,
+      "total_gst": 56.91,
+      "amount_is_base": true,
+      "voucher_no": "97",
+      "expense_heads": {
+        "Advertisement": 316.16
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Rhythm Hotels",
+      "amount": 7142.86,
+      "gross_amount": 8000.0,
+      "total_gst": 857.14,
+      "amount_is_base": true,
+      "voucher_no": "98",
+      "expense_heads": {
+        "Travelling Expenses_12%": 7142.86
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-30T00:00:00",
+      "party_name": "Career Softech",
+      "amount": 225.0,
+      "gross_amount": 266.0,
+      "total_gst": 40.5,
+      "amount_is_base": true,
+      "voucher_no": "99",
+      "expense_heads": {
+        "Software Expenses": 225.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 699.0,
+      "gross_amount": 824.82,
+      "total_gst": 125.82,
+      "amount_is_base": true,
+      "voucher_no": "88",
+      "expense_heads": {
+        "Telephone Charges_18%": 699.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-03T00:00:00",
+      "party_name": "Pioneer Packaging Industries Pvt. Ltd.",
+      "amount": 22944.0,
+      "gross_amount": 25697.28,
+      "total_gst": 2753.28,
+      "amount_is_base": true,
+      "voucher_no": "89",
+      "expense_heads": {
+        "Packing Charges_12%": 22944.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "90",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "91",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-12T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1682.0,
+      "gross_amount": 1884.0,
+      "total_gst": 201.84,
+      "amount_is_base": true,
+      "voucher_no": "100",
+      "expense_heads": {
+        "General Exp. GST_12%": 1682.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-23T00:00:00",
+      "party_name": "S S Udyog",
+      "amount": 1678.58,
+      "gross_amount": 1880.0,
+      "total_gst": 201.42,
+      "amount_is_base": true,
+      "voucher_no": "101",
+      "expense_heads": {
+        "Printing & Stationary_12%": 1678.58
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-23T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Tamil Nadu",
+      "amount": 9976.0,
+      "gross_amount": 10440.0,
+      "total_gst": 463.7,
+      "amount_is_base": true,
+      "voucher_no": "102",
+      "expense_heads": {
+        "Travelling Expenses_5%": 9274.0,
+        "Misc. Account": 702.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-23T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1679.49,
+      "gross_amount": 1982.0,
+      "total_gst": 302.3,
+      "amount_is_base": true,
+      "voucher_no": "103",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1679.49
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-23T00:00:00",
+      "party_name": "Skyking",
+      "amount": 2201.69,
+      "gross_amount": 2598.0,
+      "total_gst": 396.3,
+      "amount_is_base": true,
+      "voucher_no": "104",
+      "expense_heads": {
+        "Postage & Stamp_18%": 2201.69
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "105",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-31T00:00:00",
+      "party_name": "A2z Work Pvt. Ltd.",
+      "amount": 1965.0,
+      "gross_amount": 2319.0,
+      "total_gst": 353.7,
+      "amount_is_base": true,
+      "voucher_no": "112",
+      "expense_heads": {
+        "Computer Repair Charges": 1965.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-31T00:00:00",
+      "party_name": "Air India Charters Ltd.",
+      "amount": 12801.9,
+      "gross_amount": 13442.0,
+      "total_gst": 640.1,
+      "amount_is_base": true,
+      "voucher_no": "115",
+      "expense_heads": {
+        "Travelling Expenses_5%": 12801.9
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-31T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Mumbai",
+      "amount": 19316.0,
+      "gross_amount": 20246.0,
+      "total_gst": 930.4,
+      "amount_is_base": true,
+      "voucher_no": "116",
+      "expense_heads": {
+        "Travelling Expenses_5%": 18608.0,
+        "Misc. Account": 708.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-31T00:00:00",
+      "party_name": "Jai Balaji Polysack",
+      "amount": 20048.0,
+      "gross_amount": 23657.0,
+      "total_gst": 3608.64,
+      "amount_is_base": true,
+      "voucher_no": "117",
+      "expense_heads": {
+        "Packing Charges_18%": 20048.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "106",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "107",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-09T00:00:00",
+      "party_name": "Dynavision Technologies Pvt. Ltd.",
+      "amount": 24300.0,
+      "gross_amount": 28674.0,
+      "total_gst": 4374.0,
+      "amount_is_base": true,
+      "voucher_no": "108",
+      "expense_heads": {
+        "Software Expenses": 24300.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "109",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-12T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 754.0,
+      "gross_amount": 844.0,
+      "total_gst": 90.48,
+      "amount_is_base": true,
+      "voucher_no": "110",
+      "expense_heads": {
+        "General Exp. GST_12%": 754.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-12T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 348.0,
+      "gross_amount": 390.0,
+      "total_gst": 41.76,
+      "amount_is_base": true,
+      "voucher_no": "111",
+      "expense_heads": {
+        "General Exp. GST_12%": 348.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-18T00:00:00",
+      "party_name": "Dilip Plastics",
+      "amount": 450.0,
+      "gross_amount": 531.0,
+      "total_gst": 81.0,
+      "amount_is_base": true,
+      "voucher_no": "118",
+      "expense_heads": {
+        "Printing & Stationary_18%": 450.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-20T00:00:00",
+      "party_name": "Dynavision Technologies Pvt. Ltd.",
+      "amount": 1300.0,
+      "gross_amount": 1534.0,
+      "total_gst": 234.0,
+      "amount_is_base": true,
+      "voucher_no": "119",
+      "expense_heads": {
+        "Software Expenses": 1300.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-20T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1351.58,
+      "gross_amount": 1595.0,
+      "total_gst": 243.28,
+      "amount_is_base": true,
+      "voucher_no": "120",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1351.58
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-20T00:00:00",
+      "party_name": "Skyking",
+      "amount": 1325.0,
+      "gross_amount": 1564.0,
+      "total_gst": 238.5,
+      "amount_is_base": true,
+      "voucher_no": "121",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1325.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "122",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "A2z Work Pvt. Ltd.",
+      "amount": 1850.0,
+      "gross_amount": 2183.0,
+      "total_gst": 333.0,
+      "amount_is_base": true,
+      "voucher_no": "131",
+      "expense_heads": {
+        "Computer Repair Charges": 1850.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Least Count Technology Solutions Pvt. Ltd.",
+      "amount": 1500.0,
+      "gross_amount": 1770.0,
+      "total_gst": 270.0,
+      "amount_is_base": true,
+      "voucher_no": "134",
+      "expense_heads": {
+        "Advertisement": 1500.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 788.29,
+      "gross_amount": 930.18,
+      "total_gst": 141.89,
+      "amount_is_base": true,
+      "voucher_no": "135",
+      "expense_heads": {
+        "Advertisement": 788.29
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Facebook India Online Services Pvt. Ltd.",
+      "amount": 1482.58,
+      "gross_amount": 1749.44,
+      "total_gst": 266.86,
+      "amount_is_base": true,
+      "voucher_no": "136",
+      "expense_heads": {
+        "Advertisement": 1482.58
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Make My Trip (India) Ovt. Ltd.",
+      "amount": 317.8,
+      "gross_amount": 375.0,
+      "total_gst": 57.2,
+      "amount_is_base": true,
+      "voucher_no": "138",
+      "expense_heads": {
+        "Travelling Expenses_18%": 317.8
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-30T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 131.78,
+      "gross_amount": 155.5,
+      "total_gst": 23.72,
+      "amount_is_base": true,
+      "voucher_no": "139",
+      "expense_heads": {
+        "Postage & Stamp_18%": 131.78
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "123",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-03T00:00:00",
+      "party_name": "Saraswati Paper Mart",
+      "amount": 1360.0,
+      "gross_amount": 1605.0,
+      "total_gst": 244.8,
+      "amount_is_base": true,
+      "voucher_no": "124",
+      "expense_heads": {
+        "Printing & Stationary_18%": 1360.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "125",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1160.0,
+      "gross_amount": 1299.0,
+      "total_gst": 139.2,
+      "amount_is_base": true,
+      "voucher_no": "126",
+      "expense_heads": {
+        "General Exp. GST_12%": 1160.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 580.0,
+      "gross_amount": 650.0,
+      "total_gst": 69.6,
+      "amount_is_base": true,
+      "voucher_no": "127",
+      "expense_heads": {
+        "General Exp. GST_12%": 580.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "128",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-12T00:00:00",
+      "party_name": "Skyking",
+      "amount": 4816.26,
+      "gross_amount": 5683.0,
+      "total_gst": 866.92,
+      "amount_is_base": true,
+      "voucher_no": "129",
+      "expense_heads": {
+        "Postage & Stamp_18%": 4816.26
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-12T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1550.7,
+      "gross_amount": 1830.0,
+      "total_gst": 279.12,
+      "amount_is_base": true,
+      "voucher_no": "130",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1550.7
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-17T00:00:00",
+      "party_name": "Saraswati Paper Mart",
+      "amount": 170.0,
+      "gross_amount": 201.0,
+      "total_gst": 30.6,
+      "amount_is_base": true,
+      "voucher_no": "140",
+      "expense_heads": {
+        "Printing & Stationary_18%": 170.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-18T00:00:00",
+      "party_name": "Ahmed Raza Brothers",
+      "amount": 622.9,
+      "gross_amount": 735.0,
+      "total_gst": 112.12,
+      "amount_is_base": true,
+      "voucher_no": "141",
+      "expense_heads": {
+        "Packing Charges_18%": 622.9
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-18T00:00:00",
+      "party_name": "Aditya Infotech Ltd.",
+      "amount": 761.86,
+      "gross_amount": 899.0,
+      "total_gst": 137.13,
+      "amount_is_base": true,
+      "voucher_no": "142",
+      "expense_heads": {
+        "Software Expenses": 761.86
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-20T00:00:00",
+      "party_name": "Ranka Infotech",
+      "amount": 300.0,
+      "gross_amount": 354.0,
+      "total_gst": 54.0,
+      "amount_is_base": true,
+      "voucher_no": "143",
+      "expense_heads": {
+        "Printing & Stationary_18%": 300.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "144",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-31T00:00:00",
+      "party_name": "New Xerox Centre",
+      "amount": 3573.0,
+      "gross_amount": 4216.0,
+      "total_gst": 643.14,
+      "amount_is_base": true,
+      "voucher_no": "145",
+      "expense_heads": {
+        "Printing & Stationary_18%": 3573.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-31T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 133.3,
+      "gross_amount": 157.5,
+      "total_gst": 23.99,
+      "amount_is_base": true,
+      "voucher_no": "155",
+      "expense_heads": {
+        "Postage & Stamp_18%": 133.3
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "146",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-03T00:00:00",
+      "party_name": "Desire",
+      "amount": 3135.59,
+      "gross_amount": 3700.0,
+      "total_gst": 564.4,
+      "amount_is_base": true,
+      "voucher_no": "147",
+      "expense_heads": {
+        "Shop Repair & Maintenance Exp._18%": 3135.59
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-03T00:00:00",
+      "party_name": "Go Digit General Insurance Ltd.",
+      "amount": 68485.34,
+      "gross_amount": 80813.0,
+      "total_gst": 12327.36,
+      "amount_is_base": true,
+      "voucher_no": "148",
+      "expense_heads": {
+        "Motor Car Insurance": 68485.34
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "149",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-06T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1118.55,
+      "gross_amount": 1320.0,
+      "total_gst": 201.34,
+      "amount_is_base": true,
+      "voucher_no": "150",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1118.55
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-06T00:00:00",
+      "party_name": "Skyking",
+      "amount": 4769.24,
+      "gross_amount": 5628.0,
+      "total_gst": 858.46,
+      "amount_is_base": true,
+      "voucher_no": "151",
+      "expense_heads": {
+        "Postage & Stamp_18%": 4769.24
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1508.0,
+      "gross_amount": 1689.0,
+      "total_gst": 180.96,
+      "amount_is_base": true,
+      "voucher_no": "152",
+      "expense_heads": {
+        "General Exp. GST_12%": 1508.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-07T00:00:00",
+      "party_name": "Sahib S Choudhary & Co.",
+      "amount": 9000.0,
+      "gross_amount": 10620.0,
+      "total_gst": 1620.0,
+      "amount_is_base": true,
+      "voucher_no": "153",
+      "expense_heads": {
+        "GST Annual Return Charges": 9000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "154",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-27T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Karnataka",
+      "amount": 4735.3,
+      "gross_amount": 4964.0,
+      "total_gst": 228.7,
+      "amount_is_base": true,
+      "voucher_no": "160",
+      "expense_heads": {
+        "Travelling Expenses_5%": 4574.0,
+        "Misc. Account": 161.3
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 1136.0,
+      "gross_amount": 1340.48,
+      "total_gst": 204.48,
+      "amount_is_base": true,
+      "voucher_no": "161",
+      "expense_heads": {
+        "Domain Expenses": 1136.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Least Count Technology Solutions Pvt. Ltd.",
+      "amount": 1500.0,
+      "gross_amount": 1770.0,
+      "total_gst": 270.0,
+      "amount_is_base": true,
+      "voucher_no": "170",
+      "expense_heads": {
+        "Advertisement": 1500.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Hotal Simran Paradise",
+      "amount": 1071.0,
+      "gross_amount": 1200.0,
+      "total_gst": 128.52,
+      "amount_is_base": true,
+      "voucher_no": "171",
+      "expense_heads": {
+        "Travelling Expenses_12%": 1071.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Hotal Simran Paradise",
+      "amount": 1071.0,
+      "gross_amount": 1200.0,
+      "total_gst": 128.52,
+      "amount_is_base": true,
+      "voucher_no": "172",
+      "expense_heads": {
+        "Travelling Expenses_12%": 1071.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-31T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 458.37,
+      "gross_amount": 540.88,
+      "total_gst": 82.51,
+      "amount_is_base": true,
+      "voucher_no": "175",
+      "expense_heads": {
+        "Postage & Stamp_18%": 458.37
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "162",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "164",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1450.0,
+      "gross_amount": 1624.0,
+      "total_gst": 174.0,
+      "amount_is_base": true,
+      "voucher_no": "166",
+      "expense_heads": {
+        "General Exp. GST_12%": 1450.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "167",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-12T00:00:00",
+      "party_name": "Ranka Infotech",
+      "amount": 600.0,
+      "gross_amount": 708.0,
+      "total_gst": 108.0,
+      "amount_is_base": true,
+      "voucher_no": "168",
+      "expense_heads": {
+        "Printing & Stationary_18%": 600.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-12T00:00:00",
+      "party_name": "SBI General Insurance Co. Ltd",
+      "amount": 18000.0,
+      "gross_amount": 21240.0,
+      "total_gst": 3240.0,
+      "amount_is_base": true,
+      "voucher_no": "169",
+      "expense_heads": {
+        "Marine Insurance Charges": 18000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-18T00:00:00",
+      "party_name": "S S Udyog",
+      "amount": 2080.36,
+      "gross_amount": 2330.0,
+      "total_gst": 249.64,
+      "amount_is_base": true,
+      "voucher_no": "177",
+      "expense_heads": {
+        "Printing & Stationary_12%": 2080.36
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "179",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1488.87,
+      "gross_amount": 1757.0,
+      "total_gst": 268.0,
+      "amount_is_base": true,
+      "voucher_no": "183",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1488.87
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Skyking",
+      "amount": 1310.0,
+      "gross_amount": 1546.0,
+      "total_gst": 235.8,
+      "amount_is_base": true,
+      "voucher_no": "184",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1310.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 442.44,
+      "gross_amount": 522.0,
+      "total_gst": 79.64,
+      "amount_is_base": true,
+      "voucher_no": "191",
+      "expense_heads": {
+        "Freight Charges_18%": 442.44
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "R K Hotels",
+      "amount": 6000.0,
+      "gross_amount": 6720.0,
+      "total_gst": 720.0,
+      "amount_is_base": true,
+      "voucher_no": "192",
+      "expense_heads": {
+        "Travelling Expenses_12%": 6000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Razorpay Software Pvt. Ltd.",
+      "amount": 177.09,
+      "gross_amount": 203.93,
+      "total_gst": 26.84,
+      "amount_is_base": true,
+      "voucher_no": "193",
+      "expense_heads": {
+        "Postage & Stamp_18%": 149.12,
+        "Postage & Stamp": 27.97
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 335.39,
+      "gross_amount": 395.76,
+      "total_gst": 60.37,
+      "amount_is_base": true,
+      "voucher_no": "197",
+      "expense_heads": {
+        "Postage & Stamp_18%": 335.39
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 3246.31,
+      "gross_amount": 3830.65,
+      "total_gst": 584.34,
+      "amount_is_base": true,
+      "voucher_no": "198",
+      "expense_heads": {
+        "Postage & Stamp_18%": 3246.31
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Kerala",
+      "amount": 1428.0,
+      "gross_amount": 1499.0,
+      "total_gst": 71.4,
+      "amount_is_base": true,
+      "voucher_no": "199",
+      "expense_heads": {
+        "Travelling Expenses_5%": 1428.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Kolkata",
+      "amount": 7338.0,
+      "gross_amount": 7705.0,
+      "total_gst": 366.9,
+      "amount_is_base": true,
+      "voucher_no": "200",
+      "expense_heads": {
+        "Travelling Expenses_5%": 7338.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-28T00:00:00",
+      "party_name": "Inter Globe Aviation Ltd. Kolkata",
+      "amount": 152.0,
+      "gross_amount": 160.0,
+      "total_gst": 7.6,
+      "amount_is_base": true,
+      "voucher_no": "201",
+      "expense_heads": {
+        "Travelling Expenses_5%": 152.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "180",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "181",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-06T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1276.0,
+      "gross_amount": 1429.0,
+      "total_gst": 153.12,
+      "amount_is_base": true,
+      "voucher_no": "182",
+      "expense_heads": {
+        "General Exp. GST_12%": 1276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-06T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 2614.15,
+      "gross_amount": 3085.0,
+      "total_gst": 470.54,
+      "amount_is_base": true,
+      "voucher_no": "185",
+      "expense_heads": {
+        "Postage & Stamp_18%": 2614.15
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-06T00:00:00",
+      "party_name": "Skyking",
+      "amount": 3335.0,
+      "gross_amount": 3935.0,
+      "total_gst": 600.3,
+      "amount_is_base": true,
+      "voucher_no": "186",
+      "expense_heads": {
+        "Postage & Stamp_18%": 3335.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-11T00:00:00",
+      "party_name": "TCI Express Limited",
+      "amount": 2055.9,
+      "gross_amount": 2426.0,
+      "total_gst": 370.06,
+      "amount_is_base": true,
+      "voucher_no": "188",
+      "expense_heads": {
+        "Freight Charges_18%": 2055.9
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "189",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "190",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-12T00:00:00",
+      "party_name": "SBI General Insurance Co. Ltd",
+      "amount": 18000.0,
+      "gross_amount": 21240.0,
+      "total_gst": 3240.0,
+      "amount_is_base": true,
+      "voucher_no": "202",
+      "expense_heads": {
+        "Marine Insurance Charges": 18000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-19T00:00:00",
+      "party_name": "Koul Electricals",
+      "amount": 5338.92,
+      "gross_amount": 6300.0,
+      "total_gst": 961.0,
+      "amount_is_base": true,
+      "voucher_no": "204",
+      "expense_heads": {
+        "Shop Repair & Maintenance Exp._18%": 5338.92
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-20T00:00:00",
+      "party_name": "Shreeji Plastics",
+      "amount": 12255.1,
+      "gross_amount": 14461.0,
+      "total_gst": 2205.92,
+      "amount_is_base": true,
+      "voucher_no": "208",
+      "expense_heads": {
+        "Packing Charges_18%": 12255.1
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-24T00:00:00",
+      "party_name": "Ranka Infotech",
+      "amount": 600.0,
+      "gross_amount": 708.0,
+      "total_gst": 108.0,
+      "amount_is_base": true,
+      "voucher_no": "209",
+      "expense_heads": {
+        "Printing & Stationary_18%": 600.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-29T00:00:00",
+      "party_name": "Shree Narsingh Enterprise",
+      "amount": 1450.0,
+      "gross_amount": 1624.0,
+      "total_gst": 174.0,
+      "amount_is_base": true,
+      "voucher_no": "211",
+      "expense_heads": {
+        "General Exp. GST_12%": 1450.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-29T00:00:00",
+      "party_name": "K B Enterprise",
+      "amount": 4950.0,
+      "gross_amount": 5841.0,
+      "total_gst": 891.0,
+      "amount_is_base": true,
+      "voucher_no": "212",
+      "expense_heads": {
+        "Shop Repair & Maintenance Exp._18%": 4950.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Google India Pvt. Ltd.",
+      "amount": 276.0,
+      "gross_amount": 325.68,
+      "total_gst": 49.68,
+      "amount_is_base": true,
+      "voucher_no": "213",
+      "expense_heads": {
+        "Domain Expenses": 276.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Saraswati Paper Mart",
+      "amount": 4295.0,
+      "gross_amount": 5027.0,
+      "total_gst": 731.5,
+      "amount_is_base": true,
+      "voucher_no": "214",
+      "expense_heads": {
+        "Printing & Stationary_18%": 3975.0,
+        "Printing & Stationary_5%": 320.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Shree Shyam Air Services Pvt. Ltd.",
+      "amount": 1503.23,
+      "gross_amount": 1774.0,
+      "total_gst": 270.58,
+      "amount_is_base": true,
+      "voucher_no": "215",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1503.23
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Razorpay Software Pvt. Ltd.",
+      "amount": 546.0,
+      "gross_amount": 644.28,
+      "total_gst": 98.28,
+      "amount_is_base": true,
+      "voucher_no": "216",
+      "expense_heads": {
+        "Postage & Stamp_18%": 546.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 1374.1,
+      "gross_amount": 1621.44,
+      "total_gst": 247.34,
+      "amount_is_base": true,
+      "voucher_no": "217",
+      "expense_heads": {
+        "Postage & Stamp_18%": 1374.1
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Gurugram",
+      "amount": 3627.81,
+      "gross_amount": 4280.82,
+      "total_gst": 653.01,
+      "amount_is_base": true,
+      "voucher_no": "218",
+      "expense_heads": {
+        "Postage & Stamp_18%": 3627.81
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Skyking",
+      "amount": 2000.0,
+      "gross_amount": 2360.0,
+      "total_gst": 360.0,
+      "amount_is_base": true,
+      "voucher_no": "220",
+      "expense_heads": {
+        "Postage & Stamp_18%": 2000.0
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Delhi",
+      "amount": 107.58,
+      "gross_amount": 126.94,
+      "total_gst": 19.36,
+      "amount_is_base": true,
+      "voucher_no": "221",
+      "expense_heads": {
+        "Postage & Stamp_18%": 107.58
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-31T00:00:00",
+      "party_name": "Shiprocket Pvt. Ltd. Delhi",
+      "amount": 218.63,
+      "gross_amount": 257.98,
+      "total_gst": 39.35,
+      "amount_is_base": true,
+      "voucher_no": "222",
+      "expense_heads": {
+        "Postage & Stamp_18%": 218.63
+      }
+    }
+  ]
+}

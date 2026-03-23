@@ -1,0 +1,93 @@
+{
+  "report_generated": "2026-03-23T13:12:11.155718",
+  "assessment_year": "2025-26",
+  "financial_year": "2024-25",
+  "scope": {
+    "sections_reconciled": [
+      "194A",
+      "194C"
+    ],
+    "sections_pending": [
+      "194H",
+      "194J(b)",
+      "194Q"
+    ]
+  },
+  "matching": {
+    "form26_total": 85,
+    "form26_in_scope": 56,
+    "matched": 56,
+    "unmatched": 0,
+    "match_rate_pct": 100.0,
+    "avg_confidence": 0.957,
+    "by_pass": {
+      "exact_match": 28,
+      "gst_adjusted_base": 1,
+      "fuzzy_match": 9,
+      "aggregated_cumulative": 1,
+      "aggregated_monthly": 13,
+      "aggregated_subset": 2,
+      "aggregated_all_available": 2
+    }
+  },
+  "section_wise": {
+    "194A": {
+      "form26_count": 36,
+      "form26_amount": 7610092,
+      "form26_tds": 761018,
+      "matched_count": 36,
+      "matched_amount": 7610092,
+      "matched_tds": 761018
+    },
+    "194C": {
+      "form26_count": 20,
+      "form26_amount": 927072,
+      "form26_tds": 16384,
+      "matched_count": 20,
+      "matched_amount": 927072,
+      "matched_tds": 16384
+    },
+    "194H": {
+      "form26_count": 13,
+      "form26_amount": 1302241,
+      "form26_tds": 26047,
+      "matched_count": 0,
+      "matched_amount": 0,
+      "matched_tds": 0
+    },
+    "194J(b)": {
+      "form26_count": 3,
+      "form26_amount": 160500,
+      "form26_tds": 16050,
+      "matched_count": 0,
+      "matched_amount": 0,
+      "matched_tds": 0
+    },
+    "194Q": {
+      "form26_count": 13,
+      "form26_amount": 58592615,
+      "form26_tds": 58593,
+      "matched_count": 0,
+      "matched_amount": 0,
+      "matched_tds": 0
+    }
+  },
+  "compliance": {
+    "total_findings": 8,
+    "errors": 3,
+    "warnings": 5,
+    "info": 0,
+    "by_check": {
+      "section_validation": 5,
+      "missing_tds": 3
+    },
+    "missing_tds_exposure": 121397.0,
+    "clean_bill": false
+  },
+  "amounts": {
+    "total_form26_payments": 68592520,
+    "total_form26_tds": 878092,
+    "matched_payments": 8537164,
+    "matched_tds": 777402
+  }
+}
