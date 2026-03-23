@@ -1,57 +1,57 @@
-f26_vendor,f26_pan,f26_section,f26_amount,f26_date,f26_tds_rate,f26_tds_amount,tally_party,tally_date,tally_amount,tally_source,n_tally_entries,diff,match_pass,match_type,confidence,expense_category
-Adi Debnath,AAAAA0001A,194A,82461,2024-06-30,10,8246,Adi Debnath,2024-06-30,82461.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Adi Debnath,AAAAA0001A,194A,85749,2024-09-30,10,8575,Adi Debnath,2024-09-30,85749.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Adi Debnath,AAAAA0001A,194A,88131,2024-12-31,10,8813,Adi Debnath,2024-12-31,88131.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Adi Debnath,AAAAA0001A,194A,88212,2025-03-31,10,8821,Adi Debnath,2025-03-19,88212.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Akash Nagar,AAAAA0005A,194A,456060,2024-06-30,10,45606,Akash Nagar,2024-06-30,456060.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Akash Nagar,AAAAA0005A,194A,474682,2024-09-30,10,47468,Akash Nagar,2024-09-30,474682.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Akash Nagar,AAAAA0005A,194A,488293,2024-12-31,10,48829,Akash Nagar,2024-12-31,488293.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Akash Nagar,AAAAA0005A,194A,490993,2025-03-31,10,49099,Akash Nagar,2025-03-19,490993.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Asha Negi,AAAAA0002A,194A,124533,2024-06-30,10,12453,Asha Negi,2024-06-30,124533.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Asha Negi,AAAAA0002A,194A,129304,2024-09-30,10,12930,Asha Negi,2024-09-30,129304.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Asha Negi,AAAAA0002A,194A,132707,2024-12-31,10,13271,Asha Negi,2024-12-31,132707.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Asha Negi,AAAAA0002A,194A,133151,2025-03-31,10,13315,Asha Negi,2025-03-19,133151.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Karan Kothari,AAAAA0008A,194A,142708,2024-06-30,10,14271,Karan Kothari,2024-06-30,142708.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Karan Kothari,AAAAA0008A,194A,148019,2024-09-30,10,14802,Karan Kothari,2024-09-30,148019.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Karan Kothari,AAAAA0008A,194A,152443,2024-12-31,10,15244,Karan Kothari,2024-12-31,152443.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Karan Kothari,AAAAA0008A,194A,153123,2025-03-31,10,15312,Karan Kothari,2025-03-19,153123.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Manisha Kumari,AAAAA0003A,194A,244017,2024-06-30,10,24402,Manisha Kumari,2024-06-30,244017.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Manisha Kumari,AAAAA0003A,194A,253504,2024-09-30,10,25350,Manisha Kumari,2024-09-30,253504.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Manisha Kumari,AAAAA0003A,194A,260310,2024-12-31,10,26031,Manisha Kumari,2024-12-31,260310.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Manisha Kumari,AAAAA0003A,194A,261308,2025-03-31,10,26131,Manisha Kumari,2025-03-19,261308.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Rahul Shah,AAAAA0006A,194A,206667,2024-06-30,10,20666,Rahul Shah,2024-06-30,206667.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Rahul Shah,AAAAA0006A,194A,214373,2024-09-30,10,21437,Rahul Shah,2024-09-30,214373.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Rahul Shah,AAAAA0006A,194A,220838,2024-12-31,10,22084,Rahul Shah,2024-12-31,220838.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Rahul Shah,AAAAA0006A,194A,205829,2025-03-31,10,20593,Rahul Shah,2025-03-19,205829.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Ramesh Lohia,AAAAA0009A,194A,74720,2024-06-30,10,7472,Ramesh Lohia,2024-06-30,74720.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Ramesh Lohia,AAAAA0009A,194A,77582,2024-09-30,10,7758,Ramesh Lohia,2024-09-30,77582.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Ramesh Lohia,AAAAA0009A,194A,79624,2024-12-31,10,7962,Ramesh Lohia,2024-12-31,79624.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Ramesh Lohia,AAAAA0009A,194A,79890,2025-03-31,10,7989,Ramesh Lohia,2025-03-19,79890.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Rupa Khaitan,AAAAA0007A,194A,19858,2024-06-30,10,1986,Rupa Khaitan,2024-06-30,19858.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Rupa Khaitan,AAAAA0007A,194A,20416,2024-09-30,10,2042,Rupa Khaitan,2024-09-30,20416.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Rupa Khaitan,AAAAA0007A,194A,20757,2024-12-31,10,2076,Rupa Khaitan,2024-12-31,20757.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Rupa Khaitan,AAAAA0007A,194A,20638,2025-03-31,10,2064,Rupa Khaitan,2025-03-19,20638.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-Suresh Sethia,AAAAA0004A,194A,472888,2024-06-30,10,47289,Suresh Sethia,2024-06-30,472888.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Suresh Sethia,AAAAA0004A,194A,491696,2024-09-30,10,49170,Suresh Sethia,2024-09-30,491696.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Suresh Sethia,AAAAA0004A,194A,505307,2024-12-31,10,50531,Suresh Sethia,2024-12-31,505307.0,journal_interest,1,0.0,1,exact_match,1.0,Interest Paid
-Suresh Sethia,AAAAA0004A,194A,509301,2025-03-31,10,50930,Suresh Sethia,2025-03-19,509301.0,journal_interest,1,0.0,4,fuzzy_match,1.0,Interest Paid
-AMRITA ICONS,AYBPS6260R,194C,181380,2024-09-30,1,1814,Amrita Icons,2024-05-28,181380.0,gst_exp,2,0.0,5,aggregated_cumulative,0.85,"Freight Charges_18%, Packing Charges_18%"
-AMRITA ICONS,AYBPS6260R,194C,9600,2025-01-31,1,96,Amrita Icons,2025-01-31,9600.0,gst_exp,1,0.0,1,exact_match,1.0,Packing Charges_18%
-AMRITA ICONS,AYBPS6260R,194C,25266,2025-03-31,1,253,Amrita Icons,2025-03-06,25266.0,gst_exp,2,0.0,5,aggregated_monthly,0.9,Packing Charges_18%
-ANDERSON TECHNOLOGY PVT LTD,AAFCA4805K,194C,134332,2025-01-31,2,2687,Anderson Technology Pvt. Ltd.,2024-09-30,134332.0,gst_exp,7,0.0,5,aggregated_subset,0.8,Advertisement
-ANDERSON TECHNOLOGY PVT LTD,AAFCA4805K,194C,6666,2025-02-28,2,133,Anderson Technology Pvt. Ltd.,2025-01-31,6666.0,gst_exp,2,0.0,5,aggregated_subset,0.8,Advertisement
-ANDERSON TECHNOLOGY PVT LTD,AAFCA4805K,194C,55000,2025-03-01,2,1100,Anderson Technology Pvt. Ltd.,2025-02-28,55000.0,gst_exp,2,0.0,5,aggregated_all_available,0.75,Advertisement
-ANDREAL INNOVATION PVT LTD,ABACA2255R,194C,179000,2025-03-01,2,3580,Andreal Innovations Pvt. Ltd.,2024-07-13,179000.0,gst_exp,7,0.0,5,aggregated_all_available,0.75,Advertisement
-ANDREAL INNOVATION PVT LTD,ABACA2255R,194C,3333,2025-03-31,2,67,Andreal Innovations Pvt. Ltd.,2025-03-31,3333.0,gst_exp,1,0.0,2,gst_adjusted_base,0.95,Advertisement
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,33675,2024-04-30,2,674,Inland World Logistics Pvt. Ltd.,2024-04-04,33675.0,journal_freight,2,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,8847,2024-05-31,2,177,Inland World Logistics Pvt. Ltd.,2024-05-16,8847.0,journal_freight,3,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,44680,2024-06-30,2,894,Inland World Logistics Pvt. Ltd.,2024-06-18,44680.0,journal_freight,3,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,10601,2024-07-31,2,213,Inland World Logistics Pvt. Ltd.,2024-07-03,10601.0,journal_freight,9,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,40201,2024-08-31,2,804,Inland World Logistics Pvt. Ltd.,2024-08-02,40210.0,journal_freight,12,-9.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,26085,2024-09-30,2,522,Inland World Logistics Pvt. Ltd.,2024-09-10,26095.0,journal_freight,5,-10.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,42830,2024-10-31,2,857,Inland World Logistics Pvt. Ltd.,2024-10-07,42830.0,journal_freight,5,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,47468,2024-11-30,2,950,Inland World Logistics Pvt. Ltd.,2024-11-02,47468.0,journal_freight,14,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,27508,2024-12-31,2,551,Inland World Logistics Pvt. Ltd.,2024-12-17,27508.0,journal_freight,14,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,9742,2025-01-31,2,195,Inland World Logistics Pvt. Ltd.,2025-01-10,9742.0,journal_freight,3,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,18863,2025-02-28,2,377,Inland World Logistics Pvt. Ltd.,2025-02-07,18863.0,journal_freight,3,0.0,5,aggregated_monthly,0.9,Freight Charges
-INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,21995,2025-03-31,2,440,Inland World Logistics Pvt. Ltd.,2025-03-17,21995.0,journal_freight,5,0.0,5,aggregated_monthly,0.9,Freight Charges
+sr_no,vendor_name,pan,section,form26_amount,form26_date,tds_rate_pct,tds_amount,tally_party,tally_amount,tally_date,tally_entries_count,amount_diff,match_type,confidence,expense_category,status
+1,Adi Debnath,AAAAA0001A,194A,82461,2024-06-30,10,8246,Adi Debnath,82461.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+2,Adi Debnath,AAAAA0001A,194A,85749,2024-09-30,10,8575,Adi Debnath,85749.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+3,Adi Debnath,AAAAA0001A,194A,88131,2024-12-31,10,8813,Adi Debnath,88131.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+4,Adi Debnath,AAAAA0001A,194A,88212,2025-03-31,10,8821,Adi Debnath,88212.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+5,Akash Nagar,AAAAA0005A,194A,456060,2024-06-30,10,45606,Akash Nagar,456060.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+6,Akash Nagar,AAAAA0005A,194A,474682,2024-09-30,10,47468,Akash Nagar,474682.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+7,Akash Nagar,AAAAA0005A,194A,488293,2024-12-31,10,48829,Akash Nagar,488293.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+8,Akash Nagar,AAAAA0005A,194A,490993,2025-03-31,10,49099,Akash Nagar,490993.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+9,Asha Negi,AAAAA0002A,194A,124533,2024-06-30,10,12453,Asha Negi,124533.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+10,Asha Negi,AAAAA0002A,194A,129304,2024-09-30,10,12930,Asha Negi,129304.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+11,Asha Negi,AAAAA0002A,194A,132707,2024-12-31,10,13271,Asha Negi,132707.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+12,Asha Negi,AAAAA0002A,194A,133151,2025-03-31,10,13315,Asha Negi,133151.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+13,Karan Kothari,AAAAA0008A,194A,142708,2024-06-30,10,14271,Karan Kothari,142708.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+14,Karan Kothari,AAAAA0008A,194A,148019,2024-09-30,10,14802,Karan Kothari,148019.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+15,Karan Kothari,AAAAA0008A,194A,152443,2024-12-31,10,15244,Karan Kothari,152443.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+16,Karan Kothari,AAAAA0008A,194A,153123,2025-03-31,10,15312,Karan Kothari,153123.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+17,Manisha Kumari,AAAAA0003A,194A,244017,2024-06-30,10,24402,Manisha Kumari,244017.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+18,Manisha Kumari,AAAAA0003A,194A,253504,2024-09-30,10,25350,Manisha Kumari,253504.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+19,Manisha Kumari,AAAAA0003A,194A,260310,2024-12-31,10,26031,Manisha Kumari,260310.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+20,Manisha Kumari,AAAAA0003A,194A,261308,2025-03-31,10,26131,Manisha Kumari,261308.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+21,Rahul Shah,AAAAA0006A,194A,206667,2024-06-30,10,20666,Rahul Shah,206667.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+22,Rahul Shah,AAAAA0006A,194A,214373,2024-09-30,10,21437,Rahul Shah,214373.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+23,Rahul Shah,AAAAA0006A,194A,220838,2024-12-31,10,22084,Rahul Shah,220838.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+24,Rahul Shah,AAAAA0006A,194A,205829,2025-03-31,10,20593,Rahul Shah,205829.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+25,Ramesh Lohia,AAAAA0009A,194A,74720,2024-06-30,10,7472,Ramesh Lohia,74720.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+26,Ramesh Lohia,AAAAA0009A,194A,77582,2024-09-30,10,7758,Ramesh Lohia,77582.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+27,Ramesh Lohia,AAAAA0009A,194A,79624,2024-12-31,10,7962,Ramesh Lohia,79624.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+28,Ramesh Lohia,AAAAA0009A,194A,79890,2025-03-31,10,7989,Ramesh Lohia,79890.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+29,Rupa Khaitan,AAAAA0007A,194A,19858,2024-06-30,10,1986,Rupa Khaitan,19858.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+30,Rupa Khaitan,AAAAA0007A,194A,20416,2024-09-30,10,2042,Rupa Khaitan,20416.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+31,Rupa Khaitan,AAAAA0007A,194A,20757,2024-12-31,10,2076,Rupa Khaitan,20757.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+32,Rupa Khaitan,AAAAA0007A,194A,20638,2025-03-31,10,2064,Rupa Khaitan,20638.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+33,Suresh Sethia,AAAAA0004A,194A,472888,2024-06-30,10,47289,Suresh Sethia,472888.0,2024-06-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+34,Suresh Sethia,AAAAA0004A,194A,491696,2024-09-30,10,49170,Suresh Sethia,491696.0,2024-09-30,1,0.0,exact_match,1.0,Interest Paid,Matched
+35,Suresh Sethia,AAAAA0004A,194A,505307,2024-12-31,10,50531,Suresh Sethia,505307.0,2024-12-31,1,0.0,exact_match,1.0,Interest Paid,Matched
+36,Suresh Sethia,AAAAA0004A,194A,509301,2025-03-31,10,50930,Suresh Sethia,509301.0,2025-03-19,1,0.0,fuzzy_match,1.0,Interest Paid,Matched
+37,AMRITA ICONS,AYBPS6260R,194C,181380,2024-09-30,1,1814,Amrita Icons,181380.0,2024-05-28,2,0.0,aggregated_cumulative,0.85,Freight Charges_18%; Packing Charges_18%,Matched
+38,AMRITA ICONS,AYBPS6260R,194C,9600,2025-01-31,1,96,Amrita Icons,9600.0,2025-01-31,1,0.0,exact_match,1.0,Packing Charges_18%,Matched
+39,AMRITA ICONS,AYBPS6260R,194C,25266,2025-03-31,1,253,Amrita Icons,25266.0,2025-03-06,2,0.0,aggregated_monthly,0.9,Packing Charges_18%,Matched
+40,ANDERSON TECHNOLOGY PVT LTD,AAFCA4805K,194C,134332,2025-01-31,2,2687,Anderson Technology Pvt. Ltd.,134332.0,2024-09-30,7,0.0,aggregated_subset,0.8,Advertisement,Matched
+41,ANDERSON TECHNOLOGY PVT LTD,AAFCA4805K,194C,6666,2025-02-28,2,133,Anderson Technology Pvt. Ltd.,6666.0,2025-01-31,2,0.0,aggregated_subset,0.8,Advertisement,Matched
+42,ANDERSON TECHNOLOGY PVT LTD,AAFCA4805K,194C,55000,2025-03-01,2,1100,Anderson Technology Pvt. Ltd.,55000.0,2025-02-28,2,0.0,aggregated_all_available,0.75,Advertisement,Matched
+43,ANDREAL INNOVATION PVT LTD,ABACA2255R,194C,179000,2025-03-01,2,3580,Andreal Innovations Pvt. Ltd.,179000.0,2024-07-13,7,0.0,aggregated_all_available,0.75,Advertisement,Matched
+44,ANDREAL INNOVATION PVT LTD,ABACA2255R,194C,3333,2025-03-31,2,67,Andreal Innovations Pvt. Ltd.,3333.0,2025-03-31,1,0.0,gst_adjusted_base,0.95,Advertisement,Matched
+45,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,33675,2024-04-30,2,674,Inland World Logistics Pvt. Ltd.,33675.0,2024-04-04,2,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+46,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,8847,2024-05-31,2,177,Inland World Logistics Pvt. Ltd.,8847.0,2024-05-16,3,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+47,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,44680,2024-06-30,2,894,Inland World Logistics Pvt. Ltd.,44680.0,2024-06-18,3,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+48,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,10601,2024-07-31,2,213,Inland World Logistics Pvt. Ltd.,10601.0,2024-07-03,9,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+49,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,40201,2024-08-31,2,804,Inland World Logistics Pvt. Ltd.,40210.0,2024-08-02,12,-9.0,aggregated_monthly,0.9,Freight Charges,Matched
+50,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,26085,2024-09-30,2,522,Inland World Logistics Pvt. Ltd.,26095.0,2024-09-10,5,-10.0,aggregated_monthly,0.9,Freight Charges,Matched
+51,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,42830,2024-10-31,2,857,Inland World Logistics Pvt. Ltd.,42830.0,2024-10-07,5,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+52,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,47468,2024-11-30,2,950,Inland World Logistics Pvt. Ltd.,47468.0,2024-11-02,14,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+53,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,27508,2024-12-31,2,551,Inland World Logistics Pvt. Ltd.,27508.0,2024-12-17,14,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+54,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,9742,2025-01-31,2,195,Inland World Logistics Pvt. Ltd.,9742.0,2025-01-10,3,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+55,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,18863,2025-02-28,2,377,Inland World Logistics Pvt. Ltd.,18863.0,2025-02-07,3,0.0,aggregated_monthly,0.9,Freight Charges,Matched
+56,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,21995,2025-03-31,2,440,Inland World Logistics Pvt. Ltd.,21995.0,2025-03-17,5,0.0,aggregated_monthly,0.9,Freight Charges,Matched
