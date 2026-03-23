@@ -1,0 +1,974 @@
+{
+  "version": 1,
+  "created_at": "2026-03-23T13:10:36.049460",
+  "updated_at": "2026-03-23T13:10:36.083112",
+  "rules": [
+    {
+      "id": 1,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Xpress Cargo",
+        "section": "194C",
+        "annual_amount": 1500.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b91,500 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.049473",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 2,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "VRL Logistics Ltd.",
+        "section": "194C",
+        "annual_amount": 5700.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b95,700 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.049730",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 3,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Vimal Transport",
+        "section": "194C",
+        "annual_amount": 20988.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b920,988 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.049931",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 4,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Patel Fleet Logistics Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 14642.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b914,642 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.050113",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 5,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Kanhaiya Express Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 31160.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b931,160 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.050289",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 6,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Mahavir Cargo Carrier",
+        "section": "194C",
+        "annual_amount": 1346.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b91,346 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.050475",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 7,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Patel Parcels Carrier Co.",
+        "section": "194C",
+        "annual_amount": 964.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9964 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.050682",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 8,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Bharti Airtel Ltd.",
+        "section": "194C",
+        "annual_amount": 22308.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b922,308 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.050922",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 9,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "V Trans (India) Ltd.",
+        "section": "194C",
+        "annual_amount": 2699.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b92,699 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.051158",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 10,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "The Bengal Plastic",
+        "section": "194C",
+        "annual_amount": 480.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9480 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.051411",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 11,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Continental Solutions",
+        "section": "194C",
+        "annual_amount": 3200.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b93,200 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.051676",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 12,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Kamal Kishor Bagri",
+        "section": "194C",
+        "annual_amount": 7023.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b97,023 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.051911",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 13,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "TCI Express Limited",
+        "section": "194C",
+        "annual_amount": 17633.34,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b917,633 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.052199",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 14,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Google India Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 4121.4,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b94,121 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.052453",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 15,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Facebook India Online Services Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 6790.87,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b96,791 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.052740",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 16,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Safexpress Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 930.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9930 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.053017",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 17,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Shree Narsingh Enterprise",
+        "section": "194C",
+        "annual_amount": 18409.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b918,409 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.053301",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 18,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Shree Shyam Air Services Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 15488.25,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b915,488 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.053633",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 19,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Skyking",
+        "section": "194C",
+        "annual_amount": 25488.72,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b925,489 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.054009",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 20,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Amith Garments Services",
+        "section": "194C",
+        "annual_amount": 20800.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b920,800 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.054345",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 21,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Appario Retail Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 10669.5,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b910,670 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.054710",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 22,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Arihant Systems",
+        "section": "194C",
+        "annual_amount": 5045.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b95,045 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.055097",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 23,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "SBI General Insurance Co. Ltd",
+        "section": "194C",
+        "annual_amount": 63000.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b963,000 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.055459",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 24,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Ranka Infotech",
+        "section": "194C",
+        "annual_amount": 2700.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b92,700 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.055839",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 25,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Kochar Tradelink LLP",
+        "section": "194C",
+        "annual_amount": 38743.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b938,743 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.056215",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 26,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Natraj Stationery Stores",
+        "section": "194C",
+        "annual_amount": 1880.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b91,880 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.056627",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 27,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Shreeji Plastics",
+        "section": "194C",
+        "annual_amount": 31645.1,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b931,645 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.057017",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 28,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Hyate Nawaz Mobile Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 39830.5,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b939,830 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.057444",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 29,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Chiptronics Solutions",
+        "section": "194C",
+        "annual_amount": 3380.02,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b93,380 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.057896",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 30,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Inter Globe Aviation Ltd. Kolkata",
+        "section": "194C",
+        "annual_amount": 20762.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b920,762 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.058483",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 31,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Least Count Technology Solutions Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 6000.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b96,000 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.059082",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 32,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Sree Shivam Cargo",
+        "section": "194C",
+        "annual_amount": 600.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9600 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.059601",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 33,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Sahib S Choudhary & Co.",
+        "section": "194C",
+        "annual_amount": 39000.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b939,000 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.060074",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 34,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Desire",
+        "section": "194C",
+        "annual_amount": 6101.69,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b96,102 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.060577",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 35,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "A2z Work Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 4305.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b94,305 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.061207",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 36,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Rhythm Hotels",
+        "section": "194C",
+        "annual_amount": 7142.86,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b97,143 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.061868",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 37,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Career Softech",
+        "section": "194C",
+        "annual_amount": 225.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9225 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.062541",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 38,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Pioneer Packaging Industries Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 22944.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b922,944 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.063146",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 39,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "S S Udyog",
+        "section": "194C",
+        "annual_amount": 3758.94,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b93,759 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.063747",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 40,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Inter Globe Aviation Ltd. Tamil Nadu",
+        "section": "194C",
+        "annual_amount": 9976.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b99,976 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.064303",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 41,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Air India Charters Ltd.",
+        "section": "194C",
+        "annual_amount": 12801.9,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b912,802 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.064978",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 42,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Inter Globe Aviation Ltd. Mumbai",
+        "section": "194C",
+        "annual_amount": 19316.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b919,316 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.065601",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 43,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Jai Balaji Polysack",
+        "section": "194C",
+        "annual_amount": 20048.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b920,048 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.066324",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 44,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Dynavision Technologies Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 25600.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b925,600 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.067123",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 45,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Dilip Plastics",
+        "section": "194C",
+        "annual_amount": 450.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9450 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.067932",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 46,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Make My Trip (India) Ovt. Ltd.",
+        "section": "194C",
+        "annual_amount": 317.8,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9318 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.068754",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 47,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Shiprocket Pvt. Ltd. Gurugram",
+        "section": "194C",
+        "annual_amount": 9307.06,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b99,307 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.069592",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 48,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Saraswati Paper Mart",
+        "section": "194C",
+        "annual_amount": 5825.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b95,825 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.070389",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 49,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Ahmed Raza Brothers",
+        "section": "194C",
+        "annual_amount": 622.9,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9623 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.071213",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 50,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Aditya Infotech Ltd.",
+        "section": "194C",
+        "annual_amount": 761.86,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9762 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.072042",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 51,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "New Xerox Centre",
+        "section": "194C",
+        "annual_amount": 3573.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b93,573 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.073177",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 52,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Go Digit General Insurance Ltd.",
+        "section": "194C",
+        "annual_amount": 68485.34,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b968,485 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.074183",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 53,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Inter Globe Aviation Ltd. Karnataka",
+        "section": "194C",
+        "annual_amount": 4735.3,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b94,735 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.075099",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 54,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Hotal Simran Paradise",
+        "section": "194C",
+        "annual_amount": 2142.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b92,142 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.076064",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 55,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "R K Hotels",
+        "section": "194C",
+        "annual_amount": 6000.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b96,000 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.076958",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 56,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Razorpay Software Pvt. Ltd.",
+        "section": "194C",
+        "annual_amount": 723.09,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9723 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.077824",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 57,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Inter Globe Aviation Ltd. Kerala",
+        "section": "194C",
+        "annual_amount": 1428.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b91,428 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.079055",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 58,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Koul Electricals",
+        "section": "194C",
+        "annual_amount": 5338.92,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b95,339 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.080932",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 59,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "K B Enterprise",
+        "section": "194C",
+        "annual_amount": 4950.0,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b94,950 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.082016",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 60,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Shiprocket Pvt. Ltd. Delhi",
+        "section": "194C",
+        "annual_amount": 326.21,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Auto: aggregate \u20b9326 below \u20b9100,000 threshold",
+      "source": "human_review",
+      "created_at": "2026-03-23T13:10:36.083089",
+      "times_applied": 0,
+      "active": true
+    }
+  ],
+  "stats": {
+    "total_rules": 60,
+    "total_applied": 0,
+    "by_type": {
+      "below_threshold": 60
+    }
+  }
+}

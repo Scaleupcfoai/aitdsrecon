@@ -1,14 +1,23 @@
 {
-  "run_timestamp": "2026-03-23T13:01:15.824621",
+  "run_timestamp": "2026-03-23T13:12:11.132874",
   "sections_processed": [
     "194A",
     "194C"
   ],
+  "learned_rules": {
+    "rules_loaded": 60,
+    "rules_applied": 0,
+    "ignored_vendors": 0,
+    "exempt_vendors": 0,
+    "below_threshold_vendors": 60,
+    "below_threshold_entries": 225
+  },
   "summary": {
     "form26_total": 56,
     "form26_matched": 56,
     "form26_unmatched": 0,
     "matches_by_pass": {
+      "pass0_learned_rules": 0,
       "pass1_exact": 28,
       "pass2_gst_adjusted": 1,
       "pass3_exempt": 8,

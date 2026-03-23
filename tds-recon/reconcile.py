@@ -28,6 +28,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None):
     base = Path(__file__).parent
     parsed_dir = base / "data" / "parsed"
     results_dir = base / "data" / "results"
+    rules_dir = base / "data" / "rules"
 
     # Ensure output directories exist
     parsed_dir.mkdir(parents=True, exist_ok=True)
@@ -69,7 +70,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None):
     print("STEP 2/4: MATCHER AGENT")
     print("─" * 60)
     from agents.matcher_agent import run as matcher_run
-    match_results = matcher_run(str(parsed_dir), str(results_dir))
+    match_results = matcher_run(str(parsed_dir), str(results_dir), rules_dir=str(rules_dir))
     print()
 
     # ---- Step 3: TDS Checker ----

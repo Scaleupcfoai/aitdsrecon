@@ -23,6 +23,17 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
+# Learning Agent integration (optional — gracefully degrades if no rules exist)
+try:
+    from agents import learning_agent
+    HAS_LEARNING_AGENT = True
+except ImportError:
+    try:
+        from . import learning_agent
+        HAS_LEARNING_AGENT = True
+    except ImportError:
+        HAS_LEARNING_AGENT = False
+
 
 # ---------------------------------------------------------------------------
 # Config
@@ -684,8 +695,9 @@ def _clean_entry(entry: dict) -> dict:
 # Main — Run Matcher Agent
 # ---------------------------------------------------------------------------
 
-def run(parsed_dir: str, output_dir: str, sections: set | None = None):
-    """Run the 5-pass matching engine."""
+def run(parsed_dir: str, output_dir: str, sections: set | None = None,
+        rules_dir: str | None = None):
+    """Run the matching engine with optional learned rules (Pass 0)."""
 
     parsed_dir = Path(parsed_dir)
     output_dir = Path(output_dir)
@@ -713,6 +725,69 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None):
     tally_194c = build_tally_194c_entries(tally_data)
     print(f"[Matcher] {len(tally_194a)} Tally 194A entries (interest payments)")
     print(f"[Matcher] {len(tally_194c)} Tally 194C entries (freight + GST expenses)")
+
+    # ---- Pass 0: Apply Learned Rules ----
+    rules_applied = []
+    learned_rules = []
+    ignored_vendors = set()
+    exempt_vendors = set()
+    below_threshold_vendors = set()
+
+    if rules_dir is None:
+        # Default rules path
+        rules_dir = str(parsed_dir.parent / "data" / "rules")
+
+    if HAS_LEARNING_AGENT:
+        learned_rules = learning_agent.get_active_rules(rules_dir)
+        if learned_rules:
+            print(f"\n--- Pass 0: Learned Rules ({len(learned_rules)} active) ---")
+
+            # Apply vendor aliases to tally entries
+            alias_rules = [r for r in learned_rules if r["rule_type"] == "vendor_alias"]
+            if alias_rules:
+                tally_194c, alias_ids = learning_agent.apply_vendor_aliases(
+                    learned_rules, tally_194c)
+                tally_194a, alias_ids_a = learning_agent.apply_vendor_aliases(
+                    learned_rules, tally_194a)
+                alias_count = len(alias_ids) + len(alias_ids_a)
+                if alias_count:
+                    print(f"  Vendor aliases applied: {alias_count}")
+                    rules_applied.extend(alias_ids | alias_ids_a)
+
+            # Get ignore/exempt/below-threshold sets
+            ignored_vendors = learning_agent.get_ignored_vendors(learned_rules)
+            exempt_vendors = learning_agent.get_exempt_vendors(learned_rules)
+            below_threshold_vendors = learning_agent.get_below_threshold_vendors(
+                learned_rules, "194C")
+
+            # Filter out ignored vendors from tally entries
+            if ignored_vendors:
+                before = len(tally_194c)
+                tally_194c = [
+                    e for e in tally_194c
+                    if e.get("party_name", "").lower().strip() not in ignored_vendors
+                ]
+                ignored_count = before - len(tally_194c)
+                if ignored_count:
+                    print(f"  Ignored vendors removed: {ignored_count} entries")
+
+            # Mark below-threshold vendors
+            if below_threshold_vendors:
+                bt_count = 0
+                for e in tally_194c:
+                    if e.get("party_name", "").lower().strip() in below_threshold_vendors:
+                        e["_below_threshold"] = True
+                        bt_count += 1
+                if bt_count:
+                    print(f"  Below-threshold entries marked: {bt_count}")
+
+            # Track rule application counts
+            for rule_id in rules_applied:
+                learning_agent.increment_applied(rules_dir, rule_id)
+        else:
+            print("\n--- Pass 0: Learned Rules (no rules found) ---")
+    else:
+        print("\n--- Pass 0: Learned Rules (learning agent not available) ---")
 
     # Split Form 26 by section
     f26_194a = [e for e in form26_entries if e["section"] == "194A"]
@@ -769,15 +844,29 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None):
     unmatched_tally_194a = [_clean_entry(e) for e in tally_194a if not e.get("_matched")]
     unmatched_tally_194c = [_clean_entry(e) for e in tally_194c if not e.get("_matched")]
 
+    # ---- Collect below-threshold entries for reporting ----
+    below_threshold_entries = [
+        _clean_entry(e) for e in tally_194c if e.get("_below_threshold")
+    ]
+
     # ---- Build output ----
     results = {
         "run_timestamp": datetime.now().isoformat(),
         "sections_processed": list(sections),
+        "learned_rules": {
+            "rules_loaded": len(learned_rules),
+            "rules_applied": len(rules_applied),
+            "ignored_vendors": len(ignored_vendors),
+            "exempt_vendors": len(exempt_vendors),
+            "below_threshold_vendors": len(below_threshold_vendors),
+            "below_threshold_entries": len(below_threshold_entries),
+        },
         "summary": {
             "form26_total": len(form26_entries),
             "form26_matched": sum(1 for e in form26_entries if e.get("_matched")),
             "form26_unmatched": len(unmatched_form26),
             "matches_by_pass": {
+                "pass0_learned_rules": len(rules_applied),
                 "pass1_exact": len(m1),
                 "pass2_gst_adjusted": len(m2),
                 "pass3_exempt": len(all_exemptions),
@@ -828,5 +917,6 @@ if __name__ == "__main__":
     base = Path(__file__).parent.parent
     parsed = base / "data" / "parsed"
     output = base / "data" / "results"
+    rules = base / "data" / "rules"
 
-    run(str(parsed), str(output))
+    run(str(parsed), str(output), rules_dir=str(rules))
