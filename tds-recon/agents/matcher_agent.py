@@ -39,8 +39,8 @@ except ImportError:
 # Config
 # ---------------------------------------------------------------------------
 
-# Sections we're reconciling
-TARGET_SECTIONS = {"194A", "194C", "194H", "194J(b)", "194Q"}
+# Sections we're reconciling in this MVP
+TARGET_SECTIONS = {"194A", "194C"}
 
 # Amount tolerance for fuzzy matching (as fraction)
 FUZZY_AMOUNT_TOLERANCE = 0.005  # 0.5%
@@ -201,89 +201,6 @@ def build_tally_194c_entries(tally: dict) -> list[dict]:
                 "_matched": False,
             })
 
-    return entries
-
-
-def build_tally_194h_entries(tally: dict) -> list[dict]:
-    """Extract 194H-relevant entries from Tally Journal Register.
-    These are brokerage/commission payments."""
-    entries = []
-    for e in tally["journal_register"]["entries"]:
-        postings = e.get("account_postings", {})
-        for head in postings:
-            if "brokerage" in head.lower() or "commission" in head.lower():
-                entries.append({
-                    "tally_source": "journal_commission",
-                    "date": e["date"],
-                    "party_name": e.get("particulars", ""),
-                    "amount": postings[head],
-                    "voucher_no": e["voucher_no"],
-                    "raw": e,
-                    "_matched": False,
-                })
-                break
-    return entries
-
-
-def build_tally_194jb_entries(tally: dict) -> list[dict]:
-    """Extract 194J(b)-relevant entries from Tally.
-    Sources: GST Exp Register + Journal Register (professional_fees, consultancy)."""
-    entries = []
-    keywords = {"professional", "consultancy", "audit", "legal", "gst annual",
-                "software", "domain"}
-
-    # From GST Exp Register
-    for e in tally["purchase_gst_exp_register"]["entries"]:
-        heads = list((e.get("expense_heads") or {}).keys())
-        for h in heads:
-            if any(k in h.lower() for k in keywords):
-                entries.append({
-                    "tally_source": "gst_exp",
-                    "date": e["date"],
-                    "party_name": e.get("particulars", ""),
-                    "amount": e["base_amount"],
-                    "gross_amount": e["gross_total"],
-                    "amount_is_base": True,
-                    "voucher_no": e["voucher_no"],
-                    "expense_heads": e.get("expense_heads", {}),
-                    "raw": e,
-                    "_matched": False,
-                })
-                break
-
-    # From Journal Register: professional_fees, consultancy entries
-    jr_types = {"professional_fees", "consultancy"}
-    for e in tally["journal_register"]["entries"]:
-        if e.get("entry_type") in jr_types and e.get("particulars"):
-            amount = e.get("gross_total", 0) or 0
-            entries.append({
-                "tally_source": "journal_professional",
-                "date": e["date"],
-                "party_name": e["particulars"],
-                "amount": amount,
-                "voucher_no": e["voucher_no"],
-                "raw": e,
-                "_matched": False,
-            })
-
-    return entries
-
-
-def build_tally_194q_entries(tally: dict) -> list[dict]:
-    """Extract 194Q-relevant entries from Tally Purchase Register.
-    These are purchase of goods entries."""
-    entries = []
-    for e in tally.get("purchase_register", {}).get("entries", []):
-        if e.get("particulars"):
-            entries.append({
-                "tally_source": "purchase",
-                "date": e["date"],
-                "party_name": e["particulars"],
-                "amount": e.get("gross_total", 0) or 0,
-                "voucher_no": e.get("voucher_no", ""),
-                "raw": e,
-                "_matched": False,
-            })
     return entries
 
 
@@ -808,14 +725,8 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
     # Build Tally entry pools
     tally_194a = build_tally_194a_entries(tally_data)
     tally_194c = build_tally_194c_entries(tally_data)
-    tally_194h = build_tally_194h_entries(tally_data)
-    tally_194jb = build_tally_194jb_entries(tally_data)
-    tally_194q = build_tally_194q_entries(tally_data)
     print(f"[Matcher] {len(tally_194a)} Tally 194A entries (interest payments)")
     print(f"[Matcher] {len(tally_194c)} Tally 194C entries (freight + GST expenses)")
-    print(f"[Matcher] {len(tally_194h)} Tally 194H entries (brokerage/commission)")
-    print(f"[Matcher] {len(tally_194jb)} Tally 194J(b) entries (professional fees)")
-    print(f"[Matcher] {len(tally_194q)} Tally 194Q entries (purchase of goods)")
 
     # ---- Pass 0: Apply Learned Rules ----
     rules_applied = []
@@ -883,120 +794,57 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
     # Split Form 26 by section
     f26_194a = [e for e in form26_entries if e["section"] == "194A"]
     f26_194c = [e for e in form26_entries if e["section"] == "194C"]
-    f26_194h = [e for e in form26_entries if e["section"] == "194H"]
-    f26_194jb = [e for e in form26_entries if e["section"] == "194J(b)"]
-    f26_194q = [e for e in form26_entries if e["section"] == "194Q"]
 
     all_matches = []
     all_exemptions = []
 
-    # Section → tally pool mapping
-    section_pools = {
-        "194A": (f26_194a, tally_194a),
-        "194C": (f26_194c, tally_194c),
-        "194H": (f26_194h, tally_194h),
-        "194J(b)": (f26_194jb, tally_194jb),
-        "194Q": (f26_194q, tally_194q),
-    }
-
     # ---- Pass 1: Exact Match ----
     print("\n--- Pass 1: Exact Match ---")
-    m1 = []
-    for sec, (f26_pool, tally_pool) in section_pools.items():
-        m = pass1_exact_match(f26_pool, tally_pool)
-        m1.extend(m)
-        if m:
-            print(f"  {sec}: {len(m)} matches")
+    m1a = pass1_exact_match(f26_194a, tally_194a)
+    m1c = pass1_exact_match(f26_194c, tally_194c)
+    m1 = m1a + m1c
     all_matches.extend(m1)
+    print(f"  194A: {len(m1a)} matches")
+    print(f"  194C: {len(m1c)} matches")
 
     # ---- Pass 2: GST-Adjusted ----
     print("\n--- Pass 2: GST-Adjusted Match ---")
-    m2 = []
-    for sec, (f26_pool, tally_pool) in section_pools.items():
-        m = pass2_gst_adjusted(f26_pool, tally_pool)
-        m2.extend(m)
-        if m:
-            print(f"  {sec}: {len(m)} matches")
+    m2a = pass2_gst_adjusted(f26_194a, tally_194a)
+    m2c = pass2_gst_adjusted(f26_194c, tally_194c)
+    m2 = m2a + m2c
     all_matches.extend(m2)
+    print(f"  194A: {len(m2a)} matches")
+    print(f"  194C: {len(m2c)} matches")
 
     # ---- Pass 3: Exempt Filter ----
     print("\n--- Pass 3: Exempt Filter ---")
-    for sec, (f26_pool, tally_pool) in section_pools.items():
-        ex = pass3_exempt_filter(f26_pool, tally_pool)
-        all_exemptions.extend(ex)
+    ex_a = pass3_exempt_filter(f26_194a, tally_194a)
+    ex_c = pass3_exempt_filter(f26_194c, tally_194c)
+    all_exemptions = ex_a + ex_c
     print(f"  {len(all_exemptions)} entries marked exempt")
 
     # ---- Pass 4: Fuzzy Match ----
     print("\n--- Pass 4: Fuzzy Match ---")
-    m4 = []
-    for sec, (f26_pool, tally_pool) in section_pools.items():
-        m = pass4_fuzzy_match(f26_pool, tally_pool)
-        m4.extend(m)
-        if m:
-            print(f"  {sec}: {len(m)} matches")
+    m4a = pass4_fuzzy_match(f26_194a, tally_194a)
+    m4c = pass4_fuzzy_match(f26_194c, tally_194c)
+    m4 = m4a + m4c
     all_matches.extend(m4)
+    print(f"  194A: {len(m4a)} matches")
+    print(f"  194C: {len(m4c)} matches")
 
     # ---- Pass 5: Aggregated Match ----
     print("\n--- Pass 5: Aggregated Match ---")
-    m5 = []
-    for sec, (f26_pool, tally_pool) in section_pools.items():
-        m = pass5_aggregated_match(f26_pool, tally_pool)
-        m5.extend(m)
-        if m:
-            print(f"  {sec}: {len(m)} matches")
+    m5a = pass5_aggregated_match(f26_194a, tally_194a)
+    m5c = pass5_aggregated_match(f26_194c, tally_194c)
+    m5 = m5a + m5c
     all_matches.extend(m5)
-
-    # ---- Pass 6: Vendor-Level Match ----
-    # For remaining unmatched: if F26 vendor exists in Tally with same name,
-    # match at vendor level. Covers 194Q (large purchase volumes where
-    # individual amounts won't match) and any other stragglers.
-    print("\n--- Pass 6: Vendor-Level Match ---")
-    m6 = []
-    for sec, (f26_pool, tally_pool) in section_pools.items():
-        for f26 in f26_pool:
-            if f26.get("_matched"):
-                continue
-            f26_name = normalize_name(f26["vendor_name"])
-            # Find best matching tally vendor
-            best_entries = []
-            best_sim = 0
-            for tally in tally_pool:
-                if tally.get("_matched"):
-                    continue
-                sim = name_similarity(f26["vendor_name"], tally["party_name"])
-                if sim > 0.5 and sim >= best_sim:
-                    if sim > best_sim:
-                        best_entries = []
-                        best_sim = sim
-                    best_entries.append(tally)
-            if best_entries:
-                m6.append({
-                    "pass": 6,
-                    "pass_name": "vendor_level",
-                    "confidence": 0.70,
-                    "form26_entry": _clean_entry(f26),
-                    "tally_entries": [_clean_entry(best_entries[0])],
-                    "match_details": {
-                        "strategy": "vendor_exists_in_books",
-                        "form26_amount": f26["amount_paid"],
-                        "tally_vendor": best_entries[0]["party_name"],
-                        "name_similarity": round(best_sim, 2),
-                        "note": "Vendor exists in Tally books with matching name",
-                    },
-                })
-                f26["_matched"] = True
-        if any(m["form26_entry"].get("section") == sec for m in m6):
-            sec_count = sum(1 for m in m6 if m["form26_entry"].get("section") == sec)
-            print(f"  {sec}: {sec_count} matches")
-    all_matches.extend(m6)
+    print(f"  194A: {len(m5a)} matches")
+    print(f"  194C: {len(m5c)} matches")
 
     # ---- Collect unmatched ----
     unmatched_form26 = [_clean_entry(e) for e in form26_entries if not e.get("_matched")]
     unmatched_tally_194a = [_clean_entry(e) for e in tally_194a if not e.get("_matched")]
     unmatched_tally_194c = [_clean_entry(e) for e in tally_194c if not e.get("_matched")]
-    unmatched_tally_194h = [_clean_entry(e) for e in tally_194h if not e.get("_matched")]
-    unmatched_tally_194jb = [_clean_entry(e) for e in tally_194jb if not e.get("_matched")]
-    unmatched_tally_194q = [_clean_entry(e) for e in tally_194q if not e.get("_matched")]
 
     # ---- Collect below-threshold entries for reporting ----
     below_threshold_entries = [
@@ -1019,6 +867,8 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
             "form26_total": len(form26_entries),
             "form26_matched": sum(1 for e in form26_entries if e.get("_matched")),
             "form26_unmatched": len(unmatched_form26),
+            "below_threshold_resolved": len(below_threshold_entries),
+            "total_resolved": sum(1 for e in form26_entries if e.get("_matched")) + len(below_threshold_entries),
             "matches_by_pass": {
                 "pass0_learned_rules": len(rules_applied),
                 "pass1_exact": len(m1),
@@ -1026,7 +876,6 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
                 "pass3_exempt": len(all_exemptions),
                 "pass4_fuzzy": len(m4),
                 "pass5_aggregated": len(m5),
-                "pass6_vendor_level": len(m6),
             },
             "total_matches": len(all_matches),
         },
@@ -1035,9 +884,6 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
         "unmatched_form26": unmatched_form26,
         "unmatched_tally_194a": unmatched_tally_194a,
         "unmatched_tally_194c": unmatched_tally_194c,
-        "unmatched_tally_194h": unmatched_tally_194h,
-        "unmatched_tally_194jb": unmatched_tally_194jb,
-        "unmatched_tally_194q": unmatched_tally_194q,
     }
 
     # ---- Write output ----

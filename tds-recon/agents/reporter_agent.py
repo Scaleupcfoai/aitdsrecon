@@ -152,11 +152,13 @@ def build_executive_summary(
         "matching": {
             "form26_total": len(f26_entries),
             "form26_in_scope": summary.get("form26_total", len(matches)),
-            "matched": summary.get("form26_matched", len(matches)),
+            "matched_with_tds": summary.get("form26_matched", len(matches)),
+            "below_threshold_resolved": summary.get("below_threshold_resolved", 0),
+            "total_resolved": summary.get("total_resolved", summary.get("form26_matched", len(matches))),
             "unmatched": summary.get("form26_unmatched", 0),
             "match_rate_pct": round(
-                summary.get("form26_matched", len(matches))
-                / max(len(f26_entries), 1) * 100, 1
+                summary.get("total_resolved", summary.get("form26_matched", len(matches)))
+                / max(summary.get("total_resolved", 1) + summary.get("form26_unmatched", 0), 1) * 100, 1
             ),
             "avg_confidence": round(sum(confidences) / max(len(confidences), 1), 3),
             "by_pass": dict(pass_distribution),
@@ -333,7 +335,9 @@ def run(parsed_dir: str, results_dir: str) -> dict:
     m = summary["matching"]
     print(f"Form 26 entries (all):    {m['form26_total']}")
     print(f"Form 26 entries (scope):  {m['form26_in_scope']}")
-    print(f"Matched:                  {m['matched']} ({m['match_rate_pct']}%)")
+    print(f"Matched (with TDS):       {m['matched_with_tds']}")
+    print(f"Below threshold (TDS=0):  {m['below_threshold_resolved']}")
+    print(f"Total resolved:           {m['total_resolved']} ({m['match_rate_pct']}%)")
     print(f"Unmatched:                {m['unmatched']}")
     print(f"Avg confidence:           {m['avg_confidence']}")
     print(f"By pass: {dict(m['by_pass'])}")

@@ -1,26 +1,23 @@
 {
-  "run_timestamp": "2026-03-25T07:30:22.361477",
+  "run_timestamp": "2026-03-25T07:37:16.291553",
   "summary": {
-    "total_findings": 10,
+    "total_findings": 8,
     "by_check": {
       "section_validation": 5,
       "rate_validation": 0,
       "base_amount_validation": 0,
-      "threshold_validation": 2,
+      "threshold_validation": 0,
       "missing_tds": 3
     },
     "by_severity": {
       "error": 3,
       "warning": 5,
-      "info": 2
+      "info": 0
     },
-    "matches_checked": 85,
+    "matches_checked": 56,
     "sections_in_scope": [
       "194A",
-      "194C",
-      "194H",
-      "194J(b)",
-      "194Q"
+      "194C"
     ]
   },
   "findings": [
@@ -103,30 +100,6 @@
       ],
       "status": "review",
       "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
-    },
-    {
-      "check": "threshold_validation",
-      "severity": "info",
-      "vendor": "SAHIB S CHOUDHARY & COMPANY",
-      "pan": "AEJPC0634D",
-      "form26_section": "194J(b)",
-      "aggregate_amount": 9000,
-      "threshold_annual": 30000,
-      "num_entries": 1,
-      "status": "below_threshold_but_deducted",
-      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is not mandatory (but not wrong if deducted)."
-    },
-    {
-      "check": "threshold_validation",
-      "severity": "info",
-      "vendor": "Sai Boutique",
-      "pan": "AEPFS3230M",
-      "form26_section": "194Q",
-      "aggregate_amount": 4510343,
-      "threshold_annual": 5000000,
-      "num_entries": 4,
-      "status": "below_threshold_but_deducted",
-      "message": "194Q for Sai Boutique: aggregate \u20b94,510,343 is below annual threshold \u20b95,000,000. TDS deduction is not mandatory (but not wrong if deducted)."
     },
     {
       "check": "missing_tds",

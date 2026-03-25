@@ -55,32 +55,3 @@ sr_no,vendor_name,pan,section,form26_amount,form26_date,tds_rate_pct,tds_amount,
 54,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,9742,2025-01-31,2,195,Inland World Logistics Pvt. Ltd.,9742.0,2025-01-10,3,0.0,aggregated_monthly,0.9,Freight Charges,Matched
 55,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,18863,2025-02-28,2,377,Inland World Logistics Pvt. Ltd.,18863.0,2025-02-07,3,0.0,aggregated_monthly,0.9,Freight Charges,Matched
 56,INLAND WORLD LOGISTICS PVT LTD,AAACI5607C,194C,21995,2025-03-31,2,440,Inland World Logistics Pvt. Ltd.,21995.0,2025-03-17,5,0.0,aggregated_monthly,0.9,Freight Charges,Matched
-57,Amar Nath Prasad,BNAPP1451L,194H,22090,2025-03-31,2,442,Amar Nath Prasad Harsh Dudheria,22090.0,2025-03-31,1,0.0,fuzzy_match,1.0,,Matched
-58,Ankit Poddar,BFIPP7592G,194H,68301,2025-03-31,2,1366,Ankit Poddar,68301.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-59,Ankit Sadani,JBNPS5946C,194H,267137,2025-03-31,2,5343,Ankit Sadani,267137.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-60,Dhirendra Lalitray Doshi,AEXPD1479B,194H,55200,2025-03-31,2,1104,Dhirendra Lalitray Doshi,55200.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-61,HASMUKH VITHALDAS JOISHER,ADNPJ5114E,194H,111532,2025-03-31,2,2231,Hasmukh Vithaldas Joisher,111532.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-62,Jai Kumar Baid,AHDPB2654B,194H,17626,2025-03-31,2,353,Jai Kumar Baid,17626.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-63,KETAN J SHAH,AMUPS0795A,194H,75700,2025-03-31,2,1514,Ketan Shah,75700.0,2025-03-31,1,0.0,fuzzy_match,1.0,,Matched
-64,Kamlesh Kumar Tiwari,AEAPT6299J,194H,29484,2025-03-31,2,590,Kamlesh Kumar Tiwari,29484.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-65,NURPRIT KAUR,DPRPK3806R,194H,510428,2025-03-31,2,10209,Nurprit Kaur,510428.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-66,Rajesh Pandey,AIVPP2797G,194H,19608,2025-03-31,2,392,Rajesh Pandey,19608.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-67,Tarun Kanti Bhattacharjee,ADXPB3392C,194H,16502,2025-03-31,2,330,Tarun Kanti Bhattacharjee,16502.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-68,VIPUL MANTRI,ASYPM7947A,194H,44585,2025-03-31,2,892,Vipul Mantri,44585.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-69,Vikas Arora,ALJPA4325J,194H,64048,2025-03-31,2,1281,Vikas Arora,64048.0,2025-03-31,1,0.0,exact_match,1.0,,Matched
-70,GST PROFESSIONALS LLP,AAPFG3370E,194J(b),31500,2024-12-31,10,3150,GST Professionals LLP,31500.0,2024-11-30,2,0.0,aggregated_cumulative,0.85,,Matched
-71,SAHIB S CHOUDHARY & COMPANY,AEJPC0634D,194J(b),9000,2025-01-31,10,900,Sahib S Choudhary & Co.,9000.0,2025-01-07,1,0.0,gst_adjusted_base,0.95,GST Annual Return Charges,Matched
-72,SNCL BUILDERS LLP,ADXFS1033K,194J(b),120000,2024-12-31,10,12000,SNCL Builders LLP,120000.0,2024-12-05,1,0.0,fuzzy_match,1.0,,Matched
-73,RAYMOND LIFESTYLE LTD.,AAJCR2207E,194Q,3000076,2024-08-31,0.1,3000,Raymond Lifestyle Limited (Shirting Div.),519010.0,2024-07-31,1,2481066.0,vendor_level,0.7,,Matched
-74,RAYMOND LIFESTYLE LTD.,AAJCR2207E,194Q,14544442,2024-09-30,0.1,14544,Raymond Lifestyle Limited (Shirting Div.),519010.0,2024-07-31,1,14025432.0,vendor_level,0.7,,Matched
-75,RAYMOND LIFESTYLE LTD.,AAJCR2207E,194Q,2462522,2024-10-31,0.1,2463,Raymond Lifestyle Limited (Shirting Div.),519010.0,2024-07-31,1,1943512.0,vendor_level,0.7,,Matched
-76,RAYMOND LIFESTYLE LTD.,AAJCR2207E,194Q,13796210,2024-12-31,0.1,13796,Raymond Lifestyle Limited (Shirting Div.),519010.0,2024-07-31,1,13277200.0,vendor_level,0.7,,Matched
-77,RAYMOND LIFESTYLE LTD.,AAJCR2207E,194Q,5947729,2025-01-31,0.1,5948,Raymond Lifestyle Limited (Shirting Div.),519010.0,2024-07-31,1,5428719.0,vendor_level,0.7,,Matched
-78,RAYMOND LIFESTYLE LTD.,AAJCR2207E,194Q,7934577,2025-03-31,0.1,7935,Raymond Lifestyle Limited (Shirting Div.),519010.0,2024-07-31,1,7415567.0,vendor_level,0.7,,Matched
-79,Raymond Limited,AAACR4896A,194Q,4892496,2024-05-31,0.1,4892,Raymond Limited (Shirting Division),47246.0,2024-05-18,1,4845250.0,vendor_level,0.7,,Matched
-80,Raymond Limited,AAACR4896A,194Q,1480982,2024-06-30,0.1,1481,Raymond Limited (Shirting Division),47246.0,2024-05-18,1,1433736.0,vendor_level,0.7,,Matched
-81,Raymond Limited,AAACR4896A,194Q,23238,2024-06-30,0.1,23,Raymond Limited (Shirting Division),47246.0,2024-05-18,1,-24008.0,vendor_level,0.7,,Matched
-82,Sai Boutique,AEPFS3230M,194Q,862203,2024-11-30,0.1,862,Sai Boutique,950.0,2024-06-17,1,861253.0,vendor_level,0.7,,Matched
-83,Sai Boutique,AEPFS3230M,194Q,310823,2024-12-31,0.1,311,Sai Boutique,950.0,2024-06-17,1,309873.0,vendor_level,0.7,,Matched
-84,Sai Boutique,AEPFS3230M,194Q,2955497,2024-12-31,0.1,2956,Sai Boutique,950.0,2024-06-17,1,2954547.0,vendor_level,0.7,,Matched
-85,Sai Boutique,AEPFS3230M,194Q,381820,2025-01-31,0.1,382,Sai Boutique,950.0,2024-06-17,1,380870.0,vendor_level,0.7,,Matched

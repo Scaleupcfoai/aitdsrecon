@@ -258,10 +258,11 @@ function TdsRecon({ onBack }) {
                 <div className="tds-kpi-row">
                   <div className="tds-kpi-card">
                     <div className="tds-kpi-value">
-                      {summary.matching?.matched || 0}
-                      <span className="tds-kpi-total">/{summary.matching?.form26_total || 0}</span>
+                      {summary.matching?.total_resolved || 0}
                     </div>
-                    <div className="tds-kpi-label">Entries Matched (of {summary.matching?.form26_total || 0} total)</div>
+                    <div className="tds-kpi-label">
+                      Entries Resolved ({summary.matching?.matched_with_tds || 0} with TDS + {summary.matching?.below_threshold_resolved || 0} exempt)
+                    </div>
                     <div className="tds-kpi-bar">
                       <div className="tds-kpi-bar-fill" style={{ width: `${summary.matching?.match_rate_pct || 0}%` }} />
                     </div>

@@ -118,13 +118,16 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
         logger.detail("Matcher Agent", f"Pass 4: {by_pass['pass4_fuzzy']} fuzzy matches (name similarity > 40%)")
     if by_pass.get("pass5_aggregated", 0):
         logger.detail("Matcher Agent", f"Pass 5: {by_pass['pass5_aggregated']} aggregated matches")
-    if by_pass.get("pass6_vendor_level", 0):
-        logger.detail("Matcher Agent", f"Pass 6: {by_pass['pass6_vendor_level']} vendor-level matches")
 
     matched = summary.get("form26_matched", 0)
+    below_threshold = summary.get("below_threshold_resolved", 0)
+    total_resolved = summary.get("total_resolved", matched)
     total = summary.get("form26_total", 0)
     pct = (matched / total * 100) if total > 0 else 0
-    logger.success("Matcher Agent", f"Result: {matched}/{total} matched ({pct:.0f}%)")
+    logger.success("Matcher Agent", f"Result: {matched}/{total} matched with TDS ({pct:.0f}%)")
+    if below_threshold:
+        logger.detail("Matcher Agent", f"Below-threshold (TDS=0, exempt): {below_threshold} entries resolved")
+        logger.success("Matcher Agent", f"Total resolved: {total_resolved} entries")
     logger.agent_done("Matcher Agent", "Matching complete")
 
     # ---- Step 3: TDS Checker ----
