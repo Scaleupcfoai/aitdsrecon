@@ -1,0 +1,2092 @@
+{
+  "status": "needs_review",
+  "results": {
+    "matcher": {
+      "form26_total": 56,
+      "form26_matched": 56,
+      "form26_unmatched": 0,
+      "matches_by_pass": {
+        "pass0_learned_rules": 0,
+        "pass1_exact": 28,
+        "pass2_gst_adjusted": 1,
+        "pass3_exempt": 8,
+        "pass4_fuzzy": 9,
+        "pass5_aggregated": 18
+      },
+      "total_matches": 56
+    },
+    "checker": {
+      "total_findings": 8,
+      "by_check": {
+        "section_validation": 5,
+        "rate_validation": 0,
+        "base_amount_validation": 0,
+        "threshold_validation": 0,
+        "missing_tds": 3
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 5,
+        "info": 0
+      },
+      "matches_checked": 56,
+      "sections_in_scope": [
+        "194A",
+        "194C"
+      ]
+    },
+    "reporter": {
+      "report_generated": "2026-03-24T10:06:11.354124",
+      "assessment_year": "2025-26",
+      "financial_year": "2024-25",
+      "scope": {
+        "sections_reconciled": [
+          "194A",
+          "194C"
+        ],
+        "sections_pending": [
+          "194H",
+          "194J(b)",
+          "194Q"
+        ]
+      },
+      "matching": {
+        "form26_total": 85,
+        "form26_in_scope": 56,
+        "matched": 56,
+        "unmatched": 0,
+        "match_rate_pct": 100.0,
+        "avg_confidence": 0.957,
+        "by_pass": {
+          "exact_match": 28,
+          "gst_adjusted_base": 1,
+          "fuzzy_match": 9,
+          "aggregated_cumulative": 1,
+          "aggregated_monthly": 13,
+          "aggregated_subset": 2,
+          "aggregated_all_available": 2
+        }
+      },
+      "section_wise": {
+        "194A": {
+          "form26_count": 36,
+          "form26_amount": 7610092,
+          "form26_tds": 761018,
+          "matched_count": 36,
+          "matched_amount": 7610092,
+          "matched_tds": 761018
+        },
+        "194C": {
+          "form26_count": 20,
+          "form26_amount": 927072,
+          "form26_tds": 16384,
+          "matched_count": 20,
+          "matched_amount": 927072,
+          "matched_tds": 16384
+        },
+        "194H": {
+          "form26_count": 13,
+          "form26_amount": 1302241,
+          "form26_tds": 26047,
+          "matched_count": 0,
+          "matched_amount": 0,
+          "matched_tds": 0
+        },
+        "194J(b)": {
+          "form26_count": 3,
+          "form26_amount": 160500,
+          "form26_tds": 16050,
+          "matched_count": 0,
+          "matched_amount": 0,
+          "matched_tds": 0
+        },
+        "194Q": {
+          "form26_count": 13,
+          "form26_amount": 58592615,
+          "form26_tds": 58593,
+          "matched_count": 0,
+          "matched_amount": 0,
+          "matched_tds": 0
+        }
+      },
+      "compliance": {
+        "total_findings": 8,
+        "errors": 3,
+        "warnings": 5,
+        "info": 0,
+        "by_check": {
+          "section_validation": 5,
+          "missing_tds": 3
+        },
+        "missing_tds_exposure": 121397.0,
+        "clean_bill": false
+      },
+      "amounts": {
+        "total_form26_payments": 68592520,
+        "total_form26_tds": 878092,
+        "matched_payments": 8537164,
+        "matched_tds": 777402
+      }
+    }
+  },
+  "human_review_queue": [
+    {
+      "type": "compliance_finding",
+      "priority": "high",
+      "vendor": "Kamal Kishor Bagri",
+      "section": "194H",
+      "check": "missing_tds",
+      "action_needed": "No Form 26 entry found for Kamal Kishor Bagri under 194H. Tally shows \u20b916,845 in Brokerage and Commission, Brokerage and Commission_18%. TDS may be missing."
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "high",
+      "vendor": "Kochar Tradelink LLP",
+      "section": "194H",
+      "check": "missing_tds",
+      "action_needed": "No Form 26 entry found for Kochar Tradelink LLP under 194H. Tally shows \u20b983,675 in Brokerage and Commission, Brokerage and Commission_18%. TDS may be missing."
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "high",
+      "vendor": "Pukesh Sharma",
+      "section": "194H",
+      "check": "missing_tds",
+      "action_needed": "No Form 26 entry found for Pukesh Sharma under 194H. Tally shows \u20b920,877 in Brokerage and Commission. TDS may be missing."
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "A2z Work Pvt. Ltd.",
+      "section": "194C",
+      "amount": 490.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "A2z Work Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1965.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "A2z Work Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1850.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "medium",
+      "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+      "section": "194C",
+      "check": "section_validation",
+      "action_needed": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "medium",
+      "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+      "section": "194C",
+      "check": "section_validation",
+      "action_needed": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "medium",
+      "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+      "section": "194C",
+      "check": "section_validation",
+      "action_needed": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "medium",
+      "vendor": "ANDREAL INNOVATION PVT LTD",
+      "section": "194C",
+      "check": "section_validation",
+      "action_needed": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "type": "compliance_finding",
+      "priority": "medium",
+      "vendor": "ANDREAL INNOVATION PVT LTD",
+      "section": "194C",
+      "check": "section_validation",
+      "action_needed": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Aditya Infotech Ltd.",
+      "section": "194C",
+      "amount": 761.86,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ahmed Raza Brothers",
+      "section": "194C",
+      "amount": 622.9,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Air India Charters Ltd.",
+      "section": "194C",
+      "amount": 12801.9,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Amith Garments Services",
+      "section": "194C",
+      "amount": 20800.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Appario Retail Pvt. Ltd.",
+      "section": "194C",
+      "amount": 10669.5,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Arihant Systems",
+      "section": "194C",
+      "amount": 3350.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Arihant Systems",
+      "section": "194C",
+      "amount": 1695.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 2545.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 699.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 599.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Bharti Airtel Ltd.",
+      "section": "194C",
+      "amount": 499.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Career Softech",
+      "section": "194C",
+      "amount": 225.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Chiptronics Solutions",
+      "section": "194C",
+      "amount": 3380.02,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Continental Solutions",
+      "section": "194C",
+      "amount": 3200.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Desire",
+      "section": "194C",
+      "amount": 2966.1,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Desire",
+      "section": "194C",
+      "amount": 3135.59,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Dilip Plastics",
+      "section": "194C",
+      "amount": 450.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Dynavision Technologies Pvt. Ltd.",
+      "section": "194C",
+      "amount": 24300.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Dynavision Technologies Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1300.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 2496.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 181.64,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 496.92,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 552.33,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 476.95,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 316.16,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 788.29,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Facebook India Online Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1482.58,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Go Digit General Insurance Ltd.",
+      "section": "194C",
+      "amount": 68485.34,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 225.4,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1136.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Google India Pvt. Ltd.",
+      "section": "194C",
+      "amount": 276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Hotal Simran Paradise",
+      "section": "194C",
+      "amount": 1071.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Hotal Simran Paradise",
+      "section": "194C",
+      "amount": 1071.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Hyate Nawaz Mobile Pvt. Ltd.",
+      "section": "194C",
+      "amount": 39830.5,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Karnataka",
+      "section": "194C",
+      "amount": 4735.3,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Kerala",
+      "section": "194C",
+      "amount": 1428.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Kolkata",
+      "section": "194C",
+      "amount": 13272.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Kolkata",
+      "section": "194C",
+      "amount": 7338.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Kolkata",
+      "section": "194C",
+      "amount": 152.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Mumbai",
+      "section": "194C",
+      "amount": 19316.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Inter Globe Aviation Ltd. Tamil Nadu",
+      "section": "194C",
+      "amount": 9976.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Jai Balaji Polysack",
+      "section": "194C",
+      "amount": 20048.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "K B Enterprise",
+      "section": "194C",
+      "amount": 4950.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kamal Kishor Bagri",
+      "section": "194C",
+      "amount": 7023.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 380.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 350.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 3109.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1144.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 18091.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 4686.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 3050.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kanhaiya Express Pvt. Ltd.",
+      "section": "194C",
+      "amount": 350.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Kochar Tradelink LLP",
+      "section": "194C",
+      "amount": 38743.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Koul Electricals",
+      "section": "194C",
+      "amount": 5338.92,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Least Count Technology Solutions Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1500.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Least Count Technology Solutions Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1500.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Least Count Technology Solutions Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1500.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Least Count Technology Solutions Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1500.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Mahavir Cargo Carrier",
+      "section": "194C",
+      "amount": 310.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Mahavir Cargo Carrier",
+      "section": "194C",
+      "amount": 387.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Mahavir Cargo Carrier",
+      "section": "194C",
+      "amount": 649.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Make My Trip (India) Ovt. Ltd.",
+      "section": "194C",
+      "amount": 317.8,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Natraj Stationery Stores",
+      "section": "194C",
+      "amount": 1880.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "New Xerox Centre",
+      "section": "194C",
+      "amount": 3573.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1385.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 412.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 923.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 247.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 455.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 525.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1140.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 3552.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 408.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 960.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1050.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 315.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1350.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Fleet Logistics Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1920.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Patel Parcels Carrier Co.",
+      "section": "194C",
+      "amount": 964.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Pioneer Packaging Industries Pvt. Ltd.",
+      "section": "194C",
+      "amount": 22944.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "R K Hotels",
+      "section": "194C",
+      "amount": 6000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ranka Infotech",
+      "section": "194C",
+      "amount": 300.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ranka Infotech",
+      "section": "194C",
+      "amount": 300.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ranka Infotech",
+      "section": "194C",
+      "amount": 600.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ranka Infotech",
+      "section": "194C",
+      "amount": 300.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ranka Infotech",
+      "section": "194C",
+      "amount": 600.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Ranka Infotech",
+      "section": "194C",
+      "amount": 600.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Razorpay Software Pvt. Ltd.",
+      "section": "194C",
+      "amount": 177.09,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Razorpay Software Pvt. Ltd.",
+      "section": "194C",
+      "amount": 546.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Rhythm Hotels",
+      "section": "194C",
+      "amount": 7142.86,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "S S Udyog",
+      "section": "194C",
+      "amount": 1678.58,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "S S Udyog",
+      "section": "194C",
+      "amount": 2080.36,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "SBI General Insurance Co. Ltd",
+      "section": "194C",
+      "amount": 9000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "SBI General Insurance Co. Ltd",
+      "section": "194C",
+      "amount": 18000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "SBI General Insurance Co. Ltd",
+      "section": "194C",
+      "amount": 18000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "SBI General Insurance Co. Ltd",
+      "section": "194C",
+      "amount": 18000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Safexpress Pvt. Ltd.",
+      "section": "194C",
+      "amount": 930.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Sahib S Choudhary & Co.",
+      "section": "194C",
+      "amount": 30000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Sahib S Choudhary & Co.",
+      "section": "194C",
+      "amount": 9000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Saraswati Paper Mart",
+      "section": "194C",
+      "amount": 1360.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Saraswati Paper Mart",
+      "section": "194C",
+      "amount": 170.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Saraswati Paper Mart",
+      "section": "194C",
+      "amount": 4295.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Delhi",
+      "section": "194C",
+      "amount": 107.58,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Delhi",
+      "section": "194C",
+      "amount": 218.63,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 131.78,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 133.3,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 458.37,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 335.39,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 3246.31,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 1374.1,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shiprocket Pvt. Ltd. Gurugram",
+      "section": "194C",
+      "amount": 3627.81,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1760.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1595.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1320.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 220.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1740.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1566.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1682.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 754.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 348.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1160.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 580.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1508.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1450.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1276.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Narsingh Enterprise",
+      "section": "194C",
+      "amount": 1450.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1054.96,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 745.67,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 745.68,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 550.77,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1084.6,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1679.49,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1351.58,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1550.7,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1118.55,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1488.87,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 2614.15,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shree Shyam Air Services Pvt. Ltd.",
+      "section": "194C",
+      "amount": 1503.23,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shreeji Plastics",
+      "section": "194C",
+      "amount": 19390.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Shreeji Plastics",
+      "section": "194C",
+      "amount": 12255.1,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 2355.89,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 285.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 470.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 1684.34,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 936.3,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 2201.69,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 1325.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 4816.26,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 4769.24,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 1310.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 3335.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Skyking",
+      "section": "194C",
+      "amount": 2000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Sree Shivam Cargo",
+      "section": "194C",
+      "amount": 600.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 5393.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 4951.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 975.5,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 2932.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 883.5,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 442.44,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "TCI Express Limited",
+      "section": "194C",
+      "amount": 2055.9,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "The Bengal Plastic",
+      "section": "194C",
+      "amount": 480.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 249.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 1217.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 5489.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 2100.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 1108.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 356.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 904.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "United India Insurance Co. Ltd.",
+      "section": "194C",
+      "amount": 90498.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "V Trans (India) Ltd.",
+      "section": "194C",
+      "amount": 2699.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "VRL Logistics Ltd.",
+      "section": "194C",
+      "amount": 5700.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Vimal Transport",
+      "section": "194C",
+      "amount": 6372.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Vimal Transport",
+      "section": "194C",
+      "amount": 3339.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Vimal Transport",
+      "section": "194C",
+      "amount": 2441.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Vimal Transport",
+      "section": "194C",
+      "amount": 5402.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Vimal Transport",
+      "section": "194C",
+      "amount": 1026.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Vimal Transport",
+      "section": "194C",
+      "amount": 2408.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Xpress Cargo",
+      "section": "194C",
+      "amount": 500.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    },
+    {
+      "type": "unmatched_tally",
+      "priority": "medium",
+      "vendor": "Xpress Cargo",
+      "section": "194C",
+      "amount": 1000.0,
+      "action_needed": "Verify if TDS was deducted for this contractor payment"
+    }
+  ],
+  "pipeline": {
+    "stages_completed": [
+      "parser",
+      "matcher",
+      "checker",
+      "reporter"
+    ],
+    "gates_passed": [
+      "validate_inputs",
+      "parsed_output_check"
+    ],
+    "gates_failed": [],
+    "routing_decisions": [
+      {
+        "point": "post_matcher",
+        "run_checker": true,
+        "reason": "100% match rate (56/56) \u2014 run checker for compliance validation",
+        "unmatched_count": 0,
+        "match_rate": 100.0
+      },
+      {
+        "point": "post_checker",
+        "status": "needs_review",
+        "severity": "error",
+        "reason": "3 error(s) and 5 warning(s) found",
+        "review_items": [
+          {
+            "check": "section_validation",
+            "severity": "warning",
+            "vendor": "ANDREAL INNOVATION PVT LTD",
+            "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature.",
+            "section": "194C"
+          },
+          {
+            "check": "section_validation",
+            "severity": "warning",
+            "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+            "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature.",
+            "section": "194C"
+          },
+          {
+            "check": "section_validation",
+            "severity": "warning",
+            "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+            "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature.",
+            "section": "194C"
+          },
+          {
+            "check": "section_validation",
+            "severity": "warning",
+            "vendor": "ANDERSON TECHNOLOGY PVT LTD",
+            "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature.",
+            "section": "194C"
+          },
+          {
+            "check": "section_validation",
+            "severity": "warning",
+            "vendor": "ANDREAL INNOVATION PVT LTD",
+            "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature.",
+            "section": "194C"
+          },
+          {
+            "check": "missing_tds",
+            "severity": "error",
+            "vendor": "Kamal Kishor Bagri",
+            "message": "No Form 26 entry found for Kamal Kishor Bagri under 194H. Tally shows \u20b916,845 in Brokerage and Commission, Brokerage and Commission_18%. TDS may be missing.",
+            "section": "194H"
+          },
+          {
+            "check": "missing_tds",
+            "severity": "error",
+            "vendor": "Kochar Tradelink LLP",
+            "message": "No Form 26 entry found for Kochar Tradelink LLP under 194H. Tally shows \u20b983,675 in Brokerage and Commission, Brokerage and Commission_18%. TDS may be missing.",
+            "section": "194H"
+          },
+          {
+            "check": "missing_tds",
+            "severity": "error",
+            "vendor": "Pukesh Sharma",
+            "message": "No Form 26 entry found for Pukesh Sharma under 194H. Tally shows \u20b920,877 in Brokerage and Commission. TDS may be missing.",
+            "section": "194H"
+          }
+        ]
+      }
+    ],
+    "timing": {
+      "parser": 0.0,
+      "matcher": 0.1,
+      "checker": 0.01,
+      "reporter": 0.01,
+      "total": 0.14
+    },
+    "errors": []
+  }
+}
