@@ -156,7 +156,7 @@ def build_executive_summary(
             "unmatched": summary.get("form26_unmatched", 0),
             "match_rate_pct": round(
                 summary.get("form26_matched", len(matches))
-                / max(summary.get("form26_total", 1), 1) * 100, 1
+                / max(len(f26_entries), 1) * 100, 1
             ),
             "avg_confidence": round(sum(confidences) / max(len(confidences), 1), 3),
             "by_pass": dict(pass_distribution),

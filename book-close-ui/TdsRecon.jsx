@@ -92,7 +92,9 @@ function TdsRecon({ onBack }) {
   const checkerResults = results?.checker_results || null;
   const matches = matchResults?.matches || [];
   const findings = checkerResults?.findings || [];
-  const unmatched194c = matchResults?.unmatched_tally_194c || [];
+  const unmatched194cRaw = matchResults?.unmatched_tally_194c || [];
+  // Filter out below-threshold entries — they are resolved, not needing review
+  const unmatched194c = unmatched194cRaw.filter(e => !e._below_threshold);
 
   // Group unmatched by vendor
   const unmatchedVendors = useMemo(() => {
@@ -257,9 +259,9 @@ function TdsRecon({ onBack }) {
                   <div className="tds-kpi-card">
                     <div className="tds-kpi-value">
                       {summary.matching?.matched || 0}
-                      <span className="tds-kpi-total">/{summary.matching?.form26_in_scope || 0}</span>
+                      <span className="tds-kpi-total">/{summary.matching?.form26_total || 0}</span>
                     </div>
-                    <div className="tds-kpi-label">Entries Matched</div>
+                    <div className="tds-kpi-label">Entries Matched (of {summary.matching?.form26_total || 0} total)</div>
                     <div className="tds-kpi-bar">
                       <div className="tds-kpi-bar-fill" style={{ width: `${summary.matching?.match_rate_pct || 0}%` }} />
                     </div>

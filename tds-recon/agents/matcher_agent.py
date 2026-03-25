@@ -681,9 +681,11 @@ def _find_subset_sum(entries: list[dict], target: float, tolerance: float) -> li
 
 def _clean_entry(entry: dict) -> dict:
     """Remove internal tracking fields and bulky raw data from output."""
+    # Fields starting with _ to keep in output
+    KEEP_INTERNAL = {"_below_threshold"}
     cleaned = {}
     for k, v in entry.items():
-        if k.startswith("_"):
+        if k.startswith("_") and k not in KEEP_INTERNAL:
             continue
         if k == "raw":
             continue  # Skip the full raw entry to keep output manageable
