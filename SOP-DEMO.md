@@ -1,118 +1,128 @@
 # SOP — TDS Recon Demo Startup
 
-## Prerequisites
+## Paths on This Machine
 
-- Node.js 18+ installed
-- Python 3.11+ installed
-- Both repos cloned:
-  - `aitdsrecon` — TDS Recon agents + API server
-  - `aibookclose` — Book Close demo UI
+```
+/home/user/aitdsrecon/          ← TDS Recon agents + API server
+/home/user/aitdsrecon/tds-recon/api_server.py   ← FastAPI server
+/home/user/aitdsrecon/tds-recon/data/           ← Parsed data + results
+/home/user/aitdsrecon/book-close-ui/            ← UI files (already copied to aibookclose)
 
-## One-Time Setup
-
-### 1. Install Python dependencies (aitdsrecon)
-
-```bash
-cd aitdsrecon/tds-recon
-pip install fastapi uvicorn
+/home/user/aibookclose/         ← Book Close demo UI (React + Vite)
+/home/user/aibookclose/src/TdsRecon.jsx         ← TDS Recon component
+/home/user/aibookclose/src/tds-recon.css        ← TDS Recon styles
 ```
 
-### 2. Install Node dependencies (aibookclose)
+## Step-by-Step: Starting the Demo
+
+### Step 1 — Open Terminal 1
+
+Open a terminal window.
+
+### Step 2 — Start the API server
 
 ```bash
-cd aibookclose
-npm install
+cd /home/user/aitdsrecon/tds-recon
 ```
 
-### 3. Copy TDS Recon UI files into Book Close app
-
 ```bash
-cp aitdsrecon/book-close-ui/TdsRecon.jsx   aibookclose/src/
-cp aitdsrecon/book-close-ui/tds-recon.css   aibookclose/src/
-cp aitdsrecon/book-close-ui/index.css.updated   aibookclose/src/index.css
-cp aitdsrecon/book-close-ui/App.jsx.updated   aibookclose/src/App.jsx
-```
-
-## Starting the Demo
-
-### Terminal 1 — API Server (Python agents)
-
-```bash
-cd aitdsrecon/tds-recon
 uvicorn api_server:app --reload --port 8000
 ```
 
-Verify: `curl http://localhost:8000/api/status` should return `{"parsed_ready": true, ...}`
+You should see output like:
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     Started reloader process
+```
 
-### Terminal 2 — Book Close UI (React)
+Leave this terminal running. Do not close it.
+
+### Step 3 — Open Terminal 2
+
+Open a second terminal window.
+
+### Step 4 — Start the React UI
 
 ```bash
-cd aibookclose
+cd /home/user/aibookclose
+```
+
+```bash
 npm run dev
 ```
 
-Opens at: `http://localhost:5175/`
+You should see output like:
+```
+  VITE v7.3.1  ready in 300 ms
 
-## Demo Flow
+  ➜  Local:   http://localhost:5173/
+```
 
-1. Open `http://localhost:5175/` in browser
-2. Click **Reconciliations** in the left nav
-3. You see 9 reconciliation tiles (2 done, 3 in progress, 4 not started)
-4. Click the **"TDS Payable (all sections)"** tile (bottom-left, red TAX badge)
-5. The center panel transforms into the TDS Reconciliation workspace
+Note the port number shown (could be 5173, 5174, or 5175 depending on what's running).
 
-### Running Reconciliation
+Leave this terminal running. Do not close it.
 
-6. Click **"Run Reconciliation"** button (top-right)
-7. **Right panel** streams agent activity in real-time:
-   - Parser Agent: parses Form 26 (85 entries) + Tally (3 registers)
-   - Matcher Agent: runs 6 passes (Pass 0: learned rules → Pass 5: aggregated)
-   - TDS Checker: validates compliance (section, rate, threshold, missing TDS)
-   - Reporter: generates summary + CSV reports
-8. **Left panel** populates with results:
-   - KPI cards: 56/56 matched, 95% confidence, 8 findings, Rs 1.2L exposure
-   - Summary tab: section-wise breakdown (194A, 194C matched; 194H, 194J, 194Q pending)
+### Step 5 — Open the browser
 
-### Exploring Results
+Open the URL shown in Terminal 2 output (e.g. `http://localhost:5173/`).
 
-9. Click **Matches** tab → expand Section 194A or 194C → see individual matches
-   - Each row: vendor name, amount, match type (Exact/Fuzzy/Aggregated/GST), confidence %
-10. Click **Findings** tab → see 3 missing TDS errors + 5 section validation warnings
-    - Each finding has: severity badge, vendor, message, remediation guidance
+You should see the Lekha AI Book Close app with a white background.
 
-### Human Review (Learning Loop)
+### Step 6 — Navigate to Reconciliations
 
-11. Click **Review** tab → see unmatched vendors sorted by total amount
-12. For each vendor, click **"Below Threshold"** or **"Ignore"**:
-    - Example: "Bharti Airtel Ltd." (38 entries, Rs 22,308) → Below Threshold
-    - Example: "United India Insurance" (8 entries, Rs 1,01,921) → Ignore (insurance)
-13. Click **"Submit X Decisions & Re-run"**
-14. **Right panel** shows Learning Agent activity:
-    - "Created 3 new rules"
-    - "Bharti Airtel: 38 entries → below_threshold"
-    - "Resolved 47 entries across 3 vendors"
-    - Only Checker + Reporter re-run (NOT full pipeline)
-15. **Left panel** updates: unmatched count drops (225 → 178)
-16. Repeat steps 12-15 to show the system getting smarter
+Click **"Reconciliations"** in the left sidebar (3rd item, shows "2/9").
 
-### Returning to Book Close
+You will see 9 reconciliation tiles arranged in a 3x3 grid.
 
-17. Click **"← Back to Reconciliations"** to return to the reconciliation grid
+### Step 7 — Open TDS Recon
 
-## Key Talking Points for CA Firm
+Click the **"TDS Payable (all sections)"** tile.
+It is in the bottom row, left side, with a red "TAX" badge and "Not Started" status.
 
-- **6-pass matching engine**: exact → GST-adjusted → exempt → fuzzy → aggregated → learned rules
-- **Learning loop**: human decisions become reusable rules — system gets smarter with each review
-- **Only affected entries re-processed**: Learning Agent doesn't re-run the full pipeline, just applies corrections and re-validates
-- **Compliance checks**: section validation, rate validation, base amount (pre-GST), threshold, missing TDS detection
-- **Remediation guidance**: each finding includes specific action items (file revised return, check Form 15G/15H, etc.)
-- **Sections covered**: 194A (interest) + 194C (contractor/freight) fully reconciled; 194H, 194J(b), 194Q ready to add
+The center panel will transform into the TDS Reconciliation workspace.
+
+### Step 8 — Run the reconciliation
+
+Click the **"Run Reconciliation"** button in the top-right corner.
+
+Watch:
+- **Right panel**: Agent activity log streams messages one by one
+  - Parser Agent parses Form 26 + Tally data
+  - Matcher Agent runs 6 matching passes
+  - TDS Checker validates compliance
+  - Reporter generates reports
+- **Left panel**: KPI cards and results appear after pipeline completes
+
+### Step 9 — Explore results
+
+- **Summary tab** (default): Section-wise breakdown. Click a section to expand.
+- **Matches tab**: Individual matches grouped by section (194A, 194C). Shows vendor, amount, match type, confidence.
+- **Findings tab**: Compliance issues — errors (missing TDS) and warnings (ambiguous sections). Each has remediation guidance.
+- **Review tab**: Unmatched vendors for human classification.
+
+### Step 10 — Demo the learning loop
+
+1. Click the **Review** tab
+2. Find a vendor like "Bharti Airtel Ltd." — click **"Below Threshold"**
+3. Find "United India Insurance Co. Ltd." — click **"Ignore"**
+4. Click **"Submit 2 Decisions & Re-run"**
+5. Watch the right panel — Learning Agent applies corrections, only re-runs Checker + Reporter
+6. Left panel updates with fewer unmatched entries
+
+### Step 11 — Return to Book Close
+
+Click **"← Back to Reconciliations"** at the top to go back to the 9-tile grid.
+
+## Shutting Down
+
+- Terminal 1 (API server): Press `Ctrl+C`
+- Terminal 2 (React UI): Press `Ctrl+C`
 
 ## Troubleshooting
 
-| Issue | Fix |
+| Problem | Solution |
 |---|---|
-| "Failed to connect to API" in UI | Make sure `uvicorn api_server:app --reload --port 8000` is running in Terminal 1 |
-| CORS error in browser console | The API server has CORS configured for all origins — restart uvicorn |
-| Port 5175 in use | Change port in `aibookclose/vite.config.js` or kill the process using it |
-| Port 8000 in use | Use `uvicorn api_server:app --port 8001` and update `API` const in TdsRecon.jsx |
+| "Failed to connect to API" in browser | Terminal 1 is not running. Go back to Step 2. |
+| Blank page in browser | Terminal 2 is not running. Go back to Step 4. |
+| "Run Reconciliation" does nothing | Check browser console (F12) for errors. Likely API server not reachable. |
+| Port already in use | Kill the process using it: `lsof -ti:8000 \| xargs kill` or `lsof -ti:5173 \| xargs kill` |
