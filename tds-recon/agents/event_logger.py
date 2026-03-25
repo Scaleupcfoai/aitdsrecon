@@ -14,6 +14,11 @@ class EventLogger:
     def __init__(self):
         self.events = []
         self._start_time = time.time()
+        self._on_event = None  # Callback for real-time streaming
+
+    def set_callback(self, callback):
+        """Set a callback function called on every event emit."""
+        self._on_event = callback
 
     def emit(self, agent: str, message: str, type: str = "info", data: dict | None = None):
         event = {
@@ -29,6 +34,9 @@ class EventLogger:
         # Also print for CLI usage
         prefix = {"success": "✓", "warning": "⚠", "error": "✗", "detail": "  ├─"}.get(type, "●")
         print(f"  {prefix} [{agent}] {message}")
+        # Fire callback for real-time streaming
+        if self._on_event:
+            self._on_event(event)
 
     def info(self, agent: str, message: str, **kwargs):
         self.emit(agent, message, "info", kwargs.get("data"))

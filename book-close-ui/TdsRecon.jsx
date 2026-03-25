@@ -6,7 +6,6 @@ const fmt = (n) => new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).
 
 function TdsRecon({ onBack }) {
   const [status, setStatus] = useState('idle'); // idle | running | done | error
-  const [events, setEvents] = useState([]);
   const [visibleEvents, setVisibleEvents] = useState([]);
   const [results, setResults] = useState(null);
   const [activeTab, setActiveTab] = useState('summary');
@@ -20,37 +19,48 @@ function TdsRecon({ onBack }) {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [visibleEvents]);
 
-  // Animate events appearing one by one (Claude Code style)
-  useEffect(() => {
-    if (events.length === 0) return;
-    setVisibleEvents([]);
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < events.length) {
-        setVisibleEvents(prev => [...prev, events[i]]);
-        i++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 80); // 80ms between events
-    return () => clearInterval(timer);
-  }, [events]);
-
-  // Run pipeline
+  // Run pipeline with real-time SSE streaming
   const runPipeline = async () => {
     setStatus('running');
-    setEvents([]);
     setVisibleEvents([]);
     setReviewDecisions({});
+    setResults(null);
+
     try {
-      const res = await fetch(`${API}/api/run`, { method: 'POST' });
-      const data = await res.json();
-      setEvents(data.events || []);
-      setResults(data.results || null);
-      setRunCount(prev => prev + 1);
-      setStatus('done');
+      const evtSource = new EventSource(`${API}/api/run/stream`);
+
+      evtSource.onmessage = (msg) => {
+        try {
+          const event = JSON.parse(msg.data);
+          if (event.type === 'keepalive') return;
+
+          if (event.type === 'pipeline_complete') {
+            // Final event with results
+            setResults(event.results || null);
+            setRunCount(prev => prev + 1);
+            setStatus('done');
+            evtSource.close();
+            return;
+          }
+
+          // Real-time: add each event as it arrives
+          setVisibleEvents(prev => [...prev, event]);
+        } catch (e) {
+          // Ignore parse errors
+        }
+      };
+
+      evtSource.onerror = () => {
+        evtSource.close();
+        // If we haven't received pipeline_complete, fetch results
+        fetch(`${API}/api/results`).then(r => r.json()).then(data => {
+          setResults(data);
+          setRunCount(prev => prev + 1);
+          setStatus('done');
+        }).catch(() => setStatus('error'));
+      };
     } catch (err) {
-      setEvents([{ agent: 'Error', type: 'error', message: `Failed to connect to API: ${err.message}. Make sure api_server.py is running on port 8000.` }]);
+      setVisibleEvents([{ agent: 'Error', type: 'error', message: `Failed to connect to API: ${err.message}. Make sure api_server.py is running on port 8000.` }]);
       setStatus('error');
     }
   };
@@ -76,7 +86,7 @@ function TdsRecon({ onBack }) {
       });
       const data = await res.json();
       // Learning Agent returns its own events (corrections + Checker + Reporter only)
-      setEvents(prev => [...prev, ...(data.events || [])]);
+      setVisibleEvents(prev => [...prev, ...(data.events || [])]);
       setResults(data.results || null);
       setRunCount(prev => prev + 1);
       setReviewDecisions({});
