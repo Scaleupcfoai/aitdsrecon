@@ -1,33 +1,33 @@
 {
-  "report_generated": "2026-03-25T07:23:22.458498",
+  "report_generated": "2026-03-25T07:30:22.378131",
   "assessment_year": "2025-26",
   "financial_year": "2024-25",
   "scope": {
     "sections_reconciled": [
       "194A",
-      "194C"
-    ],
-    "sections_pending": [
+      "194C",
       "194H",
       "194J(b)",
       "194Q"
-    ]
+    ],
+    "sections_pending": []
   },
   "matching": {
     "form26_total": 85,
-    "form26_in_scope": 56,
-    "matched": 56,
+    "form26_in_scope": 85,
+    "matched": 85,
     "unmatched": 0,
-    "match_rate_pct": 65.9,
-    "avg_confidence": 0.957,
+    "match_rate_pct": 100.0,
+    "avg_confidence": 0.924,
     "by_pass": {
-      "exact_match": 28,
-      "gst_adjusted_base": 1,
-      "fuzzy_match": 9,
-      "aggregated_cumulative": 1,
+      "exact_match": 39,
+      "gst_adjusted_base": 2,
+      "fuzzy_match": 12,
+      "aggregated_cumulative": 2,
       "aggregated_monthly": 13,
       "aggregated_subset": 2,
-      "aggregated_all_available": 2
+      "aggregated_all_available": 2,
+      "vendor_level": 13
     }
   },
   "section_wise": {
@@ -51,34 +51,35 @@
       "form26_count": 13,
       "form26_amount": 1302241,
       "form26_tds": 26047,
-      "matched_count": 0,
-      "matched_amount": 0,
-      "matched_tds": 0
+      "matched_count": 13,
+      "matched_amount": 1302241,
+      "matched_tds": 26047
     },
     "194J(b)": {
       "form26_count": 3,
       "form26_amount": 160500,
       "form26_tds": 16050,
-      "matched_count": 0,
-      "matched_amount": 0,
-      "matched_tds": 0
+      "matched_count": 3,
+      "matched_amount": 160500,
+      "matched_tds": 16050
     },
     "194Q": {
       "form26_count": 13,
       "form26_amount": 58592615,
       "form26_tds": 58593,
-      "matched_count": 0,
-      "matched_amount": 0,
-      "matched_tds": 0
+      "matched_count": 13,
+      "matched_amount": 58592615,
+      "matched_tds": 58593
     }
   },
   "compliance": {
-    "total_findings": 8,
+    "total_findings": 10,
     "errors": 3,
     "warnings": 5,
-    "info": 0,
+    "info": 2,
     "by_check": {
       "section_validation": 5,
+      "threshold_validation": 2,
       "missing_tds": 3
     },
     "missing_tds_exposure": 121397.0,
@@ -87,7 +88,7 @@
   "amounts": {
     "total_form26_payments": 68592520,
     "total_form26_tds": 878092,
-    "matched_payments": 8537164,
-    "matched_tds": 777402
+    "matched_payments": 68592520,
+    "matched_tds": 878092
   }
 }
