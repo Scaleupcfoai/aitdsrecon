@@ -1,7 +1,7 @@
 {
   "version": 1,
   "created_at": "2026-03-23T13:10:36.049460",
-  "updated_at": "2026-03-23T13:10:36.083112",
+  "updated_at": "2026-03-25T05:56:54.916074",
   "rules": [
     {
       "id": 1,
@@ -962,13 +962,56 @@
       "created_at": "2026-03-23T13:10:36.083089",
       "times_applied": 0,
       "active": true
+    },
+    {
+      "id": 61,
+      "rule_type": "below_threshold",
+      "params": {
+        "vendor_name": "Bharti Airtel Ltd.",
+        "section": "194C",
+        "annual_amount": 22308,
+        "threshold": 100000,
+        "fy": "2024-25"
+      },
+      "reason": "Aggregate telecom charges below threshold",
+      "source": "human_review",
+      "created_at": "2026-03-25T05:56:54.913912",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 62,
+      "rule_type": "ignore",
+      "params": {
+        "vendor_name": "United India Insurance Co. Ltd.",
+        "category": "insurance"
+      },
+      "reason": "Insurance premium, not TDS-applicable under 194C",
+      "source": "human_review",
+      "created_at": "2026-03-25T05:56:54.915007",
+      "times_applied": 0,
+      "active": true
+    },
+    {
+      "id": 63,
+      "rule_type": "ignore",
+      "params": {
+        "vendor_name": "Go Digit General Insurance Ltd.",
+        "category": "insurance"
+      },
+      "reason": "Insurance premium, not applicable",
+      "source": "human_review",
+      "created_at": "2026-03-25T05:56:54.916043",
+      "times_applied": 0,
+      "active": true
     }
   ],
   "stats": {
-    "total_rules": 60,
+    "total_rules": 63,
     "total_applied": 0,
     "by_type": {
-      "below_threshold": 60
+      "below_threshold": 61,
+      "ignore": 2
     }
   }
 }

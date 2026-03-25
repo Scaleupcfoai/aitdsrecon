@@ -31,7 +31,15 @@ import sys
 import time
 from pathlib import Path
 
+from agents.event_logger import EventLogger, reset_logger
 
+
+def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) -> dict:
+    """Run the full TDS reconciliation pipeline.
+
+    Returns a dict with: {events, summary, results_dir}
+    """
+    logger = reset_logger()
 # ---------------------------------------------------------------------------
 # Pipeline State — passed between stages
 # ---------------------------------------------------------------------------
@@ -351,7 +359,6 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     results_dir = base / "data" / "results"
     rules_dir = base / "data" / "rules"
 
-    # Ensure output directories exist
     parsed_dir.mkdir(parents=True, exist_ok=True)
     results_dir.mkdir(parents=True, exist_ok=True)
 
@@ -361,9 +368,6 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     print("=" * 60)
     print("TDS RECONCILIATION PIPELINE (v2 — Gated Orchestrator)")
     print("=" * 60)
-    print(f"Sections: 194A (Interest), 194C (Contractor)")
-    print(f"FY: 2024-25 | AY: 2025-26")
-    print()
 
     # ================================================================
     # GATE 1: Validate Inputs
@@ -372,256 +376,138 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     print("GATE 1: VALIDATE INPUTS")
     print("─" * 60)
 
-    gate1 = validate_inputs(form26_path, tally_path, parsed_dir)
-    print(f"  Mode: {gate1['mode']}")
-    print(f"  Result: {'PASS' if gate1['passed'] else 'FAIL'} — {gate1['detail']}")
-
-    if not gate1["passed"]:
-        state["gates_failed"].append({"gate": "validate_inputs", **gate1})
-        state["status"] = "failed"
-        state["errors"].append(gate1["detail"])
-        print(f"\n  PIPELINE ABORTED: {gate1['detail']}")
-        return _finalize(state, pipeline_start)
-
-    state["gates_passed"].append({"gate": "validate_inputs", **gate1})
-    print()
-
-    # ================================================================
-    # STAGE 1: Parser Agent
-    # ================================================================
-    print("─" * 60)
-    print("STAGE 1/4: PARSER AGENT")
-    print("─" * 60)
-
-    stage_start = time.time()
-    if gate1["mode"] == "parse":
+    # ---- Step 1: Parser ----
+    logger.agent_start("Parser Agent", "Starting Parser Agent...")
+    if form26_path and tally_path:
         from agents.parser_agent import run as parser_run
         parser_run(form26_path, tally_path, str(parsed_dir))
+        logger.success("Parser Agent", "Parsed input files")
     else:
-        print("  Skipped (using cached parsed data)")
+        if not (parsed_dir / "parsed_form26.json").exists():
+            logger.error("Parser Agent", "parsed_form26.json not found")
+            return {"events": logger.get_events(), "error": "Missing parsed data"}
+        if not (parsed_dir / "parsed_tally.json").exists():
+            logger.error("Parser Agent", "parsed_tally.json not found")
+            return {"events": logger.get_events(), "error": "Missing parsed data"}
 
-    state["timing"]["parser"] = round(time.time() - stage_start, 2)
-    state["stages_completed"].append("parser")
-    print()
+        # Emit parsing details from existing files
+        with open(parsed_dir / "parsed_form26.json") as f:
+            f26 = json.load(f)
+        with open(parsed_dir / "parsed_tally.json") as f:
+            tally = json.load(f)
 
-    # ================================================================
-    # GATE 2: Check Parsed Output
-    # ================================================================
-    print("─" * 60)
-    print("GATE 2: PARSED OUTPUT CHECK")
-    print("─" * 60)
+        f26_count = len(f26.get("entries", []))
+        sections = set(e["section"] for e in f26.get("entries", []))
+        jr_count = len(tally.get("journal_register", {}).get("entries", []))
+        gst_count = len(tally.get("purchase_gst_exp_register", {}).get("entries", []))
+        pr_count = len(tally.get("purchase_register", {}).get("entries", []))
 
-    gate2 = check_parsed_output(parsed_dir)
-    print(f"  Form 26: {gate2['form26_count']} entries")
-    print(f"  Tally:   {gate2['tally_count']} entries")
-    if gate2.get("tally_breakdown"):
-        tb = gate2["tally_breakdown"]
-        print(f"    Journal: {tb['journal']}, GST Exp: {tb['gst_exp']}, Purchase: {tb['purchase']}")
-    print(f"  Result: {'PASS' if gate2['passed'] else 'FAIL'} — {gate2['detail']}")
+        logger.detail("Parser Agent", f"Form 26: {f26_count} entries across {len(sections)} sections")
+        logger.detail("Parser Agent", f"Sections found: {', '.join(sorted(sections))}")
+        logger.detail("Parser Agent", f"Tally Journal Register: {jr_count} entries")
+        logger.detail("Parser Agent", f"Tally GST Expense Register: {gst_count} entries")
+        logger.detail("Parser Agent", f"Tally Purchase Register: {pr_count} entries")
 
-    if not gate2["passed"]:
-        state["gates_failed"].append({"gate": "parsed_output_check", **gate2})
-        state["status"] = "failed"
-        state["errors"].append(gate2["detail"])
-        print(f"\n  PIPELINE ABORTED: {gate2['detail']}")
-        return _finalize(state, pipeline_start)
+        # Count unique vendor names
+        vendors = set(e.get("vendor_name", "") for e in f26.get("entries", []))
+        tally_vendors = set()
+        for e in tally.get("journal_register", {}).get("entries", []):
+            if e.get("loan_party"):
+                tally_vendors.add(e["loan_party"])
+            if e.get("particulars"):
+                tally_vendors.add(e["particulars"])
+        for e in tally.get("purchase_gst_exp_register", {}).get("entries", []):
+            if e.get("particulars"):
+                tally_vendors.add(e["particulars"])
+        logger.detail("Parser Agent", f"Form 26 vendors: {len(vendors)} unique")
+        logger.detail("Parser Agent", f"Tally vendors: {len(tally_vendors)} unique")
 
-    state["gates_passed"].append({"gate": "parsed_output_check", **gate2})
-    print()
+    logger.agent_done("Parser Agent", "Parsing complete")
 
-    # ================================================================
-    # STAGE 2: Matcher Agent
-    # ================================================================
-    print("─" * 60)
-    print("STAGE 2/4: MATCHER AGENT")
-    print("─" * 60)
-
-    stage_start = time.time()
+    # ---- Step 2: Matcher ----
+    logger.agent_start("Matcher Agent", "Starting Matcher Agent...")
     from agents.matcher_agent import run as matcher_run
     match_results = matcher_run(str(parsed_dir), str(results_dir), rules_dir=str(rules_dir))
-    state["timing"]["matcher"] = round(time.time() - stage_start, 2)
-    state["stages_completed"].append("matcher")
-    state["results"]["matcher"] = match_results.get("summary", {})
-    print()
 
-    # ================================================================
-    # ROUTING: After Matcher — should we run checker?
-    # ================================================================
-    print("─" * 60)
-    print("ROUTING: POST-MATCHER DECISION")
-    print("─" * 60)
+    # Emit matcher details from results
+    summary = match_results.get("summary", {})
+    by_pass = summary.get("matches_by_pass", {})
+    learned = match_results.get("learned_rules", {})
 
-    matcher_routing = route_after_matcher(match_results)
-    state["routing_decisions"].append({"point": "post_matcher", **matcher_routing})
-    print(f"  Unmatched: {matcher_routing['unmatched_count']}")
-    print(f"  Match rate: {matcher_routing['match_rate']}%")
-    print(f"  Decision: {'RUN CHECKER' if matcher_routing['run_checker'] else 'SKIP CHECKER'}")
-    print(f"  Reason: {matcher_routing['reason']}")
-    print()
+    if learned.get("rules_loaded", 0) > 0:
+        logger.detail("Matcher Agent", f"Pass 0: {learned['rules_loaded']} learned rules loaded")
+        if learned.get("below_threshold_entries", 0):
+            logger.detail("Matcher Agent", f"  → {learned['below_threshold_entries']} below-threshold entries marked")
+    if by_pass.get("pass1_exact", 0):
+        logger.detail("Matcher Agent", f"Pass 1: {by_pass['pass1_exact']} exact matches (name + amount + date)")
+    if by_pass.get("pass2_gst_adjusted", 0):
+        logger.detail("Matcher Agent", f"Pass 2: {by_pass['pass2_gst_adjusted']} GST-adjusted matches")
+    if by_pass.get("pass3_exempt", 0):
+        logger.detail("Matcher Agent", f"Pass 3: {by_pass['pass3_exempt']} exempt entries filtered")
+    if by_pass.get("pass4_fuzzy", 0):
+        logger.detail("Matcher Agent", f"Pass 4: {by_pass['pass4_fuzzy']} fuzzy matches (name similarity > 40%)")
+    if by_pass.get("pass5_aggregated", 0):
+        logger.detail("Matcher Agent", f"Pass 5: {by_pass['pass5_aggregated']} aggregated matches")
 
-    # ================================================================
-    # STAGE 3: TDS Checker Agent (conditional)
-    # ================================================================
-    checker_results = None
-    checker_routing = None
+    matched = summary.get("form26_matched", 0)
+    total = summary.get("form26_total", 0)
+    pct = (matched / total * 100) if total > 0 else 0
+    logger.success("Matcher Agent", f"Result: {matched}/{total} matched ({pct:.0f}%)")
+    logger.agent_done("Matcher Agent", "Matching complete")
 
-    if matcher_routing["run_checker"]:
-        print("─" * 60)
-        print("STAGE 3/4: TDS CHECKER AGENT")
-        print("─" * 60)
+    # ---- Step 3: TDS Checker ----
+    logger.agent_start("TDS Checker", "Starting TDS Checker Agent...")
+    from agents.tds_checker_agent import run as checker_run
+    checker_results = checker_run(str(parsed_dir), str(results_dir))
 
-        stage_start = time.time()
-        from agents.tds_checker_agent import run as checker_run
-        checker_results = checker_run(str(parsed_dir), str(results_dir))
-        state["timing"]["checker"] = round(time.time() - stage_start, 2)
-        state["stages_completed"].append("checker")
-        state["results"]["checker"] = checker_results.get("summary", {})
-        print()
+    findings = checker_results.get("findings", [])
+    errors = [f for f in findings if f.get("severity") == "error"]
+    warnings = [f for f in findings if f.get("severity") == "warning"]
 
-        # ============================================================
-        # ROUTING: After Checker — clean or needs review?
-        # ============================================================
-        print("─" * 60)
-        print("ROUTING: POST-CHECKER DECISION")
-        print("─" * 60)
+    for f in findings:
+        sev = f.get("severity", "info")
+        vendor = f.get("vendor", "Unknown")
+        msg = f.get("message", "")
+        # Truncate long messages
+        short_msg = msg[:120] + "..." if len(msg) > 120 else msg
+        if sev == "error":
+            logger.error("TDS Checker", f"{vendor}: {short_msg}")
+        elif sev == "warning":
+            logger.warning("TDS Checker", f"{vendor}: {short_msg}")
+        else:
+            logger.detail("TDS Checker", f"{vendor}: {short_msg}")
 
-        checker_routing = route_after_checker(checker_results)
-        state["routing_decisions"].append({"point": "post_checker", **checker_routing})
-        print(f"  Status: {checker_routing['status'].upper()}")
-        print(f"  Severity: {checker_routing['severity']}")
-        print(f"  Reason: {checker_routing['reason']}")
-        if checker_routing["review_items"]:
-            print(f"  Review items: {len(checker_routing['review_items'])}")
-        print()
-    else:
-        print("─" * 60)
-        print("STAGE 3/4: TDS CHECKER AGENT — SKIPPED")
-        print("─" * 60)
-        print(f"  Reason: {matcher_routing['reason']}")
-        state["stages_completed"].append("checker_skipped")
-        print()
+    exposure = sum(f.get("aggregate_amount", 0) for f in errors)
+    logger.success("TDS Checker", f"Complete: {len(errors)} errors, {len(warnings)} warnings, ₹{exposure:,.0f} exposure")
+    logger.agent_done("TDS Checker", "Compliance checks complete")
 
-    # ================================================================
-    # STAGE 4: Reporter Agent
-    # ================================================================
-    print("─" * 60)
-    print("STAGE 4/4: REPORTER AGENT")
-    print("─" * 60)
-
-    stage_start = time.time()
+    # ---- Step 4: Reporter ----
+    logger.agent_start("Reporter Agent", "Generating reports...")
     from agents.reporter_agent import run as reporter_run
     report = reporter_run(str(parsed_dir), str(results_dir))
-    state["timing"]["reporter"] = round(time.time() - stage_start, 2)
-    state["stages_completed"].append("reporter")
-    state["results"]["reporter"] = report.get("summary", {})
-    print()
+    logger.detail("Reporter Agent", "reconciliation_summary.json — Executive summary")
+    logger.detail("Reporter Agent", "reconciliation_report.csv — Full match report")
+    logger.detail("Reporter Agent", "findings_report.csv — Findings + remediation")
+    logger.agent_done("Reporter Agent", "Reports generated")
 
-    # ================================================================
-    # BUILD HUMAN REVIEW QUEUE
-    # ================================================================
-    review_queue = build_review_queue(match_results, checker_routing)
-    state["human_review_queue"] = review_queue
+    elapsed = time.time() - start
+    logger.emit("Pipeline", f"Complete in {elapsed:.1f}s", "success")
 
-    # ================================================================
-    # DETERMINE FINAL STATUS
-    # ================================================================
-    if state["errors"]:
-        state["status"] = "failed"
-    elif review_queue:
-        state["status"] = "needs_review"
-    else:
-        state["status"] = "complete"
+    print(f"\n{'=' * 60}")
+    print(f"PIPELINE COMPLETE — {elapsed:.1f}s")
+    print(f"{'=' * 60}")
 
-    result = _finalize(state, pipeline_start)
+    report_summary = report.get("summary", {})
+    c = report_summary.get("compliance", {})
+    status = "CLEAN" if c.get("clean_bill") else "ACTION REQUIRED"
+    print(f"Status: {status}")
 
-    # ================================================================
-    # FINAL SUMMARY
-    # ================================================================
-    print("=" * 60)
-    print("PIPELINE COMPLETE")
-    print("=" * 60)
-    _print_final_summary(result)
-
-    # Write pipeline result to disk
-    pipeline_file = results_dir / "pipeline_result.json"
-    with open(pipeline_file, "w") as f:
-        # Strip large source data from review queue for the JSON output
-        output = {**result}
-        output["human_review_queue"] = [
-            {k: v for k, v in item.items() if k != "source"}
-            for item in result["human_review_queue"]
-        ]
-        json.dump(output, f, indent=2, default=str)
-    print(f"\nPipeline result: {pipeline_file}")
-
-    return result
-
-
-def _finalize(state: dict, pipeline_start: float) -> dict:
-    """Finalize the pipeline state into the return format."""
-    state["timing"]["total"] = round(time.time() - pipeline_start, 2)
     return {
-        "status": state["status"],
-        "results": state["results"],
-        "human_review_queue": state["human_review_queue"],
-        "pipeline": {
-            "stages_completed": state["stages_completed"],
-            "gates_passed": [g["gate"] for g in state["gates_passed"]],
-            "gates_failed": [g["gate"] for g in state["gates_failed"]],
-            "routing_decisions": state["routing_decisions"],
-            "timing": state["timing"],
-            "errors": state["errors"],
-        },
+        "events": logger.get_events(),
+        "summary": report_summary,
+        "results_dir": str(results_dir),
+        "elapsed_s": round(elapsed, 2),
     }
-
-
-def _print_final_summary(result: dict):
-    """Print a human-readable final summary."""
-    pipeline = result["pipeline"]
-    timing = pipeline["timing"]
-
-    print(f"\nStatus: {result['status'].upper()}")
-    print(f"Time: {timing.get('total', 0):.1f}s")
-    print(f"Stages: {' → '.join(pipeline['stages_completed'])}")
-    print(f"Gates passed: {', '.join(pipeline['gates_passed']) or 'none'}")
-    if pipeline["gates_failed"]:
-        print(f"Gates FAILED: {', '.join(pipeline['gates_failed'])}")
-
-    # Routing decisions
-    for rd in pipeline["routing_decisions"]:
-        point = rd["point"]
-        if point == "post_matcher":
-            print(f"\nMatcher: {rd['match_rate']}% match rate, "
-                  f"{rd['unmatched_count']} unmatched")
-        elif point == "post_checker":
-            print(f"Checker: {rd['status']} ({rd['reason']})")
-
-    # Human review queue
-    queue = result["human_review_queue"]
-    if queue:
-        high = sum(1 for q in queue if q["priority"] == "high")
-        medium = sum(1 for q in queue if q["priority"] == "medium")
-        print(f"\nHuman Review Queue: {len(queue)} items")
-        print(f"  High priority: {high}")
-        print(f"  Medium priority: {medium}")
-        print()
-        for i, item in enumerate(queue, 1):
-            print(f"  {i}. [{item['priority'].upper()}] {item['type']}")
-            if item.get("vendor"):
-                print(f"     Vendor: {item['vendor']} | Section: {item.get('section', '-')}")
-            if item.get("amount"):
-                print(f"     Amount: {item['amount']:,}")
-            print(f"     Action: {item['action_needed']}")
-    else:
-        print(f"\nHuman Review Queue: EMPTY (all clear)")
-
-    # Timing breakdown
-    print(f"\nTiming:")
-    for stage, t in timing.items():
-        if stage != "total":
-            print(f"  {stage}: {t:.2f}s")
-    print(f"  TOTAL: {timing.get('total', 0):.1f}s")
-
 
 # ---------------------------------------------------------------------------
 # CLI

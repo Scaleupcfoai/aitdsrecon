@@ -1,16 +1,17 @@
 {
-  "run_timestamp": "2026-03-24T10:06:11.323771",
+  "run_timestamp": "2026-03-25T05:56:54.888875",
   "sections_processed": [
     "194C",
     "194A"
   ],
   "learned_rules": {
-    "rules_loaded": 60,
-    "rules_applied": 0,
-    "ignored_vendors": 0,
+    "rules_loaded": 63,
+    "rules_applied": 47,
+    "below_threshold_vendors": 61,
+    "below_threshold_entries": 38,
+    "ignored_vendors": 2,
     "exempt_vendors": 0,
-    "below_threshold_vendors": 60,
-    "below_threshold_entries": 225
+    "total_resolved_by_learning": 47
   },
   "summary": {
     "form26_total": 56,
@@ -3256,136 +3257,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "1",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 249.0,
-      "gross_amount": 293.0,
-      "total_gst": 44.82,
-      "amount_is_base": true,
-      "voucher_no": "2",
-      "expense_heads": {
-        "Insurance Charges": 249.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 1217.0,
-      "gross_amount": 1437.0,
-      "total_gst": 219.06,
-      "amount_is_base": true,
-      "voucher_no": "3",
-      "expense_heads": {
-        "Insurance Charges": 1217.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 5489.0,
-      "gross_amount": 6477.0,
-      "total_gst": 988.02,
-      "amount_is_base": true,
-      "voucher_no": "4",
-      "expense_heads": {
-        "Insurance Charges": 5489.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 2100.0,
-      "gross_amount": 2478.0,
-      "total_gst": 378.0,
-      "amount_is_base": true,
-      "voucher_no": "5",
-      "expense_heads": {
-        "Insurance Charges": 2100.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 1108.0,
-      "gross_amount": 1308.0,
-      "total_gst": 199.44,
-      "amount_is_base": true,
-      "voucher_no": "6",
-      "expense_heads": {
-        "Insurance Charges": 1108.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 356.0,
-      "gross_amount": 420.0,
-      "total_gst": 64.08,
-      "amount_is_base": true,
-      "voucher_no": "7",
-      "expense_heads": {
-        "Insurance Charges": 356.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-03T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 904.0,
-      "gross_amount": 1066.0,
-      "total_gst": 162.72,
-      "amount_is_base": true,
-      "voucher_no": "8",
-      "expense_heads": {
-        "Insurance Charges": 904.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-05T00:00:00",
-      "party_name": "United India Insurance Co. Ltd.",
-      "amount": 90498.0,
-      "gross_amount": 106788.0,
-      "total_gst": 16289.64,
-      "amount_is_base": true,
-      "voucher_no": "9",
-      "expense_heads": {
-        "Insurance Charges": 90498.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "10",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-04-06T00:00:00",
       "party_name": "V Trans (India) Ltd.",
       "amount": 2699.0,
@@ -3421,19 +3292,6 @@
       "voucher_no": "13",
       "expense_heads": {
         "Annual Maintenance Charges": 3200.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "14",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -3529,32 +3387,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-05-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "20",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-05-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "21",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-05-06T00:00:00",
       "party_name": "Shree Narsingh Enterprise",
       "amount": 1760.0,
@@ -3603,19 +3435,6 @@
       "voucher_no": "25",
       "expense_heads": {
         "Postage & Stamp_18%": 2355.89
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-05-13T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "26",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -3686,19 +3505,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-06-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "34",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-06-03T00:00:00",
       "party_name": "Ranka Infotech",
       "amount": 300.0,
       "gross_amount": 354.0,
@@ -3707,19 +3513,6 @@
       "voucher_no": "35",
       "expense_heads": {
         "Printing & Stationary_18%": 300.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-06-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "36",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -3759,19 +3552,6 @@
       "voucher_no": "39",
       "expense_heads": {
         "Brokerage and Commission_18%": 38743.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-06-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "40",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -3828,32 +3608,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-07-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "46",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-07-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "47",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-07-06T00:00:00",
       "party_name": "Shree Narsingh Enterprise",
       "amount": 1320.0,
@@ -3876,19 +3630,6 @@
       "voucher_no": "49",
       "expense_heads": {
         "General Exp. GST_12%": 220.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-07-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "50",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -3997,32 +3738,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-08-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "59",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-08-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "60",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-08-06T00:00:00",
       "party_name": "Shree Narsingh Enterprise",
       "amount": 1740.0,
@@ -4032,19 +3747,6 @@
       "voucher_no": "61",
       "expense_heads": {
         "General Exp. GST_12%": 1740.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-08-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "62",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -4153,32 +3855,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-09-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "71",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-09-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "73",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-09-06T00:00:00",
       "party_name": "Shree Narsingh Enterprise",
       "amount": 1566.0,
@@ -4188,32 +3864,6 @@
       "voucher_no": "74",
       "expense_heads": {
         "General Exp. GST_12%": 1566.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-09-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 2545.0,
-      "gross_amount": 3003.1,
-      "total_gst": 458.1,
-      "amount_is_base": true,
-      "voucher_no": "75",
-      "expense_heads": {
-        "Telephone Charges_18%": 2545.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-09-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "76",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -4401,19 +4051,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-10-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 699.0,
-      "gross_amount": 824.82,
-      "total_gst": 125.82,
-      "amount_is_base": true,
-      "voucher_no": "88",
-      "expense_heads": {
-        "Telephone Charges_18%": 699.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-10-03T00:00:00",
       "party_name": "Pioneer Packaging Industries Pvt. Ltd.",
       "amount": 22944.0,
       "gross_amount": 25697.28,
@@ -4422,32 +4059,6 @@
       "voucher_no": "89",
       "expense_heads": {
         "Packing Charges_12%": 22944.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-10-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "90",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-10-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "91",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -4584,32 +4195,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-11-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "106",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-11-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "107",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-11-09T00:00:00",
       "party_name": "Dynavision Technologies Pvt. Ltd.",
       "amount": 24300.0,
@@ -4619,19 +4204,6 @@
       "voucher_no": "108",
       "expense_heads": {
         "Software Expenses": 24300.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-11-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "109",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -4806,19 +4378,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-12-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "123",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-12-03T00:00:00",
       "party_name": "Saraswati Paper Mart",
       "amount": 1360.0,
       "gross_amount": 1605.0,
@@ -4827,19 +4386,6 @@
       "voucher_no": "124",
       "expense_heads": {
         "Printing & Stationary_18%": 1360.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-12-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "125",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -4866,19 +4412,6 @@
       "voucher_no": "127",
       "expense_heads": {
         "General Exp. GST_12%": 580.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-12-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "128",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -5001,19 +4534,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2025-01-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "146",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-01-03T00:00:00",
       "party_name": "Desire",
       "amount": 3135.59,
       "gross_amount": 3700.0,
@@ -5022,32 +4542,6 @@
       "voucher_no": "147",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 3135.59
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-01-03T00:00:00",
-      "party_name": "Go Digit General Insurance Ltd.",
-      "amount": 68485.34,
-      "gross_amount": 80813.0,
-      "total_gst": 12327.36,
-      "amount_is_base": true,
-      "voucher_no": "148",
-      "expense_heads": {
-        "Motor Car Insurance": 68485.34
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-01-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "149",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -5100,19 +4594,6 @@
       "voucher_no": "153",
       "expense_heads": {
         "GST Annual Return Charges": 9000.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-01-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "154",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -5196,32 +4677,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2025-02-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "162",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-02-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "164",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2025-02-06T00:00:00",
       "party_name": "Shree Narsingh Enterprise",
       "amount": 1450.0,
@@ -5231,19 +4686,6 @@
       "voucher_no": "166",
       "expense_heads": {
         "General Exp. GST_12%": 1450.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-02-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "167",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -5431,32 +4873,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2025-03-03T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 599.0,
-      "gross_amount": 706.82,
-      "total_gst": 107.82,
-      "amount_is_base": true,
-      "voucher_no": "180",
-      "expense_heads": {
-        "Telephone Charges_18%": 599.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-03-06T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "181",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2025-03-06T00:00:00",
       "party_name": "Shree Narsingh Enterprise",
       "amount": 1276.0,
@@ -5505,32 +4921,6 @@
       "voucher_no": "188",
       "expense_heads": {
         "Freight Charges_18%": 2055.9
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-03-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "189",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
-      }
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-03-12T00:00:00",
-      "party_name": "Bharti Airtel Ltd.",
-      "amount": 499.0,
-      "gross_amount": 588.82,
-      "total_gst": 89.82,
-      "amount_is_base": true,
-      "voucher_no": "190",
-      "expense_heads": {
-        "Telephone Charges_18%": 499.0
       }
     },
     {
@@ -5727,6 +5117,901 @@
       "voucher_no": "222",
       "expense_heads": {
         "Postage & Stamp_18%": 218.63
+      }
+    }
+  ],
+  "resolved_by_learning": [
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "1",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917872"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "10",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917882"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "14",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917884"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "20",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917886"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "21",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917888"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-05-13T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "26",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917890"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "34",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917892"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "36",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917893"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-06-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "40",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917895"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "46",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917897"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "47",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917898"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-07-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "50",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917899"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "59",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917902"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "60",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917903"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-08-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "62",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917905"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "71",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917907"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "73",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917908"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 2545.0,
+      "gross_amount": 3003.1,
+      "total_gst": 458.1,
+      "amount_is_base": true,
+      "voucher_no": "75",
+      "expense_heads": {
+        "Telephone Charges_18%": 2545.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917909"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-09-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "76",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917910"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 699.0,
+      "gross_amount": 824.82,
+      "total_gst": 125.82,
+      "amount_is_base": true,
+      "voucher_no": "88",
+      "expense_heads": {
+        "Telephone Charges_18%": 699.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917913"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "90",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917914"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-10-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "91",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917915"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "106",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917917"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "107",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917917"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-11-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "109",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917918"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "123",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917921"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "125",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917922"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-12-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "128",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917923"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "146",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917924"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "149",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917925"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "154",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917926"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "162",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917928"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "164",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917929"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-02-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "167",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917930"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-03T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 599.0,
+      "gross_amount": 706.82,
+      "total_gst": 107.82,
+      "amount_is_base": true,
+      "voucher_no": "180",
+      "expense_heads": {
+        "Telephone Charges_18%": 599.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917932"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-06T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "181",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917932"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "189",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917934"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-03-12T00:00:00",
+      "party_name": "Bharti Airtel Ltd.",
+      "amount": 499.0,
+      "gross_amount": 588.82,
+      "total_gst": 89.82,
+      "amount_is_base": true,
+      "voucher_no": "190",
+      "expense_heads": {
+        "Telephone Charges_18%": 499.0
+      },
+      "resolution": {
+        "type": "below_threshold",
+        "reason": "Aggregate telecom charges below threshold",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917934"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 249.0,
+      "gross_amount": 293.0,
+      "total_gst": 44.82,
+      "amount_is_base": true,
+      "voucher_no": "2",
+      "expense_heads": {
+        "Insurance Charges": 249.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917985"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 1217.0,
+      "gross_amount": 1437.0,
+      "total_gst": 219.06,
+      "amount_is_base": true,
+      "voucher_no": "3",
+      "expense_heads": {
+        "Insurance Charges": 1217.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917988"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 5489.0,
+      "gross_amount": 6477.0,
+      "total_gst": 988.02,
+      "amount_is_base": true,
+      "voucher_no": "4",
+      "expense_heads": {
+        "Insurance Charges": 5489.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917990"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 2100.0,
+      "gross_amount": 2478.0,
+      "total_gst": 378.0,
+      "amount_is_base": true,
+      "voucher_no": "5",
+      "expense_heads": {
+        "Insurance Charges": 2100.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917991"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 1108.0,
+      "gross_amount": 1308.0,
+      "total_gst": 199.44,
+      "amount_is_base": true,
+      "voucher_no": "6",
+      "expense_heads": {
+        "Insurance Charges": 1108.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917992"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 356.0,
+      "gross_amount": 420.0,
+      "total_gst": 64.08,
+      "amount_is_base": true,
+      "voucher_no": "7",
+      "expense_heads": {
+        "Insurance Charges": 356.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917994"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-03T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 904.0,
+      "gross_amount": 1066.0,
+      "total_gst": 162.72,
+      "amount_is_base": true,
+      "voucher_no": "8",
+      "expense_heads": {
+        "Insurance Charges": 904.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.917995"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2024-04-05T00:00:00",
+      "party_name": "United India Insurance Co. Ltd.",
+      "amount": 90498.0,
+      "gross_amount": 106788.0,
+      "total_gst": 16289.64,
+      "amount_is_base": true,
+      "voucher_no": "9",
+      "expense_heads": {
+        "Insurance Charges": 90498.0
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not TDS-applicable under 194C",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.918000"
+      }
+    },
+    {
+      "tally_source": "gst_exp",
+      "date": "2025-01-03T00:00:00",
+      "party_name": "Go Digit General Insurance Ltd.",
+      "amount": 68485.34,
+      "gross_amount": 80813.0,
+      "total_gst": 12327.36,
+      "amount_is_base": true,
+      "voucher_no": "148",
+      "expense_heads": {
+        "Motor Car Insurance": 68485.34
+      },
+      "resolution": {
+        "type": "ignore",
+        "reason": "Insurance premium, not applicable",
+        "resolved_by": "human_review",
+        "resolved_at": "2026-03-25T05:56:54.918059"
       }
     }
   ]
