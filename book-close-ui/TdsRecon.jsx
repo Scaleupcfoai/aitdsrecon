@@ -178,6 +178,7 @@ function TdsRecon({ onBack }) {
     const blocks = [];
     let current = null;
     for (const e of visibleEvents) {
+      if (!e || !e.type) continue;
       if (e.type === 'agent_start') {
         if (current) blocks.push(current);
         current = { agent: e.agent, events: [e], startTime: e.elapsed_ms };
