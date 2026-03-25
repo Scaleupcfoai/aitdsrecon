@@ -75,13 +75,8 @@ function TdsRecon({ onBack }) {
         body: JSON.stringify({ decisions }),
       });
       const data = await res.json();
-      setEvents(prev => [
-        ...prev,
-        { agent: 'Learning Agent', type: 'agent_start', message: `Processing ${decisions.length} human decisions...` },
-        { agent: 'Learning Agent', type: 'success', message: `Created ${data.review?.rules_created || 0} new rules` },
-        { agent: 'Learning Agent', type: 'agent_done', message: 'Re-running pipeline with updated rules...' },
-        ...(data.events || []),
-      ]);
+      // Learning Agent returns its own events (corrections + Checker + Reporter only)
+      setEvents(prev => [...prev, ...(data.events || [])]);
       setResults(data.results || null);
       setRunCount(prev => prev + 1);
       setReviewDecisions({});

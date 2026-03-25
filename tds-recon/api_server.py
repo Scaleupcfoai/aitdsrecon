@@ -91,26 +91,18 @@ class ReviewRequest(BaseModel):
 
 @app.post("/api/review")
 def submit_review(request: ReviewRequest):
-    """Submit human review decisions, create rules, and re-run pipeline."""
-    from agents.learning_agent import process_human_review
+    """Submit human review decisions — apply corrections to affected entries only.
+
+    Does NOT re-run the full pipeline. Instead:
+    1. Stores decisions as learned rules
+    2. Applies corrections to current unmatched entries
+    3. Re-runs only Checker + Reporter on updated results
+    """
+    from agents.learning_agent import apply_corrections
 
     decisions = [d.model_dump() for d in request.decisions]
-    review_result = process_human_review(str(RULES_DIR), decisions)
-
-    # Re-run pipeline with new rules
-    from reconcile import run_pipeline as _run
-    pipeline_result = _run()
-
-    # Load updated results
-    results_data = {}
-    for fname in ["match_results.json", "checker_results.json", "reconciliation_summary.json"]:
-        fpath = RESULTS_DIR / fname
-        if fpath.exists():
-            with open(fpath) as f:
-                results_data[fname.replace(".json", "")] = json.load(f)
-    pipeline_result["results"] = results_data
-    pipeline_result["review"] = review_result
-    return pipeline_result
+    result = apply_corrections(str(RULES_DIR), str(RESULTS_DIR), decisions)
+    return result
 
 
 if __name__ == "__main__":

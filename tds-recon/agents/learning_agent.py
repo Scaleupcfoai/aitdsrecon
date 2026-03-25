@@ -353,6 +353,191 @@ def process_human_review(
 
 
 # ---------------------------------------------------------------------------
+# Apply Corrections — process ONLY affected transactions, update results
+# ---------------------------------------------------------------------------
+
+def apply_corrections(
+    rules_dir: str | Path,
+    results_dir: str | Path,
+    decisions: list[dict],
+) -> dict:
+    """Apply human corrections to current results WITHOUT re-running full pipeline.
+
+    This is the core Learning Agent behavior:
+    1. Store decisions as rules
+    2. Apply corrections to affected transactions only
+    3. Move corrected entries from unmatched → resolved
+    4. Re-run Checker + Reporter on updated results (not Parser/Matcher)
+
+    Returns: {rules_created, resolved_entries, updated_results, events}
+    """
+    from agents.event_logger import EventLogger
+
+    logger = EventLogger()
+    rules_dir = Path(rules_dir)
+    results_dir = Path(results_dir)
+
+    logger.agent_start("Learning Agent", "Processing human corrections...")
+
+    # Step 1: Store decisions as rules
+    review_result = process_human_review(str(rules_dir), decisions)
+    logger.detail("Learning Agent",
+                  f"Created {review_result['rules_created']} new rules")
+
+    # Step 2: Load current results
+    with open(results_dir / "match_results.json") as f:
+        match_data = json.load(f)
+
+    unmatched_f26 = match_data.get("unmatched_form26", [])
+    unmatched_194c = match_data.get("unmatched_tally_194c", [])
+    unmatched_194a = match_data.get("unmatched_tally_194a", [])
+
+    resolved_entries = []
+    vendors_resolved = set()
+
+    # Step 3: Apply each decision to affected entries only
+    for d in decisions:
+        vendor = d.get("vendor", "").strip()
+        decision = d.get("decision", "")
+        vendor_lower = vendor.lower()
+
+        if decision in ("below_threshold", "ignore", "exempt"):
+            # Move this vendor's entries from unmatched to resolved
+            resolved_from_194c = []
+            remaining_194c = []
+            for entry in unmatched_194c:
+                if (entry.get("party_name", "").lower().strip() == vendor_lower):
+                    entry["resolution"] = {
+                        "type": decision,
+                        "reason": d.get("reason", ""),
+                        "resolved_by": "human_review",
+                        "resolved_at": datetime.now().isoformat(),
+                    }
+                    resolved_from_194c.append(entry)
+                else:
+                    remaining_194c.append(entry)
+
+            if resolved_from_194c:
+                resolved_entries.extend(resolved_from_194c)
+                vendors_resolved.add(vendor)
+                logger.detail("Learning Agent",
+                              f"{vendor}: {len(resolved_from_194c)} entries → {decision}")
+
+            unmatched_194c = remaining_194c
+
+        elif decision == "alias":
+            # Vendor alias: try to match aliased entries against unmatched Form 26
+            form26_name = d.get("params", {}).get("form26_name", "")
+            if form26_name:
+                matched_via_alias = []
+                remaining_194c = []
+                for entry in unmatched_194c:
+                    if entry.get("party_name", "").lower().strip() == vendor_lower:
+                        entry["resolution"] = {
+                            "type": "alias",
+                            "aliased_to": form26_name,
+                            "resolved_by": "human_review",
+                            "resolved_at": datetime.now().isoformat(),
+                        }
+                        matched_via_alias.append(entry)
+                    else:
+                        remaining_194c.append(entry)
+
+                if matched_via_alias:
+                    resolved_entries.extend(matched_via_alias)
+                    vendors_resolved.add(vendor)
+                    logger.detail("Learning Agent",
+                                  f"{vendor} → aliased to '{form26_name}', "
+                                  f"{len(matched_via_alias)} entries resolved")
+
+                unmatched_194c = remaining_194c
+
+        elif decision == "section_override":
+            # Section override: log it, will be used by Checker on next validation
+            logger.detail("Learning Agent",
+                          f"{vendor}: section override recorded")
+            vendors_resolved.add(vendor)
+
+    # Step 4: Update match_results with corrected unmatched lists
+    match_data["unmatched_tally_194c"] = unmatched_194c
+    if "resolved_by_learning" not in match_data:
+        match_data["resolved_by_learning"] = []
+    match_data["resolved_by_learning"].extend(resolved_entries)
+
+    # Update learned_rules stats in match_data
+    all_rules = get_active_rules(str(rules_dir))
+    match_data["learned_rules"] = {
+        "rules_loaded": len(all_rules),
+        "rules_applied": len(resolved_entries),
+        "below_threshold_vendors": len([
+            r for r in all_rules if r["rule_type"] == "below_threshold"
+        ]),
+        "below_threshold_entries": len([
+            e for e in resolved_entries
+            if e.get("resolution", {}).get("type") == "below_threshold"
+        ]),
+        "ignored_vendors": len([
+            r for r in all_rules if r["rule_type"] == "ignore"
+        ]),
+        "exempt_vendors": len([
+            r for r in all_rules if r["rule_type"] == "exempt_vendor"
+        ]),
+        "total_resolved_by_learning": len(
+            match_data.get("resolved_by_learning", [])
+        ),
+    }
+
+    # Save updated match results
+    with open(results_dir / "match_results.json", "w") as f:
+        json.dump(match_data, f, indent=2, default=str)
+
+    logger.success("Learning Agent",
+                   f"Resolved {len(resolved_entries)} entries across "
+                   f"{len(vendors_resolved)} vendors")
+    logger.agent_done("Learning Agent", "Corrections applied")
+
+    # Step 5: Re-run Checker + Reporter on updated results (NOT full pipeline)
+    logger.agent_start("TDS Checker", "Re-validating with corrections...")
+    from agents.tds_checker_agent import run as checker_run
+    parsed_dir = results_dir.parent / "parsed"
+    checker_results = checker_run(str(parsed_dir), str(results_dir))
+
+    findings = checker_results.get("findings", [])
+    errors = [f for f in findings if f.get("severity") == "error"]
+    warnings = [f for f in findings if f.get("severity") == "warning"]
+    logger.success("TDS Checker",
+                   f"Updated: {len(errors)} errors, {len(warnings)} warnings")
+    logger.agent_done("TDS Checker", "Re-validation complete")
+
+    logger.agent_start("Reporter Agent", "Regenerating reports...")
+    from agents.reporter_agent import run as reporter_run
+    report = reporter_run(str(parsed_dir), str(results_dir))
+    logger.detail("Reporter Agent", "Reports updated with corrections")
+    logger.agent_done("Reporter Agent", "Reports regenerated")
+
+    logger.emit("Learning Agent",
+                f"Done — {len(resolved_entries)} entries resolved, "
+                f"{len(vendors_resolved)} vendors classified", "success")
+
+    # Load updated results for API response
+    updated_results = {}
+    for fname in ["match_results.json", "checker_results.json",
+                   "reconciliation_summary.json"]:
+        fpath = results_dir / fname
+        if fpath.exists():
+            with open(fpath) as f:
+                updated_results[fname.replace(".json", "")] = json.load(f)
+
+    return {
+        "rules_created": review_result["rules_created"],
+        "resolved_entries": len(resolved_entries),
+        "vendors_resolved": list(vendors_resolved),
+        "events": logger.get_events(),
+        "results": updated_results,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Reporting
 # ---------------------------------------------------------------------------
 
