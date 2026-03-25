@@ -1,5 +1,5 @@
 {
-  "report_generated": "2026-03-25T06:48:47.308856",
+  "report_generated": "2026-03-25T07:23:22.458498",
   "assessment_year": "2025-26",
   "financial_year": "2024-25",
   "scope": {
@@ -18,7 +18,7 @@
     "form26_in_scope": 56,
     "matched": 56,
     "unmatched": 0,
-    "match_rate_pct": 100.0,
+    "match_rate_pct": 65.9,
     "avg_confidence": 0.957,
     "by_pass": {
       "exact_match": 28,

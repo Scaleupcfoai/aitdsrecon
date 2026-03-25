@@ -1,8 +1,8 @@
 {
-  "run_timestamp": "2026-03-25T06:48:47.280987",
+  "run_timestamp": "2026-03-25T07:23:22.420864",
   "sections_processed": [
-    "194C",
-    "194A"
+    "194A",
+    "194C"
   ],
   "learned_rules": {
     "rules_loaded": 63,
@@ -2841,7 +2841,8 @@
         "voucher_no": "137",
         "expense_heads": {
           "Advertisement": 0.8
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2859,7 +2860,8 @@
         "voucher_no": "157",
         "expense_heads": {
           "Postage & Stamp_18%": 12.16
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2877,7 +2879,8 @@
         "voucher_no": "158",
         "expense_heads": {
           "Postage & Stamp_18%": 15.9
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2895,7 +2898,8 @@
         "voucher_no": "174",
         "expense_heads": {
           "Postage & Stamp_18%": 15.9
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2913,7 +2917,8 @@
         "voucher_no": "176",
         "expense_heads": {
           "Postage & Stamp_18%": 20.16
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2931,7 +2936,8 @@
         "voucher_no": "195",
         "expense_heads": {
           "Postage & Stamp_18%": 20.5
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2949,7 +2955,8 @@
         "voucher_no": "196",
         "expense_heads": {
           "Postage & Stamp_18%": 72.56
-        }
+        },
+        "_below_threshold": true
       }
     },
     {
@@ -2967,7 +2974,8 @@
         "voucher_no": "223",
         "expense_heads": {
           "Postage & Stamp_18%": 39.0
-        }
+        },
+        "_below_threshold": true
       }
     }
   ],
@@ -2980,7 +2988,8 @@
       "party_name": "Xpress Cargo",
       "amount": 500.0,
       "amount_is_base": true,
-      "voucher_no": "8"
+      "voucher_no": "8",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -2988,7 +2997,8 @@
       "party_name": "Xpress Cargo",
       "amount": 1000.0,
       "amount_is_base": true,
-      "voucher_no": "10"
+      "voucher_no": "10",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -2996,7 +3006,8 @@
       "party_name": "VRL Logistics Ltd.",
       "amount": 5700.0,
       "amount_is_base": true,
-      "voucher_no": "37"
+      "voucher_no": "37",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3004,7 +3015,8 @@
       "party_name": "Vimal Transport",
       "amount": 6372.0,
       "amount_is_base": true,
-      "voucher_no": "133"
+      "voucher_no": "133",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3012,7 +3024,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 1385.0,
       "amount_is_base": true,
-      "voucher_no": "137"
+      "voucher_no": "137",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3020,7 +3033,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 412.0,
       "amount_is_base": true,
-      "voucher_no": "152"
+      "voucher_no": "152",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3028,7 +3042,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 380.0,
       "amount_is_base": true,
-      "voucher_no": "150"
+      "voucher_no": "150",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3036,7 +3051,8 @@
       "party_name": "Vimal Transport",
       "amount": 3339.0,
       "amount_is_base": true,
-      "voucher_no": "187"
+      "voucher_no": "187",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3044,7 +3060,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 350.0,
       "amount_is_base": true,
-      "voucher_no": "186"
+      "voucher_no": "186",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3052,7 +3069,8 @@
       "party_name": "Vimal Transport",
       "amount": 2441.0,
       "amount_is_base": true,
-      "voucher_no": "217"
+      "voucher_no": "217",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3060,7 +3078,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 923.0,
       "amount_is_base": true,
-      "voucher_no": "221"
+      "voucher_no": "221",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3068,7 +3087,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 3109.0,
       "amount_is_base": true,
-      "voucher_no": "255"
+      "voucher_no": "255",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3076,7 +3096,8 @@
       "party_name": "Vimal Transport",
       "amount": 5402.0,
       "amount_is_base": true,
-      "voucher_no": "263"
+      "voucher_no": "263",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3084,7 +3105,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 247.0,
       "amount_is_base": true,
-      "voucher_no": "275"
+      "voucher_no": "275",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3092,7 +3114,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 455.0,
       "amount_is_base": true,
-      "voucher_no": "276"
+      "voucher_no": "276",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3100,7 +3123,8 @@
       "party_name": "Vimal Transport",
       "amount": 1026.0,
       "amount_is_base": true,
-      "voucher_no": "331"
+      "voucher_no": "331",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3108,7 +3132,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 1144.0,
       "amount_is_base": true,
-      "voucher_no": "307"
+      "voucher_no": "307",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3116,7 +3141,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 18091.0,
       "amount_is_base": true,
-      "voucher_no": "357"
+      "voucher_no": "357",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3124,7 +3150,8 @@
       "party_name": "Mahavir Cargo Carrier",
       "amount": 310.0,
       "amount_is_base": true,
-      "voucher_no": "476"
+      "voucher_no": "476",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3132,7 +3159,8 @@
       "party_name": "Patel Parcels Carrier Co.",
       "amount": 964.0,
       "amount_is_base": true,
-      "voucher_no": "404"
+      "voucher_no": "404",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3140,7 +3168,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 4686.0,
       "amount_is_base": true,
-      "voucher_no": "466"
+      "voucher_no": "466",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3148,7 +3177,8 @@
       "party_name": "Mahavir Cargo Carrier",
       "amount": 387.0,
       "amount_is_base": true,
-      "voucher_no": "485"
+      "voucher_no": "485",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3156,7 +3186,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 525.0,
       "amount_is_base": true,
-      "voucher_no": "554"
+      "voucher_no": "554",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3164,7 +3195,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 1140.0,
       "amount_is_base": true,
-      "voucher_no": "474"
+      "voucher_no": "474",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3172,7 +3204,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 3552.0,
       "amount_is_base": true,
-      "voucher_no": "486"
+      "voucher_no": "486",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3180,7 +3213,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 408.0,
       "amount_is_base": true,
-      "voucher_no": "487"
+      "voucher_no": "487",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3188,7 +3222,8 @@
       "party_name": "Vimal Transport",
       "amount": 2408.0,
       "amount_is_base": true,
-      "voucher_no": "496"
+      "voucher_no": "496",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3196,7 +3231,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 3050.0,
       "amount_is_base": true,
-      "voucher_no": "499"
+      "voucher_no": "499",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3204,7 +3240,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 960.0,
       "amount_is_base": true,
-      "voucher_no": "525"
+      "voucher_no": "525",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3212,7 +3249,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 1050.0,
       "amount_is_base": true,
-      "voucher_no": "526"
+      "voucher_no": "526",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3220,7 +3258,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 315.0,
       "amount_is_base": true,
-      "voucher_no": "527"
+      "voucher_no": "527",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3228,7 +3267,8 @@
       "party_name": "Mahavir Cargo Carrier",
       "amount": 649.0,
       "amount_is_base": true,
-      "voucher_no": "551"
+      "voucher_no": "551",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3236,7 +3276,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 1350.0,
       "amount_is_base": true,
-      "voucher_no": "529"
+      "voucher_no": "529",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3244,7 +3285,8 @@
       "party_name": "Patel Fleet Logistics Pvt. Ltd.",
       "amount": 1920.0,
       "amount_is_base": true,
-      "voucher_no": "625"
+      "voucher_no": "625",
+      "_below_threshold": true
     },
     {
       "tally_source": "journal_freight",
@@ -3252,7 +3294,8 @@
       "party_name": "Kanhaiya Express Pvt. Ltd.",
       "amount": 350.0,
       "amount_is_base": true,
-      "voucher_no": "626"
+      "voucher_no": "626",
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3265,7 +3308,8 @@
       "voucher_no": "1",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3278,7 +3322,8 @@
       "voucher_no": "10",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3291,7 +3336,8 @@
       "voucher_no": "11",
       "expense_heads": {
         "Freight Charges_12%": 2699.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3304,7 +3350,8 @@
       "voucher_no": "12",
       "expense_heads": {
         "Printing & Stationary_18%": 480.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3317,7 +3364,8 @@
       "voucher_no": "13",
       "expense_heads": {
         "Annual Maintenance Charges": 3200.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3330,7 +3378,8 @@
       "voucher_no": "14",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3343,7 +3392,8 @@
       "voucher_no": "15",
       "expense_heads": {
         "Brokerage and Commission_18%": 7023.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3356,7 +3406,8 @@
       "voucher_no": "16",
       "expense_heads": {
         "Freight Charges_18%": 5393.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3369,7 +3420,8 @@
       "voucher_no": "17",
       "expense_heads": {
         "Freight Charges_18%": 4951.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3382,7 +3434,8 @@
       "voucher_no": "18",
       "expense_heads": {
         "Domain Expenses": 225.4
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3395,7 +3448,8 @@
       "voucher_no": "27",
       "expense_heads": {
         "Advertisement": 2496.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3408,7 +3462,8 @@
       "voucher_no": "28",
       "expense_heads": {
         "Freight Charges_18%": 975.5
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3421,7 +3476,8 @@
       "voucher_no": "19",
       "expense_heads": {
         "Freight Charges_18%": 930.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3434,7 +3490,8 @@
       "voucher_no": "20",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3447,7 +3504,8 @@
       "voucher_no": "21",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3460,7 +3518,8 @@
       "voucher_no": "22",
       "expense_heads": {
         "General Exp. GST_12%": 1760.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3473,7 +3532,8 @@
       "voucher_no": "23",
       "expense_heads": {
         "Freight Charges_18%": 2932.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3486,7 +3546,8 @@
       "voucher_no": "24",
       "expense_heads": {
         "Postage & Stamp_18%": 1054.96
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3499,7 +3560,8 @@
       "voucher_no": "25",
       "expense_heads": {
         "Postage & Stamp_18%": 2355.89
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3512,7 +3574,8 @@
       "voucher_no": "26",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3525,7 +3588,8 @@
       "voucher_no": "29",
       "expense_heads": {
         "Packing Charges_18%": 20800.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3538,7 +3602,8 @@
       "voucher_no": "30",
       "expense_heads": {
         "Printer": 10669.5
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3551,7 +3616,8 @@
       "voucher_no": "32",
       "expense_heads": {
         "Computer Repair Charges": 3350.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3564,7 +3630,8 @@
       "voucher_no": "33",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3577,7 +3644,8 @@
       "voucher_no": "43",
       "expense_heads": {
         "Marine Insurance Charges": 9000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3590,7 +3658,8 @@
       "voucher_no": "34",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3603,7 +3672,8 @@
       "voucher_no": "35",
       "expense_heads": {
         "Printing & Stationary_18%": 300.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3616,7 +3686,8 @@
       "voucher_no": "36",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3629,7 +3700,8 @@
       "voucher_no": "37",
       "expense_heads": {
         "Postage & Stamp_18%": 745.67
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3642,7 +3714,8 @@
       "voucher_no": "38",
       "expense_heads": {
         "Postage & Stamp_18%": 285.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3655,7 +3728,8 @@
       "voucher_no": "39",
       "expense_heads": {
         "Brokerage and Commission_18%": 38743.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3668,7 +3742,8 @@
       "voucher_no": "40",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3681,7 +3756,8 @@
       "voucher_no": "41",
       "expense_heads": {
         "General Exp. GST_12%": 1595.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3694,7 +3770,8 @@
       "voucher_no": "42",
       "expense_heads": {
         "Printing & Stationary_12%": 1880.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3707,7 +3784,8 @@
       "voucher_no": "44",
       "expense_heads": {
         "Packing Charges_18%": 19390.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3720,7 +3798,8 @@
       "voucher_no": "45",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3733,7 +3812,8 @@
       "voucher_no": "46",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3746,7 +3826,8 @@
       "voucher_no": "47",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3759,7 +3840,8 @@
       "voucher_no": "48",
       "expense_heads": {
         "General Exp. GST_12%": 1320.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3772,7 +3854,8 @@
       "voucher_no": "49",
       "expense_heads": {
         "General Exp. GST_12%": 220.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3785,7 +3868,8 @@
       "voucher_no": "50",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3798,7 +3882,8 @@
       "voucher_no": "52",
       "expense_heads": {
         "Postage & Stamp_18%": 745.68
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3811,7 +3896,8 @@
       "voucher_no": "55",
       "expense_heads": {
         "Postage & Stamp_18%": 470.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3824,7 +3910,8 @@
       "voucher_no": "56",
       "expense_heads": {
         "Freight Charges_18%": 883.5
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3837,7 +3924,8 @@
       "voucher_no": "57",
       "expense_heads": {
         "Computer": 39830.5
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3850,7 +3938,8 @@
       "voucher_no": "58",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3863,7 +3952,8 @@
       "voucher_no": "64",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 3380.02
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3876,7 +3966,8 @@
       "voucher_no": "65",
       "expense_heads": {
         "Travelling Expenses_5%": 13272.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3889,7 +3980,8 @@
       "voucher_no": "67",
       "expense_heads": {
         "Advertisement": 1500.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3902,7 +3994,8 @@
       "voucher_no": "59",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3915,7 +4008,8 @@
       "voucher_no": "60",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3928,7 +4022,8 @@
       "voucher_no": "61",
       "expense_heads": {
         "General Exp. GST_12%": 1740.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3941,7 +4036,8 @@
       "voucher_no": "62",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3954,7 +4050,8 @@
       "voucher_no": "63",
       "expense_heads": {
         "Software Expenses": 1695.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3967,7 +4064,8 @@
       "voucher_no": "68",
       "expense_heads": {
         "Printing & Stationary_18%": 300.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3980,7 +4078,8 @@
       "voucher_no": "69",
       "expense_heads": {
         "Carriage Outward Paid GST 5%": 600.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -3993,7 +4092,8 @@
       "voucher_no": "70",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4006,7 +4106,8 @@
       "voucher_no": "81",
       "expense_heads": {
         "Postage & Stamp_18%": 550.77
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4019,7 +4120,8 @@
       "voucher_no": "82",
       "expense_heads": {
         "Postage & Stamp_18%": 1684.34
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4032,7 +4134,8 @@
       "voucher_no": "83",
       "expense_heads": {
         "Advertisement": 181.64
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4045,7 +4148,8 @@
       "voucher_no": "84",
       "expense_heads": {
         "Advertisement": 496.92
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4058,7 +4162,8 @@
       "voucher_no": "71",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4071,7 +4176,8 @@
       "voucher_no": "73",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4084,7 +4190,8 @@
       "voucher_no": "74",
       "expense_heads": {
         "General Exp. GST_12%": 1566.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4097,7 +4204,8 @@
       "voucher_no": "75",
       "expense_heads": {
         "Telephone Charges_18%": 2545.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4110,7 +4218,8 @@
       "voucher_no": "76",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4123,7 +4232,8 @@
       "voucher_no": "77",
       "expense_heads": {
         "Audit Fees": 30000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4136,7 +4246,8 @@
       "voucher_no": "78",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 2966.1
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4149,7 +4260,8 @@
       "voucher_no": "79",
       "expense_heads": {
         "Postage & Stamp_18%": 1084.6
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4162,7 +4274,8 @@
       "voucher_no": "80",
       "expense_heads": {
         "Postage & Stamp_18%": 936.3
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4175,7 +4288,8 @@
       "voucher_no": "85",
       "expense_heads": {
         "Printing & Stationary_18%": 600.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4188,7 +4302,8 @@
       "voucher_no": "86",
       "expense_heads": {
         "Printing & Stationary_18%": 490.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4201,7 +4316,8 @@
       "voucher_no": "87",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4214,7 +4330,8 @@
       "voucher_no": "93",
       "expense_heads": {
         "Advertisement": 1500.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4227,7 +4344,8 @@
       "voucher_no": "94",
       "expense_heads": {
         "Marine Insurance Charges": 18000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4240,7 +4358,8 @@
       "voucher_no": "95",
       "expense_heads": {
         "Advertisement": 552.33
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4253,7 +4372,8 @@
       "voucher_no": "96",
       "expense_heads": {
         "Advertisement": 476.95
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4266,7 +4386,8 @@
       "voucher_no": "97",
       "expense_heads": {
         "Advertisement": 316.16
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4279,7 +4400,8 @@
       "voucher_no": "98",
       "expense_heads": {
         "Travelling Expenses_12%": 7142.86
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4292,7 +4414,8 @@
       "voucher_no": "99",
       "expense_heads": {
         "Software Expenses": 225.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4305,7 +4428,8 @@
       "voucher_no": "88",
       "expense_heads": {
         "Telephone Charges_18%": 699.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4318,7 +4442,8 @@
       "voucher_no": "89",
       "expense_heads": {
         "Packing Charges_12%": 22944.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4331,7 +4456,8 @@
       "voucher_no": "90",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4344,7 +4470,8 @@
       "voucher_no": "91",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4357,7 +4484,8 @@
       "voucher_no": "100",
       "expense_heads": {
         "General Exp. GST_12%": 1682.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4370,7 +4498,8 @@
       "voucher_no": "101",
       "expense_heads": {
         "Printing & Stationary_12%": 1678.58
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4384,7 +4513,8 @@
       "expense_heads": {
         "Travelling Expenses_5%": 9274.0,
         "Misc. Account": 702.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4397,7 +4527,8 @@
       "voucher_no": "103",
       "expense_heads": {
         "Postage & Stamp_18%": 1679.49
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4410,7 +4541,8 @@
       "voucher_no": "104",
       "expense_heads": {
         "Postage & Stamp_18%": 2201.69
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4423,7 +4555,8 @@
       "voucher_no": "105",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4436,7 +4569,8 @@
       "voucher_no": "112",
       "expense_heads": {
         "Computer Repair Charges": 1965.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4449,7 +4583,8 @@
       "voucher_no": "115",
       "expense_heads": {
         "Travelling Expenses_5%": 12801.9
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4463,7 +4598,8 @@
       "expense_heads": {
         "Travelling Expenses_5%": 18608.0,
         "Misc. Account": 708.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4476,7 +4612,8 @@
       "voucher_no": "117",
       "expense_heads": {
         "Packing Charges_18%": 20048.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4489,7 +4626,8 @@
       "voucher_no": "106",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4502,7 +4640,8 @@
       "voucher_no": "107",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4515,7 +4654,8 @@
       "voucher_no": "108",
       "expense_heads": {
         "Software Expenses": 24300.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4528,7 +4668,8 @@
       "voucher_no": "109",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4541,7 +4682,8 @@
       "voucher_no": "110",
       "expense_heads": {
         "General Exp. GST_12%": 754.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4554,7 +4696,8 @@
       "voucher_no": "111",
       "expense_heads": {
         "General Exp. GST_12%": 348.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4567,7 +4710,8 @@
       "voucher_no": "118",
       "expense_heads": {
         "Printing & Stationary_18%": 450.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4580,7 +4724,8 @@
       "voucher_no": "119",
       "expense_heads": {
         "Software Expenses": 1300.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4593,7 +4738,8 @@
       "voucher_no": "120",
       "expense_heads": {
         "Postage & Stamp_18%": 1351.58
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4606,7 +4752,8 @@
       "voucher_no": "121",
       "expense_heads": {
         "Postage & Stamp_18%": 1325.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4619,7 +4766,8 @@
       "voucher_no": "122",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4632,7 +4780,8 @@
       "voucher_no": "131",
       "expense_heads": {
         "Computer Repair Charges": 1850.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4645,7 +4794,8 @@
       "voucher_no": "134",
       "expense_heads": {
         "Advertisement": 1500.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4658,7 +4808,8 @@
       "voucher_no": "135",
       "expense_heads": {
         "Advertisement": 788.29
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4671,7 +4822,8 @@
       "voucher_no": "136",
       "expense_heads": {
         "Advertisement": 1482.58
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4684,7 +4836,8 @@
       "voucher_no": "138",
       "expense_heads": {
         "Travelling Expenses_18%": 317.8
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4697,7 +4850,8 @@
       "voucher_no": "139",
       "expense_heads": {
         "Postage & Stamp_18%": 131.78
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4710,7 +4864,8 @@
       "voucher_no": "123",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4723,7 +4878,8 @@
       "voucher_no": "124",
       "expense_heads": {
         "Printing & Stationary_18%": 1360.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4736,7 +4892,8 @@
       "voucher_no": "125",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4749,7 +4906,8 @@
       "voucher_no": "126",
       "expense_heads": {
         "General Exp. GST_12%": 1160.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4762,7 +4920,8 @@
       "voucher_no": "127",
       "expense_heads": {
         "General Exp. GST_12%": 580.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4775,7 +4934,8 @@
       "voucher_no": "128",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4788,7 +4948,8 @@
       "voucher_no": "129",
       "expense_heads": {
         "Postage & Stamp_18%": 4816.26
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4801,7 +4962,8 @@
       "voucher_no": "130",
       "expense_heads": {
         "Postage & Stamp_18%": 1550.7
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4814,7 +4976,8 @@
       "voucher_no": "140",
       "expense_heads": {
         "Printing & Stationary_18%": 170.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4827,7 +4990,8 @@
       "voucher_no": "141",
       "expense_heads": {
         "Packing Charges_18%": 622.9
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4840,7 +5004,8 @@
       "voucher_no": "142",
       "expense_heads": {
         "Software Expenses": 761.86
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4853,7 +5018,8 @@
       "voucher_no": "143",
       "expense_heads": {
         "Printing & Stationary_18%": 300.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4866,7 +5032,8 @@
       "voucher_no": "144",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4879,7 +5046,8 @@
       "voucher_no": "145",
       "expense_heads": {
         "Printing & Stationary_18%": 3573.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4892,7 +5060,8 @@
       "voucher_no": "155",
       "expense_heads": {
         "Postage & Stamp_18%": 133.3
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4905,7 +5074,8 @@
       "voucher_no": "146",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4918,7 +5088,8 @@
       "voucher_no": "147",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 3135.59
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4931,7 +5102,8 @@
       "voucher_no": "149",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4944,7 +5116,8 @@
       "voucher_no": "150",
       "expense_heads": {
         "Postage & Stamp_18%": 1118.55
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4957,7 +5130,8 @@
       "voucher_no": "151",
       "expense_heads": {
         "Postage & Stamp_18%": 4769.24
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4970,7 +5144,8 @@
       "voucher_no": "152",
       "expense_heads": {
         "General Exp. GST_12%": 1508.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4983,7 +5158,8 @@
       "voucher_no": "153",
       "expense_heads": {
         "GST Annual Return Charges": 9000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -4996,7 +5172,8 @@
       "voucher_no": "154",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5010,7 +5187,8 @@
       "expense_heads": {
         "Travelling Expenses_5%": 4574.0,
         "Misc. Account": 161.3
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5023,7 +5201,8 @@
       "voucher_no": "161",
       "expense_heads": {
         "Domain Expenses": 1136.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5036,7 +5215,8 @@
       "voucher_no": "170",
       "expense_heads": {
         "Advertisement": 1500.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5049,7 +5229,8 @@
       "voucher_no": "171",
       "expense_heads": {
         "Travelling Expenses_12%": 1071.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5062,7 +5243,8 @@
       "voucher_no": "172",
       "expense_heads": {
         "Travelling Expenses_12%": 1071.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5075,7 +5257,8 @@
       "voucher_no": "175",
       "expense_heads": {
         "Postage & Stamp_18%": 458.37
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5088,7 +5271,8 @@
       "voucher_no": "162",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5101,7 +5285,8 @@
       "voucher_no": "164",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5114,7 +5299,8 @@
       "voucher_no": "166",
       "expense_heads": {
         "General Exp. GST_12%": 1450.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5127,7 +5313,8 @@
       "voucher_no": "167",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5140,7 +5327,8 @@
       "voucher_no": "168",
       "expense_heads": {
         "Printing & Stationary_18%": 600.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5153,7 +5341,8 @@
       "voucher_no": "169",
       "expense_heads": {
         "Marine Insurance Charges": 18000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5166,7 +5355,8 @@
       "voucher_no": "177",
       "expense_heads": {
         "Printing & Stationary_12%": 2080.36
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5179,7 +5369,8 @@
       "voucher_no": "179",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5192,7 +5383,8 @@
       "voucher_no": "183",
       "expense_heads": {
         "Postage & Stamp_18%": 1488.87
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5205,7 +5397,8 @@
       "voucher_no": "184",
       "expense_heads": {
         "Postage & Stamp_18%": 1310.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5218,7 +5411,8 @@
       "voucher_no": "191",
       "expense_heads": {
         "Freight Charges_18%": 442.44
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5231,7 +5425,8 @@
       "voucher_no": "192",
       "expense_heads": {
         "Travelling Expenses_12%": 6000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5245,7 +5440,8 @@
       "expense_heads": {
         "Postage & Stamp_18%": 149.12,
         "Postage & Stamp": 27.97
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5258,7 +5454,8 @@
       "voucher_no": "197",
       "expense_heads": {
         "Postage & Stamp_18%": 335.39
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5271,7 +5468,8 @@
       "voucher_no": "198",
       "expense_heads": {
         "Postage & Stamp_18%": 3246.31
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5284,7 +5482,8 @@
       "voucher_no": "199",
       "expense_heads": {
         "Travelling Expenses_5%": 1428.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5297,7 +5496,8 @@
       "voucher_no": "200",
       "expense_heads": {
         "Travelling Expenses_5%": 7338.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5310,7 +5510,8 @@
       "voucher_no": "201",
       "expense_heads": {
         "Travelling Expenses_5%": 152.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5323,7 +5524,8 @@
       "voucher_no": "180",
       "expense_heads": {
         "Telephone Charges_18%": 599.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5336,7 +5538,8 @@
       "voucher_no": "181",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5349,7 +5552,8 @@
       "voucher_no": "182",
       "expense_heads": {
         "General Exp. GST_12%": 1276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5362,7 +5566,8 @@
       "voucher_no": "185",
       "expense_heads": {
         "Postage & Stamp_18%": 2614.15
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5375,7 +5580,8 @@
       "voucher_no": "186",
       "expense_heads": {
         "Postage & Stamp_18%": 3335.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5388,7 +5594,8 @@
       "voucher_no": "188",
       "expense_heads": {
         "Freight Charges_18%": 2055.9
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5401,7 +5608,8 @@
       "voucher_no": "189",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5414,7 +5622,8 @@
       "voucher_no": "190",
       "expense_heads": {
         "Telephone Charges_18%": 499.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5427,7 +5636,8 @@
       "voucher_no": "202",
       "expense_heads": {
         "Marine Insurance Charges": 18000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5440,7 +5650,8 @@
       "voucher_no": "204",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 5338.92
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5453,7 +5664,8 @@
       "voucher_no": "208",
       "expense_heads": {
         "Packing Charges_18%": 12255.1
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5466,7 +5678,8 @@
       "voucher_no": "209",
       "expense_heads": {
         "Printing & Stationary_18%": 600.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5479,7 +5692,8 @@
       "voucher_no": "211",
       "expense_heads": {
         "General Exp. GST_12%": 1450.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5492,7 +5706,8 @@
       "voucher_no": "212",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 4950.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5505,7 +5720,8 @@
       "voucher_no": "213",
       "expense_heads": {
         "Domain Expenses": 276.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5519,7 +5735,8 @@
       "expense_heads": {
         "Printing & Stationary_18%": 3975.0,
         "Printing & Stationary_5%": 320.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5532,7 +5749,8 @@
       "voucher_no": "215",
       "expense_heads": {
         "Postage & Stamp_18%": 1503.23
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5545,7 +5763,8 @@
       "voucher_no": "216",
       "expense_heads": {
         "Postage & Stamp_18%": 546.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5558,7 +5777,8 @@
       "voucher_no": "217",
       "expense_heads": {
         "Postage & Stamp_18%": 1374.1
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5571,7 +5791,8 @@
       "voucher_no": "218",
       "expense_heads": {
         "Postage & Stamp_18%": 3627.81
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5584,7 +5805,8 @@
       "voucher_no": "220",
       "expense_heads": {
         "Postage & Stamp_18%": 2000.0
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5597,7 +5819,8 @@
       "voucher_no": "221",
       "expense_heads": {
         "Postage & Stamp_18%": 107.58
-      }
+      },
+      "_below_threshold": true
     },
     {
       "tally_source": "gst_exp",
@@ -5610,7 +5833,8 @@
       "voucher_no": "222",
       "expense_heads": {
         "Postage & Stamp_18%": 218.63
-      }
+      },
+      "_below_threshold": true
     }
   ]
 }
