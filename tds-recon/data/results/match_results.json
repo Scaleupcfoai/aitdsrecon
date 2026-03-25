@@ -1,8 +1,8 @@
 {
-  "run_timestamp": "2026-03-23T13:12:11.132874",
+  "run_timestamp": "2026-03-25T05:45:21.988181",
   "sections_processed": [
-    "194A",
-    "194C"
+    "194C",
+    "194A"
   ],
   "learned_rules": {
     "rules_loaded": 60,
