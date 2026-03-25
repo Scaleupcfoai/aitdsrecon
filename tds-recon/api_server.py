@@ -12,7 +12,9 @@ import threading
 import time
 from pathlib import Path
 
-from fastapi import FastAPI
+import shutil
+
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -33,6 +35,7 @@ BASE = Path(__file__).parent
 RESULTS_DIR = BASE / "data" / "results"
 RULES_DIR = BASE / "data" / "rules"
 PARSED_DIR = BASE / "data" / "parsed"
+UPLOADS_DIR = BASE / "data" / "uploads"
 
 
 @app.get("/api/status")
@@ -43,6 +46,75 @@ def get_status():
         "results_ready": (RESULTS_DIR / "match_results.json").exists(),
         "rules_ready": (RULES_DIR / "learned_rules.json").exists(),
     }
+
+
+@app.post("/api/upload")
+async def upload_files(
+    form26: UploadFile = File(...),
+    tally: UploadFile = File(...),
+):
+    """Upload Form 26 and Tally XLSX files. Saves to data/uploads/."""
+    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+
+    form26_path = UPLOADS_DIR / "form26.xlsx"
+    tally_path = UPLOADS_DIR / "tally.xlsx"
+
+    with open(form26_path, "wb") as f:
+        shutil.copyfileobj(form26.file, f)
+    with open(tally_path, "wb") as f:
+        shutil.copyfileobj(tally.file, f)
+
+    return {
+        "status": "uploaded",
+        "form26": form26.filename,
+        "tally": tally.filename,
+    }
+
+
+@app.get("/api/run/stream/upload")
+def run_pipeline_with_upload():
+    """Run the full pipeline on uploaded files with real-time SSE.
+
+    Parses the uploaded XLSX files first, then runs matcher → checker → reporter.
+    """
+    form26_path = UPLOADS_DIR / "form26.xlsx"
+    tally_path = UPLOADS_DIR / "tally.xlsx"
+
+    if not form26_path.exists() or not tally_path.exists():
+        def error_gen():
+            yield f"data: {json.dumps({'type': 'error', 'agent': 'Upload', 'message': 'Upload Form 26 and Tally files first'})}\n\n"
+        return StreamingResponse(error_gen(), media_type="text/event-stream")
+
+    event_queue = queue.Queue()
+
+    def on_event(event):
+        event_queue.put(event)
+
+    def run_in_thread():
+        from agents.event_logger import reset_logger
+        from reconcile import run_pipeline as _run
+
+        logger = reset_logger()
+        logger.set_callback(on_event)
+        result = _run(str(form26_path), str(tally_path))
+
+        results_data = _load_results()
+        event_queue.put({
+            "type": "pipeline_complete",
+            "agent": "Pipeline",
+            "message": f"Complete in {result.get('elapsed_s', 0)}s",
+            "results": results_data,
+        })
+        event_queue.put(None)
+
+    thread = threading.Thread(target=run_in_thread, daemon=True)
+    thread.start()
+
+    return StreamingResponse(
+        _sse_generator(event_queue),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 @app.get("/api/run/stream")
@@ -75,23 +147,11 @@ def run_pipeline_stream():
         })
         event_queue.put(None)  # Sentinel to end stream
 
-    # Start pipeline in background thread
     thread = threading.Thread(target=run_in_thread, daemon=True)
     thread.start()
 
-    def event_generator():
-        while True:
-            try:
-                event = event_queue.get(timeout=30)
-                if event is None:
-                    break
-                yield f"data: {json.dumps(event, default=str)}\n\n"
-            except queue.Empty:
-                # Keep-alive
-                yield f"data: {json.dumps({'type': 'keepalive'})}\n\n"
-
     return StreamingResponse(
-        event_generator(),
+        _sse_generator(event_queue),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
@@ -250,6 +310,18 @@ def submit_review(request: ReviewRequest):
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _sse_generator(event_queue):
+    """Yield SSE events from a queue until sentinel (None) is received."""
+    while True:
+        try:
+            event = event_queue.get(timeout=30)
+            if event is None:
+                break
+            yield f"data: {json.dumps(event, default=str)}\n\n"
+        except queue.Empty:
+            yield f"data: {json.dumps({'type': 'keepalive'})}\n\n"
+
 
 def _load_results() -> dict:
     results = {}

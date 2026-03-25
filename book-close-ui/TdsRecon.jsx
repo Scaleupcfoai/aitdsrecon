@@ -12,6 +12,8 @@ function TdsRecon({ onBack }) {
   const [expandedSections, setExpandedSections] = useState(new Set());
   const [reviewDecisions, setReviewDecisions] = useState({});
   const [runCount, setRunCount] = useState(0);
+  const [uploadedFiles, setUploadedFiles] = useState({ form26: null, tally: null });
+  const [useUpload, setUseUpload] = useState(false);
   const logRef = useRef(null);
 
   // Auto-scroll agent activity log
@@ -19,15 +21,32 @@ function TdsRecon({ onBack }) {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [visibleEvents]);
 
-  // Run pipeline with real-time SSE streaming
+  // Upload files then run, or run on existing data
   const runPipeline = async () => {
     setStatus('running');
     setVisibleEvents([]);
     setReviewDecisions({});
     setResults(null);
 
+    // If user uploaded files, upload them first
+    let streamUrl = `${API}/api/run/stream`;
+    if (useUpload && uploadedFiles.form26 && uploadedFiles.tally) {
+      try {
+        const formData = new FormData();
+        formData.append('form26', uploadedFiles.form26);
+        formData.append('tally', uploadedFiles.tally);
+        const uploadRes = await fetch(`${API}/api/upload`, { method: 'POST', body: formData });
+        if (!uploadRes.ok) throw new Error('Upload failed');
+        streamUrl = `${API}/api/run/stream/upload`;
+      } catch (err) {
+        setVisibleEvents([{ agent: 'Upload', type: 'error', message: `Upload failed: ${err.message}` }]);
+        setStatus('error');
+        return;
+      }
+    }
+
     try {
-      const evtSource = new EventSource(`${API}/api/run/stream`);
+      const evtSource = new EventSource(streamUrl);
 
       evtSource.onmessage = (msg) => {
         try {
@@ -245,8 +264,13 @@ function TdsRecon({ onBack }) {
           <h1>TDS Payable (all sections)</h1>
           <div className="tds-subtitle">FY 2024-25 | AY 2025-26 | Sections: 194A, 194C, 194H, 194J(b), 194Q</div>
         </div>
-        <button className="tds-run-btn" onClick={runPipeline} disabled={status === 'running'}>
-          {status === 'running' ? <><span className="spinner"></span> Running...</> : 'Run Reconciliation'}
+        <button
+          className="tds-run-btn"
+          onClick={runPipeline}
+          disabled={status === 'running' || (useUpload && (!uploadedFiles.form26 || !uploadedFiles.tally))}
+        >
+          {status === 'running' ? <><span className="spinner"></span> Running...</> :
+           useUpload ? 'Upload & Run' : 'Run Reconciliation'}
         </button>
       </div>
 
@@ -257,9 +281,52 @@ function TdsRecon({ onBack }) {
             <div className="tds-empty-state">
               <div className="tds-empty-icon">📋</div>
               <div className="tds-empty-title">Ready to Reconcile</div>
-              <div className="tds-empty-desc">
-                Click "Run Reconciliation" to match Form 26 TDS deductions against Tally books using our 6-pass AI matching engine.
+              <div className="tds-empty-desc" style={{ marginBottom: 16 }}>
+                Upload your files or run with existing data.
               </div>
+
+              {/* Upload toggle */}
+              <div style={{ display: 'flex', gap: 8, marginBottom: 12, justifyContent: 'center' }}>
+                <button
+                  className={`tds-tab ${!useUpload ? 'active' : ''}`}
+                  onClick={() => setUseUpload(false)}
+                  style={{ fontSize: 12, padding: '4px 12px' }}
+                >
+                  Use Existing Data
+                </button>
+                <button
+                  className={`tds-tab ${useUpload ? 'active' : ''}`}
+                  onClick={() => setUseUpload(true)}
+                  style={{ fontSize: 12, padding: '4px 12px' }}
+                >
+                  Upload New Files
+                </button>
+              </div>
+
+              {useUpload && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center', marginBottom: 12 }}>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    Form 26 (.xlsx)
+                    <input
+                      type="file"
+                      accept=".xlsx,.xls"
+                      onChange={e => setUploadedFiles(prev => ({ ...prev, form26: e.target.files[0] || null }))}
+                      style={{ fontSize: 12 }}
+                    />
+                    {uploadedFiles.form26 && <span style={{ color: 'var(--accent-green)' }}>{uploadedFiles.form26.name}</span>}
+                  </label>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    Tally Extract (.xlsx)
+                    <input
+                      type="file"
+                      accept=".xlsx,.xls"
+                      onChange={e => setUploadedFiles(prev => ({ ...prev, tally: e.target.files[0] || null }))}
+                      style={{ fontSize: 12 }}
+                    />
+                    {uploadedFiles.tally && <span style={{ color: 'var(--accent-green)' }}>{uploadedFiles.tally.name}</span>}
+                  </label>
+                </div>
+              )}
             </div>
           ) : (
             <>
