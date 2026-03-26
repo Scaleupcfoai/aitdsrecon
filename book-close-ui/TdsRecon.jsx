@@ -14,12 +14,96 @@ function TdsRecon({ onBack }) {
   const [runCount, setRunCount] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState({ form26: null, tally: null });
   const [useUpload, setUseUpload] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'assistant', content: 'Welcome to TDS Reconciliation. I can help you reconcile Form 26 against Tally books.', actions: ['Run Reconciliation', 'Upload Files'] },
+  ]);
+  const [chatInput, setChatInput] = useState('');
   const logRef = useRef(null);
+  const chatEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
-  // Auto-scroll agent activity log
+  // Auto-scroll chat
   useEffect(() => {
-    if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
-  }, [visibleEvents]);
+    if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, visibleEvents]);
+
+  // Add assistant message helper
+  const addAssistantMsg = (content, actions) => {
+    setChatMessages(prev => [...prev, { role: 'assistant', content, actions }]);
+  };
+
+  // Handle chat commands
+  const handleCommand = (text) => {
+    const lower = text.toLowerCase().trim();
+
+    if (lower.includes('run') || lower.includes('start') || lower.includes('reconcil')) {
+      runPipeline();
+      return;
+    }
+    if (lower.includes('upload')) {
+      fileInputRef.current?.click();
+      return;
+    }
+    if (lower.includes('match') || lower.includes('show match')) {
+      setActiveTab('matches');
+      addAssistantMsg(`Showing ${matches.length} matches. Check the left panel.`);
+      return;
+    }
+    if (lower.includes('finding') || lower.includes('error') || lower.includes('issue')) {
+      setActiveTab('findings');
+      addAssistantMsg(`Showing ${findings.length} findings (${findings.filter(f => f.severity === 'error').length} errors). Check the left panel.`);
+      return;
+    }
+    if (lower.includes('summary') || lower.includes('overview')) {
+      setActiveTab('summary');
+      addAssistantMsg('Showing summary. Check the left panel.');
+      return;
+    }
+    if (lower.includes('review') || lower.includes('unmatched')) {
+      setActiveTab('review');
+      addAssistantMsg(`Showing ${unmatchedVendors.length} vendors for review. Check the left panel.`);
+      return;
+    }
+    if (lower.includes('export') || lower.includes('report') || lower.includes('download')) {
+      addAssistantMsg('Reports are generated at:\n- reconciliation_summary.json\n- reconciliation_report.csv\n- findings_report.csv');
+      return;
+    }
+    // Default help
+    addAssistantMsg(
+      'I can help with:\n- **Run reconciliation** \u2014 execute the full pipeline\n- **Upload files** \u2014 attach Form 26 + Tally XLSX\n- **Show matches / findings / summary / review**\n- **Export report**\n\nOr click any action button below.',
+      ['Run Reconciliation', 'Show Matches', 'Show Findings', 'Export Report']
+    );
+  };
+
+  const sendMessage = () => {
+    const text = chatInput.trim();
+    if (!text) return;
+    setChatMessages(prev => [...prev, { role: 'user', content: text }]);
+    setChatInput('');
+    handleCommand(text);
+  };
+
+  const handleActionClick = (action) => {
+    setChatMessages(prev => [...prev, { role: 'user', content: action }]);
+    handleCommand(action);
+  };
+
+  const handleFilesDrop = (files) => {
+    const form26File = Array.from(files).find(f => f.name.toLowerCase().includes('form') || f.name.toLowerCase().includes('26'));
+    const tallyFile = Array.from(files).find(f => f.name.toLowerCase().includes('tally'));
+
+    if (files.length >= 2) {
+      setUploadedFiles({ form26: files[0], tally: files[1] });
+      setUseUpload(true);
+      setChatMessages(prev => [...prev, {
+        role: 'file-upload',
+        files: [{ name: files[0].name, label: 'Form 26' }, { name: files[1].name, label: 'Tally' }],
+      }]);
+      addAssistantMsg('Files attached! Ready to parse and reconcile.', ['Upload & Run']);
+    } else if (files.length === 1) {
+      addAssistantMsg('Please attach both Form 26 and Tally files. You can drag-drop them together.');
+    }
+  };
 
   // Upload files then run, or run on existing data
   const runPipeline = async () => {
@@ -27,6 +111,7 @@ function TdsRecon({ onBack }) {
     setVisibleEvents([]);
     setReviewDecisions({});
     setResults(null);
+    addAssistantMsg('Starting reconciliation pipeline. Running 4 agents: Parser \u2192 Matcher \u2192 TDS Checker \u2192 Reporter...');
 
     // If user uploaded files, upload them first
     let streamUrl = `${API}/api/run/stream`;
@@ -59,6 +144,17 @@ function TdsRecon({ onBack }) {
             setRunCount(prev => prev + 1);
             setStatus('done');
             evtSource.close();
+            // Add summary to chat
+            const s = event.results?.reconciliation_summary;
+            if (s) {
+              const m = s.matching || {};
+              const c = s.compliance || {};
+              setChatMessages(prev => [...prev, {
+                role: 'assistant',
+                content: `Reconciliation complete!\n\n**${m.total_resolved || 0} entries resolved** (${m.matched_with_tds || 0} with TDS + ${m.below_threshold_resolved || 0} exempt)\n**${c.total_findings || 0} findings** (${c.errors || 0} errors, ${c.warnings || 0} warnings)\n**\u20B9${fmt(c.missing_tds_exposure || 0)}** missing TDS exposure\n\nWhat would you like to explore?`,
+                actions: ['Show Summary', 'Show Matches', 'View Findings', 'Export Report'],
+              }]);
+            }
             return;
           }
 
@@ -523,59 +619,133 @@ function TdsRecon({ onBack }) {
           )}
         </div>
 
-        {/* ── RIGHT: Agent Activity ── */}
-        <div className="tds-activity">
+        {/* ── RIGHT: Chat + Agent Activity ── */}
+        <div className="tds-activity"
+          onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }}
+          onDragLeave={e => { e.currentTarget.classList.remove('drag-over'); }}
+          onDrop={e => { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); handleFilesDrop(e.dataTransfer.files); }}
+        >
           <div className="tds-activity-header">
             <div className={`tds-activity-dot ${status === 'running' ? '' : 'idle'}`} />
-            Agent Activity
+            Lekha AI
             {runCount > 0 && <span className="tds-rules-badge">Run #{runCount}</span>}
           </div>
-          <div className="tds-activity-log" ref={logRef}>
-            {eventBlocks.length === 0 && status !== 'running' && (
-              <div className="tds-empty-state" style={{ padding: '40px 20px' }}>
-                <div className="tds-empty-desc">
-                  Agent activity will appear here as the reconciliation runs.
-                </div>
-              </div>
-            )}
-            {eventBlocks.map((block, bi) => (
-              <div key={bi} className="tds-agent-block">
-                <div className="tds-agent-header">
-                  <div className={`tds-agent-icon ${getAgentIconClass(block.agent)}`}>
-                    {getAgentIconLetter(block.agent)}
+          <div className="tds-chat-body" ref={logRef}>
+            {/* Chat messages */}
+            {chatMessages.map((msg, mi) => (
+              <div key={`msg-${mi}`}>
+                {msg.role === 'user' && (
+                  <div className="tds-chat-user">
+                    <div className="tds-chat-user-bubble">{msg.content}</div>
                   </div>
-                  <span className="tds-agent-name">{block.agent}</span>
-                  {block.endTime != null && block.startTime != null && (
-                    <span className="tds-agent-time">
-                      {((block.endTime - block.startTime) / 1000).toFixed(1)}s
-                    </span>
-                  )}
-                  {block.events.some(e => e.type === 'agent_done') && (
-                    <span className="tds-agent-status-icon" style={{ color: 'var(--accent-green)' }}>{'\u2713'}</span>
-                  )}
-                </div>
-                {block.events
-                  .filter(e => e.type !== 'agent_start' && e.type !== 'agent_done')
-                  .map((e, ei) => (
-                    <div key={ei} className={`tds-log-line ${e.type}`} style={{ animationDelay: `${ei * 0.05}s` }}>
-                      <span className="log-prefix">
-                        {e.type === 'detail' ? '\u251C\u2500' : e.type === 'success' ? '\u2713' : e.type === 'error' ? '\u2717' : e.type === 'warning' ? '\u26A0' : '\u2022'}
-                      </span>
-                      {e.message}
+                )}
+                {msg.role === 'assistant' && (
+                  <div className="tds-chat-assistant">
+                    <div className="tds-chat-avatar">L</div>
+                    <div className="tds-chat-assistant-content">
+                      <div className="tds-chat-assistant-bubble">
+                        {msg.content.split('\n').map((line, li) => (
+                          <span key={li}>
+                            {line.replace(/\*\*(.*?)\*\*/g, '\u200B$1').split('\u200B').map((part, pi) =>
+                              pi % 2 === 1 ? <strong key={pi}>{part}</strong> : part
+                            )}
+                            {li < msg.content.split('\n').length - 1 && <br />}
+                          </span>
+                        ))}
+                      </div>
+                      {msg.actions && (
+                        <div className="tds-chat-actions">
+                          {msg.actions.map((a, ai) => (
+                            <button key={ai} className="tds-chat-action-chip" onClick={() => handleActionClick(a)}>{a}</button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
+                )}
+                {msg.role === 'file-upload' && (
+                  <div className="tds-chat-user">
+                    <div className="tds-chat-file-bubble">
+                      {msg.files.map((f, fi) => (
+                        <div key={fi} className="tds-chat-file-item">
+                          <span className="tds-chat-file-icon">{'\uD83D\uDCC4'}</span>
+                          <span>{f.label}: {f.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Render agent blocks after the "Starting pipeline" assistant message */}
+                {mi === chatMessages.findIndex(m => m.content?.includes('Starting reconciliation')) && eventBlocks.length > 0 && (
+                  <div className="tds-chat-agent-blocks">
+                    {eventBlocks.map((block, bi) => (
+                      <div key={bi} className="tds-agent-block">
+                        <div className="tds-agent-header">
+                          <div className={`tds-agent-icon ${getAgentIconClass(block.agent)}`}>
+                            {getAgentIconLetter(block.agent)}
+                          </div>
+                          <span className="tds-agent-name">{block.agent}</span>
+                          {block.endTime != null && block.startTime != null && (
+                            <span className="tds-agent-time">
+                              {((block.endTime - block.startTime) / 1000).toFixed(1)}s
+                            </span>
+                          )}
+                          {block.events.some(e => e.type === 'agent_done') && (
+                            <span className="tds-agent-status-icon" style={{ color: 'var(--accent-green)' }}>{'\u2713'}</span>
+                          )}
+                        </div>
+                        {block.events
+                          .filter(e => e.type !== 'agent_start' && e.type !== 'agent_done')
+                          .map((e, ei) => (
+                            <div key={ei} className={`tds-log-line ${e.type}`} style={{ animationDelay: `${ei * 0.05}s` }}>
+                              <span className="log-prefix">
+                                {e.type === 'detail' ? '\u251C\u2500' : e.type === 'success' ? '\u2713' : e.type === 'error' ? '\u2717' : e.type === 'warning' ? '\u26A0' : '\u2022'}
+                              </span>
+                              {e.message}
+                            </div>
+                          ))}
+                      </div>
+                    ))}
+                    {status === 'running' && (
+                      <div className="tds-typing">
+                        <div className="tds-typing-dot" />
+                        <div className="tds-typing-dot" />
+                        <div className="tds-typing-dot" />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
-            {status === 'running' && (
-              <div className="tds-typing">
-                <div className="tds-typing-dot" />
-                <div className="tds-typing-dot" />
-                <div className="tds-typing-dot" />
-              </div>
-            )}
-            {status === 'done' && runCount > 1 && (
-              <div className="tds-run-divider">Run #{runCount} Complete</div>
-            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Chat input bar */}
+          <div className="tds-chat-input-bar">
+            <button className="tds-chat-attach-btn" onClick={() => fileInputRef.current?.click()} title="Attach files">
+              {'\uD83D\uDCCE'}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".xlsx,.xls"
+              style={{ display: 'none' }}
+              onChange={e => { if (e.target.files.length) handleFilesDrop(e.target.files); e.target.value = ''; }}
+            />
+            <input
+              className="tds-chat-input"
+              type="text"
+              placeholder="Type a message or drop files..."
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+              disabled={status === 'running'}
+            />
+            <button className="tds-chat-send-btn" onClick={sendMessage} disabled={!chatInput.trim() || status === 'running'}>
+              {'\u2192'}
+            </button>
           </div>
         </div>
       </div>
