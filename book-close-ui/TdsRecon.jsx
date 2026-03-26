@@ -44,14 +44,15 @@ function TdsRecon({ onBack }) {
       fileInputRef.current?.click();
       return;
     }
-    if (lower.includes('match') || lower.includes('show match')) {
-      setActiveTab('matches');
-      addAssistantMsg(`Showing ${matches.length} matches. Check the left panel.`);
+    if (lower.includes('match') || lower.includes('tds detail') || lower.includes('show match')) {
+      setActiveTab('tds_details');
+      addAssistantMsg(`Showing ${matches.length} TDS entries with reconciled status. Check the left panel.`);
       return;
     }
-    if (lower.includes('finding') || lower.includes('error') || lower.includes('issue')) {
-      setActiveTab('findings');
-      addAssistantMsg(`Showing ${findings.length} findings (${findings.filter(f => f.severity === 'error').length} errors). Check the left panel.`);
+    if (lower.includes('finding') || lower.includes('error') || lower.includes('issue') || lower.includes('pending')) {
+      setActiveTab('pending');
+      const pendingCount = findings.filter(f => f.severity === 'error' || f.severity === 'warning').length;
+      addAssistantMsg(`Showing ${pendingCount} pending items for review. Check the left panel.`);
       return;
     }
     if (lower.includes('summary') || lower.includes('overview')) {
@@ -432,66 +433,74 @@ function TdsRecon({ onBack }) {
           ) : (
             <>
               {/* KPI Cards */}
-              {summary && (
+              {summary && (() => {
+                const m = summary.matching || {};
+                const c = summary.compliance || {};
+                // Real exposure = only missing TDS + wrong section/rate errors (not zero-rate exempt)
+                const realExposure = (findings || [])
+                  .filter(f => f.severity === 'error' && (f.check === 'missing_tds' || f.check === 'rate_validation' || f.check === 'section_validation'))
+                  .reduce((sum, f) => sum + (f.aggregate_amount || f.form26_amount || 0), 0);
+                const issuesTdsAmount = (findings || [])
+                  .filter(f => f.severity === 'error' || f.severity === 'warning')
+                  .reduce((sum, f) => sum + (f.aggregate_amount || f.form26_amount || 0), 0);
+                return (
                 <div className="tds-kpi-row">
                   <div className="tds-kpi-card">
-                    <div className="tds-kpi-value">
-                      {summary.matching?.total_resolved || 0}
-                    </div>
+                    <div className="tds-kpi-value">{m.form26_in_scope || 0}</div>
+                    <div className="tds-kpi-label">Entries Analyzed</div>
+                  </div>
+                  <div className="tds-kpi-card">
+                    <div className="tds-kpi-value">{m.total_resolved || 0}</div>
                     <div className="tds-kpi-label">
-                      Entries Resolved ({summary.matching?.matched_with_tds || 0} with TDS + {summary.matching?.below_threshold_resolved || 0} exempt)
+                      Reconciled ({m.matched_with_tds || 0} TDS + {m.below_threshold_resolved || 0} exempt)
                     </div>
                     <div className="tds-kpi-bar">
-                      <div className="tds-kpi-bar-fill" style={{ width: `${summary.matching?.match_rate_pct || 0}%` }} />
-                    </div>
-                  </div>
-                  <div className="tds-kpi-card">
-                    <div className="tds-kpi-value">{((summary.matching?.avg_confidence || 0) * 100).toFixed(0)}%</div>
-                    <div className="tds-kpi-label">Avg Confidence</div>
-                    <div className="tds-kpi-bar">
-                      <div className="tds-kpi-bar-fill" style={{ width: `${(summary.matching?.avg_confidence || 0) * 100}%` }} />
-                    </div>
-                  </div>
-                  <div className="tds-kpi-card">
-                    <div className="tds-kpi-value">{summary.compliance?.total_findings || 0}</div>
-                    <div className="tds-kpi-label">Findings ({summary.compliance?.errors || 0} errors)</div>
-                    <div className="tds-kpi-bar">
-                      <div className="tds-kpi-bar-fill" style={{
-                        width: `${Math.min(100, (summary.compliance?.errors || 0) * 20)}%`,
-                        background: 'var(--accent-red)'
-                      }} />
+                      <div className="tds-kpi-bar-fill" style={{ width: `${m.match_rate_pct || 0}%` }} />
                     </div>
                   </div>
                   <div className="tds-kpi-card">
                     <div className="tds-kpi-value" style={{ fontSize: 22 }}>
-                      {'\u20B9'}{fmt(summary.compliance?.missing_tds_exposure || 0)}
+                      {'\u20B9'}{fmt(summary.amounts?.matched_tds || 0)}
                     </div>
-                    <div className="tds-kpi-label">Missing TDS Exposure</div>
+                    <div className="tds-kpi-label">Actual TDS Deducted</div>
+                  </div>
+                  <div className="tds-kpi-card">
+                    <div className="tds-kpi-value" style={{ fontSize: 22, color: realExposure > 0 ? 'var(--accent-red)' : 'var(--accent-green)' }}>
+                      {'\u20B9'}{fmt(realExposure)}
+                    </div>
+                    <div className="tds-kpi-label">
+                      {realExposure > 0 ? 'TDS at Risk (missing/wrong)' : 'No TDS Risk'}
+                    </div>
                   </div>
                 </div>
-              )}
+                );
+              })()}
 
               {/* Tabs */}
               <div className="tds-tabs">
-                {['summary', 'matches', 'findings', 'review'].map(tab => (
+                {['summary', 'tds_details', 'pending'].map(tab => (
                   <button
                     key={tab}
                     className={`tds-tab ${activeTab === tab ? 'active' : ''}`}
                     onClick={() => setActiveTab(tab)}
                   >
-                    {tab === 'summary' ? 'Summary' :
-                     tab === 'matches' ? `Matches (${matches.length})` :
-                     tab === 'findings' ? `Findings (${findings.length})` :
-                     `Review (${unmatchedVendors.length})`}
+                    {tab === 'summary' ? 'Section Summary' :
+                     tab === 'tds_details' ? `TDS Details (${matches.length})` :
+                     `Pending (${findings.filter(f => f.severity === 'error' || f.severity === 'warning').length})`}
                   </button>
                 ))}
               </div>
 
-              {/* Tab Content */}
+              {/* ── Tab: Section Summary ── */}
               {activeTab === 'summary' && summary && (
                 <div>
-                  {/* Section-wise overview */}
-                  {Object.entries(summary.section_wise || {}).map(([section, data]) => (
+                  {Object.entries(summary.section_wise || {}).map(([section, data]) => {
+                    // Find findings for this section
+                    const sectionFindings = (findings || []).filter(f =>
+                      (f.form26_section === section || f.expected_section === section) &&
+                      (f.severity === 'error' || f.severity === 'warning')
+                    );
+                    return (
                     <div key={section} className="tds-section-group">
                       <button className="tds-section-header" onClick={() => toggleSection(section)}>
                         <span className={`tds-section-chevron ${expandedSections.has(section) ? 'open' : ''}`}>&#9654;</span>
@@ -499,34 +508,45 @@ function TdsRecon({ onBack }) {
                           {section} {sectionNames[section] ? `\u2014 ${sectionNames[section]}` : ''}
                         </span>
                         <span className="tds-section-count">{data.form26_count} entries</span>
-                        <span className={`tds-section-status-badge ${data.matched_count === data.form26_count ? 'matched' : 'pending'}`}>
-                          {data.matched_count === data.form26_count ? 'Matched' :
-                           data.not_in_scope ? 'Pending' : `${data.matched_count}/${data.form26_count}`}
+                        <span className={`tds-section-status-badge ${
+                          sectionFindings.length > 0 ? 'issue' :
+                          data.matched_count === data.form26_count ? 'matched' : 'pending'
+                        }`}>
+                          {sectionFindings.length > 0 ? `${sectionFindings.length} issues` :
+                           data.matched_count === data.form26_count ? 'Matched' :
+                           data.not_in_scope ? 'Not in Scope' : `${data.matched_count}/${data.form26_count}`}
                         </span>
                       </button>
                       {expandedSections.has(section) && (
                         <div className="tds-section-body" style={{ padding: '8px 12px' }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 12, color: 'var(--text-secondary)' }}>
-                            <div>Form 26 Amount: <strong>{'\u20B9'}{fmt(data.form26_amount || 0)}</strong></div>
-                            <div>TDS Deducted: <strong>{'\u20B9'}{fmt(data.form26_tds || 0)}</strong></div>
-                            {data.matched_amount != null && <div>Matched Amount: <strong>{'\u20B9'}{fmt(data.matched_amount)}</strong></div>}
-                            {data.not_in_scope && <div style={{ color: 'var(--text-muted)' }}>Not yet in scope for matching</div>}
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, fontSize: 12, color: 'var(--text-secondary)', marginBottom: sectionFindings.length ? 8 : 0 }}>
+                            <div>Amount: <strong>{'\u20B9'}{fmt(data.form26_amount || 0)}</strong></div>
+                            <div>TDS: <strong>{'\u20B9'}{fmt(data.form26_tds || 0)}</strong></div>
+                            <div>Matched: <strong>{'\u20B9'}{fmt(data.matched_amount || 0)}</strong></div>
                           </div>
+                          {sectionFindings.map((f, fi) => (
+                            <div key={fi} style={{ fontSize: 11, padding: '4px 0', color: f.severity === 'error' ? 'var(--accent-red)' : 'var(--accent-orange)', borderTop: fi === 0 ? '1px solid var(--border)' : 'none', marginTop: fi === 0 ? 4 : 0 }}>
+                              {f.severity === 'error' ? '\u2717' : '\u26A0'} {f.vendor}: {f.message?.slice(0, 100)}
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
 
-              {activeTab === 'matches' && (
+              {/* ── Tab: TDS Details ── */}
+              {activeTab === 'tds_details' && (
                 <div>
                   {Object.entries(matchesBySection).map(([section, sectionMatches]) => (
                     <div key={section} className="tds-section-group">
                       <button className="tds-section-header" onClick={() => toggleSection(`m_${section}`)}>
                         <span className={`tds-section-chevron ${expandedSections.has(`m_${section}`) ? 'open' : ''}`}>&#9654;</span>
-                        <span className="tds-section-name">Section {section}</span>
-                        <span className="tds-section-count">{sectionMatches.length} matches</span>
+                        <span className="tds-section-name">Section {section} {sectionNames[section] ? `\u2014 ${sectionNames[section]}` : ''}</span>
+                        <span className="tds-section-count">{sectionMatches.length} entries</span>
+                        <span className="tds-section-status-badge matched">Reconciled</span>
                       </button>
                       {expandedSections.has(`m_${section}`) && (
                         <div className="tds-section-body">
@@ -534,6 +554,7 @@ function TdsRecon({ onBack }) {
                             <div key={i} className="tds-match-row">
                               <div className="tds-match-vendor">{m.form26_entry?.vendor_name || 'Unknown'}</div>
                               <div className="tds-match-amount">{'\u20B9'}{fmt(m.form26_entry?.amount_paid || 0)}</div>
+                              <div className="tds-match-amount" style={{ fontSize: 10, color: 'var(--text-muted)' }}>TDS {'\u20B9'}{fmt(m.form26_entry?.tax_deducted || 0)}</div>
                               <div className={`tds-match-type ${getMatchTypeClass(m.pass_name)}`}>
                                 {getMatchTypeLabel(m.pass_name)}
                               </div>
@@ -546,18 +567,43 @@ function TdsRecon({ onBack }) {
                       )}
                     </div>
                   ))}
+                  {/* Exempt / Zero TDS group */}
+                  {(() => {
+                    const exemptCount = matchResults?.exemptions?.length || 0;
+                    const btCount = summary?.matching?.below_threshold_resolved || 0;
+                    if (exemptCount + btCount === 0) return null;
+                    return (
+                      <div className="tds-section-group">
+                        <button className="tds-section-header" onClick={() => toggleSection('zero_tds')}>
+                          <span className={`tds-section-chevron ${expandedSections.has('zero_tds') ? 'open' : ''}`}>&#9654;</span>
+                          <span className="tds-section-name">Zero TDS / Exempt</span>
+                          <span className="tds-section-count">{exemptCount + btCount} entries</span>
+                          <span className="tds-section-status-badge matched">No TDS Required</span>
+                        </button>
+                        {expandedSections.has('zero_tds') && (
+                          <div className="tds-section-body" style={{ padding: '8px 12px', fontSize: 12, color: 'var(--text-secondary)' }}>
+                            {btCount > 0 && <div>{btCount} below-threshold entries (aggregate below annual limit)</div>}
+                            {exemptCount > 0 && <div>{exemptCount} exempt entries (Form 15G/15H or lower deduction certificate)</div>}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
-              {activeTab === 'findings' && (
+              {/* ── Tab: Pending to Reconcile ── */}
+              {activeTab === 'pending' && (
                 <div>
-                  {findings.length === 0 ? (
-                    <div className="tds-empty-state">
-                      <div className="tds-empty-title">No findings</div>
-                      <div className="tds-empty-desc">All entries passed compliance checks.</div>
-                    </div>
-                  ) : (
-                    findings.map((f, i) => (
+                  {(() => {
+                    const pendingItems = (findings || []).filter(f => f.severity === 'error' || f.severity === 'warning');
+                    if (pendingItems.length === 0) return (
+                      <div className="tds-empty-state">
+                        <div className="tds-empty-title">All Clear</div>
+                        <div className="tds-empty-desc">No pending items. All entries are reconciled.</div>
+                      </div>
+                    );
+                    return pendingItems.map((f, i) => (
                       <div key={i} className="tds-finding-row">
                         <div className="tds-finding-icon">
                           {f.severity === 'error' ? '\u2717' : '\u26A0'}
@@ -569,55 +615,10 @@ function TdsRecon({ onBack }) {
                             <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{f.check || ''}</span>
                           </div>
                           <div className="tds-finding-message">{f.message || ''}</div>
-                          {f.remediation && (
-                            <div className="tds-finding-remediation">{f.remediation}</div>
-                          )}
                         </div>
                       </div>
-                    ))
-                  )}
-                </div>
-              )}
-
-              {activeTab === 'review' && (
-                <div>
-                  <div className="tds-review-intro">
-                    {unmatchedVendors.length} vendors have Tally entries with no matching Form 26 TDS deduction.
-                    Review each vendor and classify them. Your decisions become learned rules for future runs.
-                  </div>
-                  {unmatchedVendors.map(([vendor, data]) => (
-                    <div key={vendor} className="tds-review-vendor-row">
-                      <div className="tds-review-vendor-info">
-                        <div className="tds-review-vendor-name">{vendor}</div>
-                        <div className="tds-review-vendor-meta">
-                          {data.entries.length} entries | {'\u20B9'}{fmt(data.total)}
-                        </div>
-                      </div>
-                      <div className="tds-review-actions">
-                        {[
-                          { key: 'below_threshold', label: 'Below Threshold', params: { section: '194C', annual_amount: data.total, threshold: 100000, fy: '2024-25' } },
-                          { key: 'ignore', label: 'Ignore', params: { category: 'not_tds_applicable' } },
-                        ].map(opt => (
-                          <button
-                            key={opt.key}
-                            className={`tds-review-action-btn ${reviewDecisions[vendor]?.decision === opt.key ? 'selected' : ''}`}
-                            onClick={() => setDecision(vendor, opt.key, opt.params)}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                  {unmatchedVendors.length > 0 && (
-                    <button
-                      className="tds-submit-review"
-                      onClick={submitReview}
-                      disabled={pendingReviewCount === 0 || status === 'running'}
-                    >
-                      {status === 'running' ? 'Submitting...' : `Submit ${pendingReviewCount} Decision${pendingReviewCount !== 1 ? 's' : ''} & Re-run`}
-                    </button>
-                  )}
+                    ));
+                  })()}
                 </div>
               )}
             </>

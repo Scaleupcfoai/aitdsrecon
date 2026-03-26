@@ -198,6 +198,7 @@
 }
 .tds-section-status-badge.matched { background: rgba(22,163,74,0.1); color: var(--accent-green); }
 .tds-section-status-badge.pending { background: rgba(151,160,175,0.15); color: var(--text-muted); }
+.tds-section-status-badge.issue { background: rgba(220,38,38,0.1); color: var(--accent-red); }
 
 /* Match rows */
 .tds-section-body { padding: 4px 0 4px 12px; }
