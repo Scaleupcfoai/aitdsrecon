@@ -3,3 +3,4 @@ uvicorn
 openpyxl
 pydantic
 python-multipart
+anthropic

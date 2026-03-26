@@ -33,54 +33,85 @@ function TdsRecon({ onBack }) {
   };
 
   // Handle chat commands
-  const handleCommand = (text) => {
+  // Handle commands — quick actions locally, everything else goes to Claude
+  const handleCommand = async (text) => {
     const lower = text.toLowerCase().trim();
 
-    if (lower.includes('run') || lower.includes('start') || lower.includes('reconcil')) {
-      runPipeline();
-      return;
-    }
-    if (lower.includes('upload')) {
+    // Quick local actions
+    if (lower.includes('upload') && !lower.includes('run')) {
       fileInputRef.current?.click();
       return;
     }
-    if (lower.includes('match') || lower.includes('tds detail') || lower.includes('show match')) {
-      setActiveTab('tds_details');
-      addAssistantMsg(`Showing ${matches.length} TDS entries with reconciled status. Check the left panel.`);
+    if ((lower.includes('run') || lower.includes('start') || lower.includes('reconcil')) && !lower.includes('why') && !lower.includes('explain')) {
+      runPipeline();
       return;
     }
-    if (lower.includes('finding') || lower.includes('error') || lower.includes('issue') || lower.includes('pending')) {
-      setActiveTab('pending');
-      const pendingCount = findings.filter(f => f.severity === 'error' || f.severity === 'warning').length;
-      addAssistantMsg(`Showing ${pendingCount} pending items for review. Check the left panel.`);
-      return;
-    }
-    if (lower.includes('summary') || lower.includes('overview')) {
-      setActiveTab('summary');
-      addAssistantMsg('Showing summary. Check the left panel.');
-      return;
-    }
-    if (lower.includes('review') || lower.includes('unmatched')) {
-      setActiveTab('review');
-      addAssistantMsg(`Showing ${unmatchedVendors.length} vendors for review. Check the left panel.`);
-      return;
-    }
-    if (lower.includes('export') || lower.includes('report') || lower.includes('download')) {
+    if (lower === 'export' || lower === 'download' || lower === 'export report') {
       setChatMessages(prev => [...prev, {
         role: 'download',
         files: [
-          { name: 'tds_recon_report.xlsx', label: 'TDS Recon Report (Excel — 3 sheets)' },
+          { name: 'tds_recon_report.xlsx', label: 'TDS Recon Report (Excel)' },
           { name: 'reconciliation_report.csv', label: 'Reconciliation Report (CSV)' },
           { name: 'findings_report.csv', label: 'Findings Report (CSV)' },
         ],
       }]);
       return;
     }
-    // Default help
-    addAssistantMsg(
-      'I can help with:\n- **Run reconciliation** \u2014 execute the full pipeline\n- **Upload files** \u2014 attach Form 26 + Tally XLSX\n- **Show matches / findings / summary / review**\n- **Export report**\n\nOr click any action button below.',
-      ['Run Reconciliation', 'Show Matches', 'Show Findings', 'Export Report']
-    );
+
+    // Everything else goes to Claude via chat bridge
+    setChatMessages(prev => [...prev, { role: 'assistant', content: null }]); // thinking placeholder
+
+    try {
+      const res = await fetch(`${API}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      });
+      const { id } = await res.json();
+
+      // Poll for Claude's response
+      for (let i = 0; i < 60; i++) {
+        await new Promise(r => setTimeout(r, 500));
+        const pollRes = await fetch(`${API}/api/chat/${id}`);
+        const data = await pollRes.json();
+
+        if (data.status === 'done' || data.status === 'error') {
+          setChatMessages(prev => {
+            const updated = [...prev];
+            const idx = updated.findLastIndex(m => m.role === 'assistant' && m.content === null);
+            if (idx >= 0) {
+              updated[idx] = { role: 'assistant', content: data.response || 'No response.' };
+            }
+            return updated;
+          });
+          // Refresh results if Claude ran agents
+          if (data.status === 'done') {
+            try {
+              const resultsRes = await fetch(`${API}/api/results`);
+              const resultsData = await resultsRes.json();
+              if (resultsData.reconciliation_summary) setResults(resultsData);
+            } catch {}
+          }
+          return;
+        }
+      }
+      // Timeout
+      addAssistantMsg('Request timed out. Please try again.');
+    } catch (err) {
+      // Chat bridge not running — fall back to local help
+      setChatMessages(prev => {
+        const updated = [...prev];
+        const idx = updated.findLastIndex(m => m.role === 'assistant' && m.content === null);
+        if (idx >= 0) {
+          updated[idx] = {
+            role: 'assistant',
+            content: 'Chat bridge is not running. Start it with:\n`python chat_bridge.py`\n\nMeanwhile, you can use action buttons below.',
+            actions: ['Run Reconciliation', 'Export Report'],
+          };
+        }
+        return updated;
+      });
+    }
   };
 
   const sendMessage = () => {
@@ -649,6 +680,15 @@ function TdsRecon({ onBack }) {
                   <div className="tds-chat-assistant">
                     <div className="tds-chat-avatar">L</div>
                     <div className="tds-chat-assistant-content">
+                      {msg.content === null ? (
+                        <div className="tds-chat-assistant-bubble">
+                          <div className="tds-typing" style={{ margin: 0, padding: 0 }}>
+                            <div className="tds-typing-dot" />
+                            <div className="tds-typing-dot" />
+                            <div className="tds-typing-dot" />
+                          </div>
+                        </div>
+                      ) : (
                       <div className="tds-chat-assistant-bubble">
                         {msg.content.split('\n').map((line, li) => (
                           <span key={li}>
@@ -659,6 +699,7 @@ function TdsRecon({ onBack }) {
                           </span>
                         ))}
                       </div>
+                      )}
                       {msg.actions && (
                         <div className="tds-chat-actions">
                           {msg.actions.map((a, ai) => (
