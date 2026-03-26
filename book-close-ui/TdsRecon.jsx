@@ -89,18 +89,16 @@ function TdsRecon({ onBack }) {
   };
 
   const handleFilesDrop = (files) => {
-    const form26File = Array.from(files).find(f => f.name.toLowerCase().includes('form') || f.name.toLowerCase().includes('26'));
-    const tallyFile = Array.from(files).find(f => f.name.toLowerCase().includes('tally'));
-
-    if (files.length >= 2) {
-      setUploadedFiles({ form26: files[0], tally: files[1] });
+    const fileArr = Array.from(files);
+    if (fileArr.length >= 2) {
+      setUploadedFiles({ form26: fileArr[0], tally: fileArr[1] });
       setUseUpload(true);
       setChatMessages(prev => [...prev, {
         role: 'file-upload',
-        files: [{ name: files[0].name, label: 'Form 26' }, { name: files[1].name, label: 'Tally' }],
+        files: [{ name: fileArr[0]?.name || 'File 1', label: 'Form 26' }, { name: fileArr[1]?.name || 'File 2', label: 'Tally' }],
       }]);
       addAssistantMsg('Files attached! Ready to parse and reconcile.', ['Upload & Run']);
-    } else if (files.length === 1) {
+    } else if (fileArr.length === 1) {
       addAssistantMsg('Please attach both Form 26 and Tally files. You can drag-drop them together.');
     }
   };
