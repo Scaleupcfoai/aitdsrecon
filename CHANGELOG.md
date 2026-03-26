@@ -4,10 +4,10 @@
 
 ## Current State
 
-- **Version:** 2.0.0
-- **Status:** TDS Recon MVP complete — 5-agent pipeline, interactive chat UI, Excel reports, generic parser
+- **Version:** 2.1.0
+- **Status:** TDS Recon MVP complete + chat bridge experiment. Unified repo (ui/ + tds-recon/ in one repo). Ready for new client data.
 - **Last session:** 2026-03-26
-- **Next priority:** Run on new client data, validate parser with different Tally structures, chat UX Phase 2 (inline result cards in chat)
+- **Next priority:** Test with new client data, validate generic parser, test Claude chat bridge with API key, evolve chat bridge from Q&A to orchestrator
 
 ## Unreleased
 
@@ -21,14 +21,42 @@
 - (nothing yet)
 
 ### Known Issues
-- `reset_client.py` needs evaluation before production use — review whether --keep-rules pattern retention is useful across clients
-- aibookclose repo on GitHub only has initial commit — TDS Recon UI files must be manually copied from aitdsrecon/book-close-ui/
-- 194H, 194J(b), 194Q sections are in Form 26 data but matcher only processes 194A + 194C (by design for MVP)
-- Chat command parser is keyword-based — no NLP, just string matching
+- `reset_client.py` needs evaluation before production use
+- Claude chat bridge (experiment branch) requires Anthropic API key — not yet tested end-to-end
+- Chat bridge uses file-based polling (500ms) — replace with WebSocket for production
+- `book-close-ui/` directory still exists in repo (legacy copies) — can be removed once ui/ is confirmed stable
+- 194H, 194J(b), 194Q sections not matched by Matcher (by design for MVP scope 194A + 194C)
 
 ---
 
 ## Version History
+
+### 2.1.0 — Unified Repo + Chat Bridge + Dashboard Redesign (2026-03-26)
+
+**Repo restructure:**
+- Moved frontend from aibookclose into aitdsrecon/ui/ — single repo, one git pull
+- Added DEV-SETUP.md for new developer onboarding
+
+**Dashboard redesign:**
+- New KPIs: Entries Analyzed, Entries Reconciled (TDS + exempt), Actual TDS Deducted, TDS at Risk
+- TDS at Risk only shows genuinely missing/wrong TDS (not zero-rate exempt)
+- Tabs: Section Summary (inline issues per section), TDS Details (with Zero TDS group), Pending
+- Section Summary shows amount + TDS + matched in one line with issue badge
+
+**Chat bridge experiment (branch: claude/chat-bridge-experiment-Akcin):**
+- File-based bridge: UI → FastAPI → inbox.json → Claude (Anthropic SDK) → outbox.json → UI
+- Claude has system prompt with TDS knowledge + tool definitions for all agents
+- Tools: run_full_pipeline, run_parser, run_matcher, run_checker, run_reporter, get_results, get_findings, submit_review
+- Thinking dots in UI while Claude processes
+- Graceful fallback if bridge not running
+
+**Other:**
+- 3-sheet Excel report (Issues, TDS Matched, Zero TDS Exempt) with styled headers
+- Downloadable reports from chat (Excel, CSV)
+- Generic parser — no hardcoded client data
+- Real-time SSE streaming for pipeline execution
+- File upload from chat (drag-drop + paperclip)
+- Windows encoding fix (UTF-8 for CSV)
 
 ### 2.0.0 — TDS Recon Agentic System (2026-03-26)
 
@@ -39,32 +67,10 @@
 - Reporter Agent — JSON summary + CSV reports + 3-sheet Excel workbook
 - Learning Agent — human review decisions stored as rules for future runs
 
-**Backend:**
-- FastAPI server with SSE streaming (real-time events as agents execute)
-- Individual agent endpoints (/api/run/parser, /matcher, /checker, /reporter)
-- File upload endpoint + stream-from-upload pipeline
-- Download endpoint for reports (Excel, CSV, JSON)
-
-**UI:**
-- Split-panel: Dashboard (left) + Interactive Chat (right)
-- KPIs: Entries Analyzed, Reconciled (TDS + exempt), Actual TDS, TDS at Risk
-- Tabs: Section Summary (with inline issues), TDS Details, Pending
-- Chat: text commands, action chips, file drag-drop, download links
-- Agent thinking blocks stream in real-time inside chat conversation
-
-**Data:**
-- Below-threshold entries (TDS=0) count as resolved, not pending review
-- Excel report: Sheet 1 (Issues for Review), Sheet 2 (TDS Matched + expense head), Sheet 3 (Zero TDS Exempt with reason)
-- Generic parser — no hardcoded column names, director names, or vendor names
-
 ### 1.0.0 — Complete Payment Recon Demo (2026-03-19)
 
 - 3-panel layout with nav+chat, workflow center, detail slider
 - Multi-step workflow: Upload files → Map columns → View results
-- Grouped unreconciled transactions by issue type (accordion UI)
-- 7 issue categories with category-level resolution actions
-- Email modal for outreach workflows
-- Lekha AI branding with custom SVG logo
 - Mock data: 80 transactions (67 matched, 13 issues)
 
 ---
@@ -73,8 +79,18 @@
 
 | Date | Session Summary | Files Touched | Version After |
 |------|----------------|---------------|---------------|
-| 2026-03-26 | TDS Recon MVP: 5-agent pipeline, SSE streaming, chat UI, Excel reports, generic parser, dashboard redesign | api_server.py, reconcile.py, parser_agent.py, matcher_agent.py, tds_checker_agent.py, reporter_agent.py, event_logger.py, learning_agent.py, TdsRecon.jsx, tds-recon.css, reset_client.py, requirements.txt, SOP-DEMO.md | 2.0.0 |
-| 2026-03-19 | Rebranded to Lekha AI, added accordion grouping, category actions, email modal, SOP, pushed to GitHub | App.jsx, index.css, index.html, lekha-logo.svg, SOP.md | 1.0.0 |
+| 2026-03-26 (cont.) | Unified repo, dashboard redesign, Excel reports, chat bridge experiment, DEV-SETUP.md | ui/*, api_server.py, reporter_agent.py, TdsRecon.jsx, tds-recon.css, chat_bridge.py, DEV-SETUP.md | 2.1.0 |
+| 2026-03-26 | TDS Recon MVP: 5-agent pipeline, SSE streaming, chat UI, generic parser | All agent files, api_server.py, reconcile.py, TdsRecon.jsx | 2.0.0 |
+| 2026-03-19 | Rebranded to Lekha AI, accordion grouping, category actions, email modal | App.jsx, index.css, index.html, lekha-logo.svg, SOP.md | 1.0.0 |
+
+---
+
+## Branches
+
+| Branch | Purpose | Status |
+|--------|---------|--------|
+| `claude/sub-agents-mvp-guide-Akcin` | Main dev branch — stable MVP | Active |
+| `claude/chat-bridge-experiment-Akcin` | Claude chat brain experiment | Experimental |
 
 ---
 
