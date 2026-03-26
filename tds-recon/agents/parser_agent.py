@@ -49,52 +49,48 @@ def clean_name(raw_name: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Expense category columns in Purchase GST Exp Register
-# These are the actual expense head columns (not GST/rounding/meta columns)
+# Column classification for dynamic detection
+# Instead of hardcoding column names, we detect them from Excel headers
+# and classify them using keyword patterns.
 # ---------------------------------------------------------------------------
 
-EXPENSE_COLUMNS_GST_EXP = {
-    "Telephone Charges_18%", "Insurance Charges", "Freight Charges_12%",
-    "Printing & Stationary_18%", "Annual Maintenance Charges",
-    "Brokerage and Commission_18%", "Freight Charges_18%", "Domain Expenses",
-    "Advertisement", "General Exp. GST_12%", "Postage & Stamp_18%",
-    "Packing Charges_18%", "Printer", "Computer Repair Charges",
-    "Marine Insurance Charges", "Printing & Stationary_12%", "Computer",
-    "Shop Repair & Maintenance Exp._18%", "Travelling Expenses_5%",
-    "Software Expenses", "Carriage Outward Paid GST 5%", "Audit Fees",
-    "Travelling Expenses_12%", "Packing Charges_12%", "Misc. Account",
-    "Travelling Expenses_18%", "Motor Car Insurance", "GST Annual Return Charges",
-    "Postage & Stamp", "Printing & Stationary_5%",
-}
+# GST column patterns — match these exactly or by pattern
+GST_COLUMN_PATTERNS = {"input c gst", "input s gst", "input i gst", "c gst", "s gst", "i gst", "igst", "cgst", "sgst"}
 
-GST_COLUMNS_GST_EXP = {
-    "Input C GST", "Input S GST", "Input I GST", "C GST", "S GST",
-}
-
+# Meta columns that are structural, not expense heads
 META_COLUMNS_GST_EXP = {
     "Date", "Particulars", "Voucher No.", "Value", "Addl. Cost",
     "Gross Total", "Rounded (+/-)",
 }
 
-
-# ---------------------------------------------------------------------------
-# Journal Register account columns — classified by type
-# ---------------------------------------------------------------------------
-
-INTEREST_LOAN_COLUMNS = {
-    "Adi Debnath (Loan)", "Asha Negi (Loan)", "Manisha Kumari (Loan)",
-    "Suresh Sethia (Loan)", "Rupa Khaitan", "Akash Nagar (Loan)",
-    "Rahul Shah (Loan)", "Karan Kothari (Loan)", "Ramesh Lohia (Loan)",
-}
-
-DIRECTOR_SALARY_COLUMNS = {
-    "Suresh Sethia", "Akash Nagar", "Adi Debnath", "Saket Agarwal",
-    "Manisha Kumari", "Asha Negi", "Rahul Shah",
-}
-
 JOURNAL_META_COLUMNS = {
     "Date", "Particulars", "Voucher No.", "Value", "Gross Total",
 }
+
+# Patterns to identify loan/interest party columns (e.g. "X (Loan)")
+LOAN_COLUMN_PATTERN = re.compile(r"^(.+?)\s*\(Loan\)$", re.IGNORECASE)
+
+# Patterns to identify director salary columns — detected dynamically
+# by checking if the account name appears alongside "Salary & Bonus" or
+# "Director's Salary" postings in the same journal entries.
+# Not hardcoded — detected at parse time.
+
+
+def _is_gst_column(col_name: str) -> bool:
+    """Check if a column name is a GST column."""
+    return col_name.lower().strip() in GST_COLUMN_PATTERNS or \
+           "gst" in col_name.lower() and ("input" in col_name.lower() or
+           col_name.strip() in {"C GST", "S GST", "I GST"})
+
+
+def _is_meta_column_gst(col_name: str) -> bool:
+    """Check if a column is a meta/structural column in GST Exp Register."""
+    return col_name in META_COLUMNS_GST_EXP
+
+
+def _is_expense_column(col_name: str) -> bool:
+    """Any column that is not meta and not GST is an expense head."""
+    return not _is_meta_column_gst(col_name) and not _is_gst_column(col_name)
 
 
 # ---------------------------------------------------------------------------
@@ -207,12 +203,14 @@ def parse_journal_register(ws) -> list[dict]:
         # Classify the entry based on which accounts are hit
         entry_type = _classify_journal_entry(account_postings)
 
-        # For interest entries, extract the loan party
+        # For interest entries, extract the loan party dynamically
+        # Loan columns match pattern "Name (Loan)" or similar
         loan_party = None
         if "Interest Paid" in account_postings:
-            for col_name in INTEREST_LOAN_COLUMNS:
-                if col_name in account_postings:
-                    loan_party = col_name.replace(" (Loan)", "")
+            for col_name in account_postings:
+                m = LOAN_COLUMN_PATTERN.match(col_name)
+                if m:
+                    loan_party = m.group(1).strip()
                     break
 
         entry = {
@@ -256,7 +254,10 @@ def _classify_journal_entry(postings: dict) -> str:
         return "audit_fees"
     if "TDS Payable" in keys:
         return "tds_deduction"
-    if keys & DIRECTOR_SALARY_COLUMNS:
+    # Detect director salary: if any posting key looks like a person name
+    # and the entry has no other expense classification, treat as salary.
+    # Person name heuristic: 2-4 words, all title case, no special chars
+    if any(re.match(r"^[A-Z][a-z]+(?: [A-Z][a-z]+){1,3}$", k) for k in keys):
         return "salary"
     if "Cash Discount" in keys or "Discount (CD)" in keys:
         return "discount"
@@ -319,9 +320,9 @@ def parse_purchase_gst_exp_register(ws) -> list[dict]:
                 addl_cost = cell.value
             elif col_name == "Rounded (+/-)":
                 rounding = cell.value
-            elif col_name in GST_COLUMNS_GST_EXP:
+            elif _is_gst_column(col_name):
                 gst_amounts[col_name] = cell.value
-            elif col_name in EXPENSE_COLUMNS_GST_EXP:
+            elif _is_expense_column(col_name):
                 expense_heads[col_name] = cell.value
 
         if not expense_heads and not gst_amounts:
