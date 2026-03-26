@@ -68,9 +68,9 @@ function TdsRecon({ onBack }) {
       setChatMessages(prev => [...prev, {
         role: 'download',
         files: [
+          { name: 'tds_recon_report.xlsx', label: 'TDS Recon Report (Excel — 3 sheets)' },
           { name: 'reconciliation_report.csv', label: 'Reconciliation Report (CSV)' },
           { name: 'findings_report.csv', label: 'Findings Report (CSV)' },
-          { name: 'reconciliation_summary.json', label: 'Executive Summary (JSON)' },
         ],
       }]);
       return;

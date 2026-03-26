@@ -266,6 +266,171 @@ def build_findings_report_rows(findings: list[dict]) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# 4b. Excel Report (3 sheets)
+# ---------------------------------------------------------------------------
+
+def build_excel_report(
+    filepath,
+    finding_rows: list[dict],
+    match_rows: list[dict],
+    below_threshold_entries: list[dict],
+    exemptions: list[dict],
+):
+    """Build a multi-sheet Excel workbook.
+
+    Sheet 1: Issues for Human Review (findings — wrong section, missing TDS, etc.)
+    Sheet 2: TDS Report — all matched entries with expense head
+    Sheet 3: Zero TDS Entries — below-threshold and exempt with reason
+    """
+    import openpyxl
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+    wb = openpyxl.Workbook()
+
+    header_font = Font(bold=True, size=11, color="FFFFFF")
+    header_fill = PatternFill(start_color="467273", end_color="467273", fill_type="solid")
+    error_fill = PatternFill(start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")
+    warn_fill = PatternFill(start_color="FEF3C7", end_color="FEF3C7", fill_type="solid")
+    thin_border = Border(
+        left=Side(style="thin", color="D1D5DB"),
+        right=Side(style="thin", color="D1D5DB"),
+        top=Side(style="thin", color="D1D5DB"),
+        bottom=Side(style="thin", color="D1D5DB"),
+    )
+
+    def write_header(ws, headers):
+        for col, h in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=h)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = Alignment(horizontal="center", wrap_text=True)
+            cell.border = thin_border
+
+    def style_row(ws, row_num, num_cols, fill=None):
+        for col in range(1, num_cols + 1):
+            cell = ws.cell(row=row_num, column=col)
+            cell.border = thin_border
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+            if fill:
+                cell.fill = fill
+
+    # ========== Sheet 1: Issues for Human Review ==========
+    ws1 = wb.active
+    ws1.title = "Issues for Review"
+    h1 = ["Sr.", "Severity", "Check Type", "Vendor", "PAN", "Section",
+          "Amount", "Finding", "Remediation", "Status"]
+    write_header(ws1, h1)
+
+    for i, row in enumerate(finding_rows, 2):
+        ws1.cell(row=i, column=1, value=row.get("sr_no", i - 1))
+        ws1.cell(row=i, column=2, value=row.get("severity", ""))
+        ws1.cell(row=i, column=3, value=row.get("check_type", ""))
+        ws1.cell(row=i, column=4, value=row.get("vendor", ""))
+        ws1.cell(row=i, column=5, value=row.get("pan", ""))
+        ws1.cell(row=i, column=6, value=row.get("section", ""))
+        ws1.cell(row=i, column=7, value=row.get("amount", 0))
+        ws1.cell(row=i, column=8, value=row.get("finding", ""))
+        ws1.cell(row=i, column=9, value=row.get("remediation", ""))
+        ws1.cell(row=i, column=10, value="Open")
+        fill = error_fill if row.get("severity") == "ERROR" else warn_fill if row.get("severity") == "WARNING" else None
+        style_row(ws1, i, len(h1), fill)
+
+    for col in range(1, len(h1) + 1):
+        ws1.column_dimensions[openpyxl.utils.get_column_letter(col)].width = max(12, min(40, len(str(h1[col - 1])) + 4))
+    ws1.column_dimensions["H"].width = 60
+    ws1.column_dimensions["I"].width = 60
+    ws1.auto_filter.ref = ws1.dimensions
+
+    # ========== Sheet 2: TDS Report (Matched Entries) ==========
+    ws2 = wb.create_sheet("TDS Report - Matched")
+    h2 = ["Sr.", "Vendor", "PAN", "Section", "Form 26 Amount", "Form 26 Date",
+          "TDS Rate %", "TDS Amount", "Tally Party", "Tally Amount", "Tally Date",
+          "Tally Entries", "Amount Diff", "Match Type", "Confidence", "Status", "Expense Head"]
+    write_header(ws2, h2)
+
+    for i, row in enumerate(match_rows, 2):
+        ws2.cell(row=i, column=1, value=row.get("sr_no", i - 1))
+        ws2.cell(row=i, column=2, value=row.get("vendor_name", ""))
+        ws2.cell(row=i, column=3, value=row.get("pan", ""))
+        ws2.cell(row=i, column=4, value=row.get("section", ""))
+        ws2.cell(row=i, column=5, value=row.get("form26_amount", 0))
+        ws2.cell(row=i, column=6, value=row.get("form26_date", ""))
+        ws2.cell(row=i, column=7, value=row.get("tds_rate_pct", ""))
+        ws2.cell(row=i, column=8, value=row.get("tds_amount", 0))
+        ws2.cell(row=i, column=9, value=row.get("tally_party", ""))
+        ws2.cell(row=i, column=10, value=row.get("tally_amount", 0))
+        ws2.cell(row=i, column=11, value=row.get("tally_date", ""))
+        ws2.cell(row=i, column=12, value=row.get("tally_entries_count", 0))
+        ws2.cell(row=i, column=13, value=row.get("amount_diff", 0))
+        ws2.cell(row=i, column=14, value=row.get("match_type", ""))
+        ws2.cell(row=i, column=15, value=row.get("confidence", 0))
+        ws2.cell(row=i, column=16, value="Reconciled")
+        ws2.cell(row=i, column=17, value=row.get("expense_category", ""))
+        style_row(ws2, i, len(h2))
+
+    for col in range(1, len(h2) + 1):
+        ws2.column_dimensions[openpyxl.utils.get_column_letter(col)].width = max(10, min(30, len(str(h2[col - 1])) + 4))
+    ws2.column_dimensions["B"].width = 30
+    ws2.column_dimensions["Q"].width = 40
+    ws2.auto_filter.ref = ws2.dimensions
+
+    # ========== Sheet 3: Zero TDS Entries ==========
+    ws3 = wb.create_sheet("Zero TDS - Exempt")
+    h3 = ["Sr.", "Vendor", "Section", "Amount", "Entries", "Reason for Zero TDS", "Expense Head"]
+    write_header(ws3, h3)
+
+    row_num = 2
+
+    # Below-threshold grouped by vendor
+    vendor_groups = {}
+    for e in below_threshold_entries:
+        v = e.get("party_name", "Unknown")
+        if v not in vendor_groups:
+            vendor_groups[v] = {"amount": 0, "count": 0, "heads": set()}
+        vendor_groups[v]["amount"] += e.get("amount", 0)
+        vendor_groups[v]["count"] += 1
+        if e.get("expense_heads"):
+            vendor_groups[v]["heads"].update(e["expense_heads"].keys())
+        src = e.get("tally_source", "")
+        if "freight" in src:
+            vendor_groups[v]["heads"].add("Freight Charges")
+
+    for v, data in sorted(vendor_groups.items(), key=lambda x: -x[1]["amount"]):
+        ws3.cell(row=row_num, column=1, value=row_num - 1)
+        ws3.cell(row=row_num, column=2, value=v)
+        ws3.cell(row=row_num, column=3, value="194C")
+        ws3.cell(row=row_num, column=4, value=round(data["amount"], 2))
+        ws3.cell(row=row_num, column=5, value=data["count"])
+        ws3.cell(row=row_num, column=6, value=f"Below threshold - aggregate Rs {data['amount']:,.0f} < Rs 1,00,000 annual limit")
+        ws3.cell(row=row_num, column=7, value="; ".join(sorted(data["heads"])) if data["heads"] else "Contractor/Freight")
+        style_row(ws3, row_num, len(h3))
+        row_num += 1
+
+    # Exempt entries
+    for e in exemptions:
+        f26 = e.get("form26_entry", {})
+        ws3.cell(row=row_num, column=1, value=row_num - 1)
+        ws3.cell(row=row_num, column=2, value=f26.get("vendor_name", ""))
+        ws3.cell(row=row_num, column=3, value=f26.get("section", ""))
+        ws3.cell(row=row_num, column=4, value=f26.get("amount_paid", 0))
+        ws3.cell(row=row_num, column=5, value=1)
+        ws3.cell(row=row_num, column=6, value=f"Exempt - {e.get('pass_name', 'exempt filter')}")
+        ws3.cell(row=row_num, column=7, value="")
+        style_row(ws3, row_num, len(h3))
+        row_num += 1
+
+    for col in range(1, len(h3) + 1):
+        ws3.column_dimensions[openpyxl.utils.get_column_letter(col)].width = max(10, min(30, len(str(h3[col - 1])) + 4))
+    ws3.column_dimensions["B"].width = 30
+    ws3.column_dimensions["F"].width = 50
+    ws3.column_dimensions["G"].width = 40
+    ws3.auto_filter.ref = ws3.dimensions
+
+    wb.save(str(filepath))
+    wb.close()
+
+
+# ---------------------------------------------------------------------------
 # Main Runner
 # ---------------------------------------------------------------------------
 
@@ -322,6 +487,17 @@ def run(parsed_dir: str, results_dir: str) -> dict:
             writer.writeheader()
             writer.writerows(finding_rows)
     print(f"  → {findings_file} ({len(finding_rows)} rows)")
+
+    # ---- 4. Excel Workbook (3 sheets) ----
+    excel_file = results_path / "tds_recon_report.xlsx"
+    below_threshold = match_data.get("unmatched_tally_194c", [])
+    below_threshold = [e for e in below_threshold if e.get("_below_threshold")]
+    # Also include below-threshold from 194A if any
+    below_threshold_a = match_data.get("unmatched_tally_194a", [])
+    below_threshold_a = [e for e in below_threshold_a if e.get("_below_threshold")]
+    below_threshold.extend(below_threshold_a)
+    build_excel_report(excel_file, finding_rows, match_rows, below_threshold, match_data.get("exemptions", []))
+    print(f"  → {excel_file} (3 sheets)")
 
     # ---- Print Summary ----
     print("\n" + "=" * 60)

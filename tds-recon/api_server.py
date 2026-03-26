@@ -279,6 +279,7 @@ def run_reporter():
 def download_report(filename: str):
     """Download a report file (CSV or JSON)."""
     allowed = {
+        "tds_recon_report.xlsx",
         "reconciliation_report.csv",
         "findings_report.csv",
         "reconciliation_summary.json",
