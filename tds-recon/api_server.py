@@ -16,7 +16,7 @@ import shutil
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
 # Add parent to path so agents module is importable
@@ -269,6 +269,32 @@ def run_reporter():
     elapsed = time.time() - start
     logger.agent_done("Reporter Agent", f"Reports generated ({elapsed:.1f}s)")
     return {"events": logger.get_events(), "elapsed_s": round(elapsed, 2), "results": {"reconciliation_summary": report.get("summary", {})}}
+
+
+# ---------------------------------------------------------------------------
+# Download Reports
+# ---------------------------------------------------------------------------
+
+@app.get("/api/download/{filename}")
+def download_report(filename: str):
+    """Download a report file (CSV or JSON)."""
+    allowed = {
+        "reconciliation_report.csv",
+        "findings_report.csv",
+        "reconciliation_summary.json",
+        "match_results.json",
+        "checker_results.json",
+    }
+    if filename not in allowed:
+        return {"error": f"File not available: {filename}"}
+    fpath = RESULTS_DIR / filename
+    if not fpath.exists():
+        return {"error": f"File not found. Run the pipeline first."}
+    return FileResponse(
+        path=str(fpath),
+        filename=filename,
+        media_type="application/octet-stream",
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -512,6 +512,36 @@
 }
 .tds-chat-file-icon { font-size: 14px; }
 
+/* Download links */
+.tds-chat-download-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tds-chat-download-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tds-chat-download-link:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.tds-chat-download-icon {
+  font-size: 14px;
+}
+
 /* Agent blocks inside chat */
 .tds-chat-agent-blocks {
   margin: 4px 0 4px 32px;

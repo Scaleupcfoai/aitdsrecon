@@ -65,7 +65,14 @@ function TdsRecon({ onBack }) {
       return;
     }
     if (lower.includes('export') || lower.includes('report') || lower.includes('download')) {
-      addAssistantMsg('Reports are generated at:\n- reconciliation_summary.json\n- reconciliation_report.csv\n- findings_report.csv');
+      setChatMessages(prev => [...prev, {
+        role: 'download',
+        files: [
+          { name: 'reconciliation_report.csv', label: 'Reconciliation Report (CSV)' },
+          { name: 'findings_report.csv', label: 'Findings Report (CSV)' },
+          { name: 'reconciliation_summary.json', label: 'Executive Summary (JSON)' },
+        ],
+      }]);
       return;
     }
     // Default help
@@ -670,6 +677,22 @@ function TdsRecon({ onBack }) {
                           <span>{f.label}: {f.name}</span>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+                {msg.role === 'download' && (
+                  <div className="tds-chat-assistant">
+                    <div className="tds-chat-avatar">L</div>
+                    <div className="tds-chat-assistant-content">
+                      <div className="tds-chat-assistant-bubble">Download your reports:</div>
+                      <div className="tds-chat-download-list">
+                        {msg.files.map((f, fi) => (
+                          <a key={fi} className="tds-chat-download-link" href={`${API}/api/download/${f.name}`} download={f.name}>
+                            <span className="tds-chat-download-icon">{'\u2B07'}</span>
+                            {f.label}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
