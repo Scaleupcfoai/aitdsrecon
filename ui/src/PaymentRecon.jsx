@@ -25,15 +25,15 @@ const columnOptions = [
 function getBotResponse(msg) {
   const lower = msg.toLowerCase();
   if (lower.includes('start') || lower.includes('run') || lower.includes('march') || lower.includes('reconcil')) {
-    return { text: `Running reconciliation for March 11, 2026...\n\nMatching pr-sales records with Razorpay payments...\nApplying matching rules on: order_id, amount\n\nResults:\n  67 of 80 transactions matched\n  13 transactions have issues\n\nIssue Breakdown:\n  3 Invoice Missing | 2 Payment Failed\n  1 Double Payment | 2 Date Mismatch\n  3 No Payment | 1 Amount Mismatch\n  1 Refund Pending\n\nMatch Rate: 83.75%\nWhat would you like to investigate?`, actions: [
+    return { text: `Running reconciliation for March 11, 2026...\n\nMatching sales records with Razorpay payments...\nApplying matching rules on: order_id, amount\n\nResults:\n  67 of 80 transactions matched\n  13 transactions have issues\n\nIssue Breakdown:\n  3 Invoice Missing | 2 Payment Failed\n  1 Double Payment | 2 Date Mismatch\n  3 No Payment | 1 Amount Mismatch\n  1 Refund Pending\n\nMatch Rate: 83.75%\nWhat would you like to investigate?`, actions: [
       { label: 'Show All Issues', action: 'Show unmatched transactions' },
       { label: 'Invoice Missing', action: 'Invoice missing cases?' },
-      { label: 'No Payment', action: 'Show no pr-payment cases' },
+      { label: 'No Payment', action: 'Show no payment cases' },
     ]};
   }
   if (lower.includes('unmatched') || lower.includes('issue')) {
-    return { text: `13 unmatched transactions found:\n\nPriority:\n1. No Payment (3) - Revenue at risk\n2. Invoice Missing (3) - Settlement blocked\n3. Payment Failed (2) - Customer impact\n\nClick any issue category chip to pr-filter the table.`, actions: [
-      { label: 'Get Details', action: 'Get details for pr-all issues' },
+    return { text: `13 unmatched transactions found:\n\nPriority:\n1. No Payment (3) - Revenue at risk\n2. Invoice Missing (3) - Settlement blocked\n3. Payment Failed (2) - Customer impact\n\nClick any issue category chip to filter the table.`, actions: [
+      { label: 'Get Details', action: 'Get details for all issues' },
       { label: 'Email Sellers', action: 'Send emails to sellers' },
       { label: 'Export Report', action: 'Generate recon report' },
     ]};
@@ -46,7 +46,7 @@ function getBotResponse(msg) {
     ]};
   }
   if (lower.includes('email') || lower.includes('send')) {
-    return { text: `Preparing outreach emails for sellers...\n\nTemplate: "Action Required - Upload Invoice"\nRecipients: 3 seller contacts from Myntra hub\nAuto-follow-up: 48 hours\n\nShall I pr-send these emails?`, actions: [
+    return { text: `Preparing outreach emails for sellers...\n\nTemplate: "Action Required - Upload Invoice"\nRecipients: 3 seller contacts from Myntra hub\nAuto-follow-up: 48 hours\n\nShall I send these emails?`, actions: [
       { label: 'Yes, Send All', action: 'Confirm sending emails' },
       { label: 'Preview First', action: 'Show email preview' },
     ]};
@@ -73,19 +73,19 @@ function getBotResponse(msg) {
     return { text: `Reconciliation session saved.\n\nSummary report exported to: reports/recon_20260311.xlsx\nPending items tracked in issue tracker.\n\nSession closed. Start a new reconciliation anytime.` };
   }
   if (lower.includes('double')) {
-    return { text: `1 double pr-payment detected.\n\nCustomer charged twice. Second pr-payment needs refund to prevent chargeback.`, actions: [
+    return { text: `1 double payment detected.\n\nCustomer charged twice. Second payment needs refund to prevent chargeback.`, actions: [
       { label: 'Initiate Refund', action: 'Process refund' },
       { label: 'View Details', action: 'Get details' },
     ]};
   }
   if (lower.includes('no payment')) {
-    return { text: `3 orders with no pr-payment found.\n\nGoods delivered but no Razorpay payment. Potential causes:\n- Payment via different gateway\n- Marketplace processing delay\n- System sync issue`, actions: [
+    return { text: `3 orders with no payment found.\n\nGoods delivered but no Razorpay payment. Potential causes:\n- Payment via different gateway\n- Marketplace processing delay\n- System sync issue`, actions: [
       { label: 'Check Other Gateways', action: 'Check PayU, Cashfree' },
       { label: 'Raise with Myntra', action: 'Email Myntra ops' },
     ]};
   }
   if (lower.includes('detail') || lower.includes('get') || lower.includes('check') || lower.includes('investigate')) {
-    return { text: `Fetching data...\n\nERP system: checked\nWarehouse data: cross-referenced\nRazorpay logs: pulled\n\nAll data loaded. Click any transaction in the table to see full analysis in the pr-right panel.` };
+    return { text: `Fetching data...\n\nERP system: checked\nWarehouse data: cross-referenced\nRazorpay logs: pulled\n\nAll data loaded. Click any transaction in the table to see full analysis in the right panel.` };
   }
   if (lower.includes('sync')) {
     return { text: `Syncing latest data...\n\nRazorpay: 2 new settlements\nMyntra: 5 new orders\nIncreFF: 3 returns received\n\nDashboard updated.`, actions: [
@@ -95,7 +95,7 @@ function getBotResponse(msg) {
   if (lower.includes('refund') || lower.includes('process')) {
     return { text: `Processing refund...\n\nRefund initiated via Razorpay API.\nAmount will be credited within 5-7 business days.\nCustomer notified via email.` };
   }
-  return { text: `I can help with:\n\n- Run reconciliation\n- Investigate pr-issues by category\n- Send emails for missing data\n- Process refunds\n- Generate reports\n- Close reconciliation session\n\nWhat would you like to do?` };
+  return { text: `I can help with:\n\n- Run reconciliation\n- Investigate issues by category\n- Send emails for missing data\n- Process refunds\n- Generate reports\n- Close reconciliation session\n\nWhat would you like to do?` };
 }
 
 // Phases: 'upload' -> 'mapping' -> 'results'
@@ -121,7 +121,7 @@ function PaymentRecon({ onBack }) {
   const [rightOpen, setRightOpen] = useState(true);
   const [filter, setFilter] = useState('all');
   const [messages, setMessages] = useState([
-    { type: 'bot', text: 'Welcome to Lekha AI!\n\nUpload your pr-sales report and pr-payment report to begin reconciliation.\n\nSupported formats: CSV, XLSX, JSON', actions: [
+    { type: 'bot', text: 'Welcome to Lekha AI!\n\nUpload your sales report and payment report to begin reconciliation.\n\nSupported formats: CSV, XLSX, JSON', actions: [
       { label: 'Use Sample Data', action: 'Load sample Myntra + Razorpay data' },
     ]},
   ]);
@@ -142,15 +142,15 @@ function PaymentRecon({ onBack }) {
     const templates = {
       invoice_missing: {
         subject: `Action Required: Upload Invoice for Order ${orderId}`,
-        body: `Dear Seller,\n\nWe are processing settlements for recent orders and noticed that the invoice for the following order pr-is missing from our system:\n\nOrder ID: ${orderId}\nMarketplace: Myntra\nDate: March 11, 2026\n\nPlease upload the invoice via Myntra Seller Hub > Orders > Upload Invoice within the next 48 hours to avoid settlement delays.\n\nIf you have already uploaded the invoice, please reply to this email with the invoice number for our reference.\n\nRegards,\nLekha AI\nScaleUp CFO`,
+        body: `Dear Seller,\n\nWe are processing settlements for recent orders and noticed that the invoice for the following order is missing from our system:\n\nOrder ID: ${orderId}\nMarketplace: Myntra\nDate: March 11, 2026\n\nPlease upload the invoice via Myntra Seller Hub > Orders > Upload Invoice within the next 48 hours to avoid settlement delays.\n\nIf you have already uploaded the invoice, please reply to this email with the invoice number for our reference.\n\nRegards,\nLekha AI\nScaleUp CFO`,
       },
       no_payment: {
         subject: `Payment Trace Request - Order ${orderId}`,
-        body: `Dear Myntra Ops Team,\n\nWe have identified the following order where goods were delivered but no corresponding pr-payment has been received via Razorpay:\n\nOrder ID: ${orderId}\nDelivery Date: March 11, 2026\nStatus: Delivered (confirmed via Increff WMS)\n\nCould you please investigate and confirm:\n1. Was this pr-payment processed via a different gateway?\n2. Is there a pending settlement for this order?\n3. Any known pr-issues with this transaction?\n\nPlease respond within 24 hours as this impacts our daily reconciliation.\n\nRegards,\nLekha AI\nScaleUp CFO`,
+        body: `Dear Myntra Ops Team,\n\nWe have identified the following order where goods were delivered but no corresponding payment has been received via Razorpay:\n\nOrder ID: ${orderId}\nDelivery Date: March 11, 2026\nStatus: Delivered (confirmed via Increff WMS)\n\nCould you please investigate and confirm:\n1. Was this payment processed via a different gateway?\n2. Is there a pending settlement for this order?\n3. Any known issues with this transaction?\n\nPlease respond within 24 hours as this impacts our daily reconciliation.\n\nRegards,\nLekha AI\nScaleUp CFO`,
       },
       date_mismatch: {
         subject: `Invoice Date Correction Required - Order ${orderId}`,
-        body: `Dear Seller,\n\nDuring our reconciliation process, we found a date mismatch for the following order:\n\nOrder ID: ${orderId}\n\nThe invoice date does not match the pr-payment date in our records. Please review and reissue the invoice with the correct date.\n\nRegards,\nLekha AI\nScaleUp CFO`,
+        body: `Dear Seller,\n\nDuring our reconciliation process, we found a date mismatch for the following order:\n\nOrder ID: ${orderId}\n\nThe invoice date does not match the payment date in our records. Please review and reissue the invoice with the correct date.\n\nRegards,\nLekha AI\nScaleUp CFO`,
       },
       default: {
         subject: `Reconciliation Query - Order ${orderId}`,
@@ -232,7 +232,7 @@ function PaymentRecon({ onBack }) {
   };
 
   const startRecon = () => {
-    transitionTo('results', 'Matching 80 pr-sales records against 77 payments...', 3500);
+    transitionTo('results', 'Matching 80 sales records against 77 payments...', 3500);
     setReconStarted(true);
     setTimeout(() => sendMessage('Start reconciliation for March 11'), 3600);
   };
@@ -248,12 +248,12 @@ function PaymentRecon({ onBack }) {
   // Category-level actions
   const categoryActions = {
     invoice_missing: [
-      { id: 'email', label: 'Ask Data by Email', desc: 'Request missing invoices from pr-all sellers', icon: '✉' },
+      { id: 'email', label: 'Ask Data by Email', desc: 'Request missing invoices from all sellers', icon: '✉' },
       { id: 'call', label: 'Call Seller Contact', desc: 'Get phone details for follow-up', icon: '📞' },
       { id: 'file', label: 'Check Source Files', desc: 'Scan uploaded docs for invoices', icon: '📁' },
     ],
     payment_failed: [
-      { id: 'email', label: 'Send Retry Links', desc: 'Email customers with pr-payment retry links', icon: '✉' },
+      { id: 'email', label: 'Send Retry Links', desc: 'Email customers with payment retry links', icon: '✉' },
       { id: 'call', label: 'Call Gateway Support', desc: 'Contact Razorpay for failure reasons', icon: '📞' },
       { id: 'file', label: 'Check Gateway Logs', desc: 'Pull detailed failure logs from Razorpay', icon: '📁' },
     ],
@@ -268,7 +268,7 @@ function PaymentRecon({ onBack }) {
       { id: 'auto', label: 'Auto-Correct Dates', desc: 'Apply date normalization rules', icon: '⚡' },
     ],
     no_payment: [
-      { id: 'email', label: 'Raise with Myntra Ops', desc: 'Email marketplace for pr-payment trace', icon: '✉' },
+      { id: 'email', label: 'Raise with Myntra Ops', desc: 'Email marketplace for payment trace', icon: '✉' },
       { id: 'call', label: 'Call Marketplace Hub', desc: 'Escalate via phone for urgent cases', icon: '📞' },
       { id: 'file', label: 'Check Other Gateways', desc: 'Search PayU, Cashfree, Paytm', icon: '📁' },
     ],
@@ -278,34 +278,34 @@ function PaymentRecon({ onBack }) {
       { id: 'auto', label: 'Apply Fee Adjustment', desc: 'Auto-reconcile known commission rates', icon: '⚡' },
     ],
     refund_pending: [
-      { id: 'email', label: 'Notify Customer', desc: 'Send refund pr-status update email', icon: '✉' },
+      { id: 'email', label: 'Notify Customer', desc: 'Send refund status update email', icon: '✉' },
       { id: 'file', label: 'Check Warehouse Receipt', desc: 'Verify return received at warehouse', icon: '📁' },
       { id: 'refund', label: 'Process All Refunds', desc: 'Initiate refund via Razorpay API', icon: '↩' },
     ],
   };
 
   const handleCategoryAction = (issueKey, actionId) => {
-    const pr-cat = issueCategories.find(c => c.key === issueKey);
+    const cat = issueCategories.find(c => c.key === issueKey);
     const txnsInGroup = transactions.filter(t => t.status === issueKey);
     const orderIds = txnsInGroup.map(t => t.orderId).join(', ');
 
     if (actionId === 'email') {
-      // Open email pr-modal for category-level email
+      // Open email modal for category-level email
       const templates = {
         invoice_missing: { subject: `Action Required: Upload Invoices for ${txnsInGroup.length} Orders`, body: `Dear Seller,\n\nWe are processing settlements and noticed missing invoices for the following orders:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)} (${t.product})`).join('\n')}\n\nPlease upload invoices via Myntra Seller Hub > Orders > Upload Invoice within 48 hours.\n\nRegards,\nLekha AI\nScaleUp CFO` },
-        payment_failed: { subject: `Payment Retry Required - ${txnsInGroup.length} Orders`, body: `Dear Customer,\n\nYour pr-payment could not be processed for the following orders:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)} (${t.product})`).join('\n')}\n\nPlease retry pr-payment using the link below or contact support.\n\nRegards,\nLekha AI` },
-        no_payment: { subject: `Payment Trace Request - ${txnsInGroup.length} Unmatched Orders`, body: `Dear Myntra Ops Team,\n\nGoods delivered but no pr-payment received for:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)} (${t.customer}, ${t.city})`).join('\n')}\n\nPlease investigate and confirm pr-payment status.\n\nRegards,\nLekha AI\nScaleUp CFO` },
+        payment_failed: { subject: `Payment Retry Required - ${txnsInGroup.length} Orders`, body: `Dear Customer,\n\nYour payment could not be processed for the following orders:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)} (${t.product})`).join('\n')}\n\nPlease retry payment using the link below or contact support.\n\nRegards,\nLekha AI` },
+        no_payment: { subject: `Payment Trace Request - ${txnsInGroup.length} Unmatched Orders`, body: `Dear Myntra Ops Team,\n\nGoods delivered but no payment received for:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)} (${t.customer}, ${t.city})`).join('\n')}\n\nPlease investigate and confirm payment status.\n\nRegards,\nLekha AI\nScaleUp CFO` },
         date_mismatch: { subject: `Invoice Date Correction - ${txnsInGroup.length} Orders`, body: `Dear Seller,\n\nDate mismatches found for:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)}`).join('\n')}\n\nPlease reissue invoices with correct dates.\n\nRegards,\nLekha AI` },
         double_payment: { subject: `Duplicate Payment Alert - ${txnsInGroup.length} Orders`, body: `Dear Finance Team,\n\nDuplicate payments detected:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)} (duplicate charge)`).join('\n')}\n\nPlease process refunds for the duplicate amounts.\n\nRegards,\nLekha AI` },
         amount_mismatch: { subject: `Amount Discrepancy - ${txnsInGroup.length} Orders`, body: `Dear Marketplace Team,\n\nAmount mismatches found:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Sale Rs ${fmt(t.sellingPrice)}, Payment Rs ${fmt(t.paymentAmount)}, Variance Rs ${fmt(t.variance)}`).join('\n')}\n\nPlease verify against commission rate card.\n\nRegards,\nLekha AI` },
-        refund_pending: { subject: `Pending Refunds - ${txnsInGroup.length} Orders`, body: `Dear Customer,\n\nYour return has been received. Refund pr-is being processed for:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)}`).join('\n')}\n\nExpected credit: 5-7 business days.\n\nRegards,\nLekha AI` },
+        refund_pending: { subject: `Pending Refunds - ${txnsInGroup.length} Orders`, body: `Dear Customer,\n\nYour return has been received. Refund is being processed for:\n\n${txnsInGroup.map(t => `• ${t.orderId} — Rs ${fmt(t.sellingPrice)}`).join('\n')}\n\nExpected credit: 5-7 business days.\n\nRegards,\nLekha AI` },
       };
       const tmpl = templates[issueKey] || { subject: `Reconciliation Query - ${txnsInGroup.length} Orders`, body: `Orders: ${orderIds}` };
       setEmailModal({ to: '', subject: tmpl.subject, body: tmpl.body, orderId: orderIds, categoryKey: issueKey });
     } else {
       // Non-email actions: simulate processing and resolve
       const actionLabel = categoryActions[issueKey]?.find(a => a.id === actionId)?.label || actionId;
-      setMessages(prev => [...prev, { type: 'user', text: `${actionLabel} for pr-all ${cat?.label || issueKey} cases` }]);
+      setMessages(prev => [...prev, { type: 'user', text: `${actionLabel} for all ${cat?.label || issueKey} cases` }]);
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
@@ -323,7 +323,7 @@ function PaymentRecon({ onBack }) {
 
   // Stats
   const matched = transactions.filter(t => t.status === 'matched').length;
-  const pr-issues = transactions.filter(t => t.status !== 'matched').length;
+  const issues = transactions.filter(t => t.status !== 'matched').length;
   const totalSales = transactions.reduce((s, t) => s + t.sellingPrice, 0);
   const settledAmount = transactions.filter(t => t.settlementId).reduce((s, t) => s + t.sellingPrice, 0);
   const matchRate = ((matched / transactions.length) * 100).toFixed(1);
@@ -354,12 +354,12 @@ function PaymentRecon({ onBack }) {
           <div className="pr-chat-messages" ref={chatRef}>
             {messages.map((m, i) => (
               <div key={i} className={`pr-chat-msg ${m.type}`}>
-                <div className="pr-msg-label">{m.type === 'bot' ? 'Lekha AI' : 'You'}</div>
+                <div className="pr-msg-pr-label">{m.type === 'bot' ? 'Lekha AI' : 'You'}</div>
                 {m.text}
                 {m.actions && (
                   <div className="pr-chat-actions">
                     {m.actions.map((a, j) => (
-                      <button key={j} className="pr-chat-action-btn" onClick={() => sendMessage(a.action)}>{a.label}</button>
+                      <button key={j} className="pr-chat-pr-action-btn" onClick={() => sendMessage(a.action)}>{a.label}</button>
                     ))}
                   </div>
                 )}
@@ -367,7 +367,7 @@ function PaymentRecon({ onBack }) {
             ))}
             {isTyping && (
               <div className="pr-chat-msg bot">
-                <div className="pr-msg-label">Recon AI</div>
+                <div className="pr-msg-pr-label">Recon AI</div>
                 <div className="pr-typing-dots"><span></span><span></span><span></span></div>
               </div>
             )}
@@ -387,7 +387,7 @@ function PaymentRecon({ onBack }) {
                 placeholder="Ask about reconciliation..."
                 rows={1}
               />
-              <button className="pr-chat-send-btn" onClick={() => sendMessage(input)}>
+              <button className="pr-chat-pr-send-btn" onClick={() => sendMessage(input)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               </button>
             </div>
@@ -405,12 +405,12 @@ function PaymentRecon({ onBack }) {
           </div>
         )}
         <div className="pr-top-bar">
-          <div className="pr-top-bar-left">
+          <div className="pr-pr-top-bar-left">
             <h2>Payment Reconciliation</h2>
             <span className="pr-date-badge">March 11, 2026</span>
             {reconStarted && <span className="pr-date-badge" style={{ borderColor: 'var(--accent-green)', color: 'var(--accent-green)' }}>Recon Complete</span>}
           </div>
-          <div className="pr-top-bar-right">
+          <div className="pr-pr-top-bar-right">
             {phase === 'results' && (
               <>
                 <button className="pr-top-btn" onClick={() => sendMessage('Sync latest data')}>
@@ -430,19 +430,19 @@ function PaymentRecon({ onBack }) {
         {phase === 'upload' && (
           <div className="pr-upload-section">
             <div className="pr-upload-area">
-              <div className="pr-step-indicator">
+              <div className="pr-pr-step-indicator">
                 <div className={`pr-step ${salesFile && paymentFile ? 'done' : 'active'}`}>
-                  <div className="pr-step-num">1</div>
+                  <div className="pr-pr-step-num">1</div>
                   Upload Files
                 </div>
-                <div className="pr-step-line"></div>
+                <div className="pr-pr-step-line"></div>
                 <div className="pr-step">
-                  <div className="pr-step-num">2</div>
+                  <div className="pr-pr-step-num">2</div>
                   Map Columns
                 </div>
-                <div className="pr-step-line"></div>
+                <div className="pr-pr-step-line"></div>
                 <div className="pr-step">
-                  <div className="pr-step-num">3</div>
+                  <div className="pr-pr-step-num">3</div>
                   View Results
                 </div>
               </div>
@@ -461,7 +461,7 @@ function PaymentRecon({ onBack }) {
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
                 <h3>{paymentFile ? 'Payment Report Uploaded' : 'Upload Payment Report'}</h3>
-                <p>{paymentFile ? '' : 'Razorpay settlement or pr-payment export (CSV, XLSX)'}</p>
+                <p>{paymentFile ? '' : 'Razorpay settlement or payment export (CSV, XLSX)'}</p>
                 {paymentFile && <div className="pr-file-name">{paymentFile} - 77 rows</div>}
               </div>
 
@@ -478,19 +478,19 @@ function PaymentRecon({ onBack }) {
         {phase === 'mapping' && (
           <div className="pr-upload-section">
             <div className="pr-upload-area">
-              <div className="pr-step-indicator">
+              <div className="pr-pr-step-indicator">
                 <div className="pr-step done">
-                  <div className="pr-step-num">1</div>
+                  <div className="pr-pr-step-num">1</div>
                   Upload Files
                 </div>
-                <div className="pr-step-line"></div>
+                <div className="pr-pr-step-line"></div>
                 <div className="pr-step active">
-                  <div className="pr-step-num">2</div>
+                  <div className="pr-pr-step-num">2</div>
                   Map Columns
                 </div>
-                <div className="pr-step-line"></div>
+                <div className="pr-pr-step-line"></div>
                 <div className="pr-step">
-                  <div className="pr-step-num">3</div>
+                  <div className="pr-pr-step-num">3</div>
                   View Results
                 </div>
               </div>
@@ -498,7 +498,7 @@ function PaymentRecon({ onBack }) {
               <div className="pr-column-mapping">
                 <h3>Select Matching Parameters</h3>
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>
-                  Choose which columns to use for matching pr-sales with payments
+                  Choose which columns to use for matching sales with payments
                 </p>
 
                 <div className="pr-mapping-row">
@@ -546,28 +546,28 @@ function PaymentRecon({ onBack }) {
           <>
             <div className="pr-status-cards">
               <div className={`pr-status-card ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
-                <div className="pr-card-label">Total Transactions</div>
-                <div className="pr-card-value blue">{transactions.length}</div>
+                <div className="pr-card-pr-label">Total Transactions</div>
+                <div className="pr-card-pr-value blue">{transactions.length}</div>
                 <div className="pr-card-sub">Rs {fmt(totalSales)}</div>
               </div>
               <div className={`pr-status-card ${filter === 'matched' ? 'active' : ''}`} onClick={() => setFilter('matched')}>
-                <div className="pr-card-label">Matched</div>
-                <div className="pr-card-value green">{matched}</div>
+                <div className="pr-card-pr-label">Matched</div>
+                <div className="pr-card-pr-value green">{matched}</div>
                 <div className="pr-card-sub">{matchRate}% match rate</div>
               </div>
               <div className={`pr-status-card ${filter === 'issues' ? 'active' : ''}`} onClick={() => setFilter('issues')}>
-                <div className="pr-card-label">Issues Found</div>
-                <div className="pr-card-value red">{issues}</div>
+                <div className="pr-card-pr-label">Issues Found</div>
+                <div className="pr-card-pr-value red">{issues}</div>
                 <div className="pr-card-sub">Needs attention</div>
               </div>
               <div className="pr-status-card">
-                <div className="pr-card-label">Settled</div>
-                <div className="pr-card-value green">Rs {fmt(settledAmount)}</div>
+                <div className="pr-card-pr-label">Settled</div>
+                <div className="pr-card-pr-value green">Rs {fmt(settledAmount)}</div>
                 <div className="pr-card-sub">Via Razorpay</div>
               </div>
               <div className="pr-status-card">
-                <div className="pr-card-label">At Risk</div>
-                <div className="pr-card-value orange">Rs {fmt(atRisk)}</div>
+                <div className="pr-card-pr-label">At Risk</div>
+                <div className="pr-card-pr-value orange">Rs {fmt(atRisk)}</div>
                 <div className="pr-card-sub">Revenue exposure</div>
               </div>
             </div>
@@ -583,11 +583,11 @@ function PaymentRecon({ onBack }) {
             </div>
 
             <div className="pr-progress-row">
-              <span className="pr-progress-label">Resolved</span>
+              <span className="pr-progress-pr-label">Resolved</span>
               <div className="pr-progress-bar">
                 <div className="pr-progress-fill" style={{ width: `${matchRate}%` }}></div>
               </div>
-              <span className="pr-progress-label">{matchRate}%</span>
+              <span className="pr-progress-pr-label">{matchRate}%</span>
             </div>
 
             <div className="pr-table-section">
@@ -596,7 +596,7 @@ function PaymentRecon({ onBack }) {
               </div>
               <div className="pr-table-wrap">
                 {/* Issue Groups Accordion */}
-                {(filter === 'all' || pr-filter === 'issues' ? issueCategories : issueCategories.filter(c => c.key === filter)).map(cat => {
+                {(filter === 'all' || filter === 'issues' ? issueCategories : issueCategories.filter(c => c.key === filter)).map(cat => {
                   const groupTxns = transactions.filter(t => t.status === cat.key);
                   if (groupTxns.length === 0) return null;
                   const isExpanded = expandedGroups.has(cat.key);
@@ -604,15 +604,15 @@ function PaymentRecon({ onBack }) {
                   const totalAtRisk = Math.abs(groupTxns.reduce((s, t) => s + t.variance, 0));
                   return (
                     <div key={cat.key} className={`pr-issue-group ${isResolved ? 'resolved' : ''}`}>
-                      <div className="pr-issue-group-header" onClick={() => toggleGroup(cat.key)}>
-                        <div className="pr-issue-group-left">
+                      <div className="pr-pr-issue-group-header" onClick={() => toggleGroup(cat.key)}>
+                        <div className="pr-pr-issue-group-left">
                           <svg className={`pr-chevron ${isExpanded ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
                           <div className="pr-chip-dot" style={{ background: cat.color }}></div>
-                          <span className="pr-issue-group-title">{cat.label}</span>
-                          <span className="pr-issue-group-count">{groupTxns.length}</span>
+                          <span className="pr-pr-issue-group-title">{cat.label}</span>
+                          <span className="pr-pr-issue-group-count">{groupTxns.length}</span>
                           {isResolved && <span className="pr-resolved-badge">✓ Resolved</span>}
                         </div>
-                        <div className="pr-issue-group-right">
+                        <div className="pr-pr-issue-group-right">
                           {totalAtRisk > 0 && <span className="pr-risk-amount">Rs {fmt(totalAtRisk)} at risk</span>}
                         </div>
                       </div>
@@ -621,13 +621,13 @@ function PaymentRecon({ onBack }) {
                         <>
                           {/* Category-level actions */}
                           {!isResolved && categoryActions[cat.key] && (
-                            <div className="pr-issue-group-actions">
-                              <span className="pr-actions-label">Next Steps:</span>
+                            <div className="pr-pr-issue-group-actions">
+                              <span className="pr-actions-pr-label">Next Steps:</span>
                               {categoryActions[cat.key].map((act, j) => (
-                                <button key={j} className="pr-cat-action-btn" onClick={(e) => { e.stopPropagation(); handleCategoryAction(cat.key, act.id); }}>
+                                <button key={j} className="pr-cat-pr-action-btn" onClick={(e) => { e.stopPropagation(); handleCategoryAction(cat.key, act.id); }}>
                                   <span className="pr-cat-action-icon">{act.icon}</span>
                                   <div>
-                                    <div className="pr-cat-action-label">{act.label}</div>
+                                    <div className="pr-cat-action-pr-label">{act.label}</div>
                                     <div className="pr-cat-action-desc">{act.desc}</div>
                                   </div>
                                 </button>
@@ -635,7 +635,7 @@ function PaymentRecon({ onBack }) {
                             </div>
                           )}
                           {isResolved && (
-                            <div className="pr-issue-group-resolved-msg">
+                            <div className="pr-pr-issue-group-resolved-msg">
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
                               All {groupTxns.length} transactions in this category have been resolved
                             </div>
@@ -673,18 +673,18 @@ function PaymentRecon({ onBack }) {
                   );
                 })}
 
-                {/* Matched transactions (shown when pr-filter pr-is 'all' or 'matched') */}
-                {(filter === 'all' || pr-filter === 'matched') && (() => {
+                {/* Matched transactions (shown when filter is 'all' or 'matched') */}
+                {(filter === 'all' || filter === 'matched') && (() => {
                   const matchedTxns = transactions.filter(t => t.status === 'matched');
                   const isExpanded = expandedGroups.has('matched');
                   return (
                     <div className="pr-issue-group pr-matched-group">
-                      <div className="pr-issue-group-header" onClick={() => toggleGroup('matched')}>
-                        <div className="pr-issue-group-left">
+                      <div className="pr-pr-issue-group-header" onClick={() => toggleGroup('matched')}>
+                        <div className="pr-pr-issue-group-left">
                           <svg className={`pr-chevron ${isExpanded ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
                           <div className="pr-chip-dot" style={{ background: 'var(--accent-green)' }}></div>
-                          <span className="pr-issue-group-title">Matched</span>
-                          <span className="pr-issue-group-count">{matchedTxns.length}</span>
+                          <span className="pr-pr-issue-group-title">Matched</span>
+                          <span className="pr-pr-issue-group-count">{matchedTxns.length}</span>
                           <span className="pr-resolved-badge">✓ Reconciled</span>
                         </div>
                       </div>
@@ -769,7 +769,7 @@ function PaymentRecon({ onBack }) {
                     <div className="pr-detail-row"><span className="pr-label">Settlement</span><span className="pr-value pr-mono">{selectedTxn.settlementId || 'Pending'}</span></div>
                   </>
                 ) : (
-                  <div style={{ color: 'var(--accent-red)', fontSize: 13, padding: '8px 0' }}>No pr-payment found in Razorpay</div>
+                  <div style={{ color: 'var(--accent-red)', fontSize: 13, padding: '8px 0' }}>No payment found in Razorpay</div>
                 )}
               </div>
 
@@ -792,15 +792,15 @@ function PaymentRecon({ onBack }) {
               </div>
 
               <div className="pr-terminal">
-                <div className="pr-terminal-head">recon_engine.py</div>
-                <div className="pr-terminal-body">
+                <div className="pr-pr-terminal-head">recon_engine.py</div>
+                <div className="pr-pr-terminal-body">
                   <div className="pr-tl"><span className="pr-tc">$</span> python recon_engine.py --order {selectedTxn.orderId}</div>
                   <div className="pr-tl"><span className="pr-tg">[OK]</span> Fetching Razorpay data...</div>
                   <div className="pr-tl"><span className="pr-tg">[OK]</span> Fetching sale record...</div>
                   {selectedTxn.paymentId ? (
                     <div className="pr-tl"><span className="pr-tb">[FOUND]</span> {selectedTxn.paymentId}</div>
                   ) : (
-                    <div className="pr-tl"><span className="pr-tr">[ERR]</span> No pr-payment in Razorpay</div>
+                    <div className="pr-tl"><span className="pr-tr">[ERR]</span> No payment in Razorpay</div>
                   )}
                   {selectedTxn.status === 'matched' ? (
                     <div className="pr-tl"><span className="pr-tg">[MATCH]</span> Rs {fmt(selectedTxn.sellingPrice)} == Rs {fmt(selectedTxn.paymentAmount)}</div>
@@ -854,16 +854,16 @@ function PaymentRecon({ onBack }) {
 
       {/* Email Modal */}
       {emailModal && (
-        <div className="pr-modal-overlay" onClick={() => setEmailModal(null)}>
+        <div className="pr-pr-modal-overlay" onClick={() => setEmailModal(null)}>
           <div className="pr-modal" onClick={e => e.stopPropagation()}>
-            <div className="pr-modal-header">
+            <div className="pr-pr-modal-header">
               <h3>Send Email</h3>
               <button className="pr-close-btn" onClick={() => setEmailModal(null)}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
-            <div className="pr-modal-body">
-              <div className="pr-modal-field">
+            <div className="pr-pr-modal-body">
+              <div className="pr-pr-modal-field">
                 <label>To (Email Address)</label>
                 <input
                   type="email"
@@ -873,14 +873,14 @@ function PaymentRecon({ onBack }) {
                   autoFocus
                 />
               </div>
-              <div className="pr-modal-field">
+              <div className="pr-pr-modal-field">
                 <label>Subject</label>
                 <input
                   value={emailModal.subject}
                   onChange={e => setEmailModal({ ...emailModal, subject: e.target.value })}
                 />
               </div>
-              <div className="pr-modal-field">
+              <div className="pr-pr-modal-field">
                 <label>Message</label>
                 <textarea
                   value={emailModal.body}
@@ -888,9 +888,9 @@ function PaymentRecon({ onBack }) {
                 />
               </div>
             </div>
-            <div className="pr-modal-footer">
-              <button className="pr-modal-btn pr-cancel" onClick={() => setEmailModal(null)}>Cancel</button>
-              <button className="pr-modal-btn pr-send" onClick={sendEmail} disabled={!emailModal.to}>
+            <div className="pr-pr-modal-footer">
+              <button className="pr-pr-modal-btn pr-cancel" onClick={() => setEmailModal(null)}>Cancel</button>
+              <button className="pr-pr-modal-btn pr-send" onClick={sendEmail} disabled={!emailModal.to}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 Send Email
               </button>
