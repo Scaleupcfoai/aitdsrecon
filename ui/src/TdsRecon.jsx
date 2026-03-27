@@ -4,6 +4,45 @@ import './tds-recon.css';
 const API = 'http://localhost:8000';
 const fmt = (n) => new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(n);
 
+// Agent thinking states and post-completion action options
+const AGENT_CONFIG = {
+  'Parser Agent': {
+    thinkingStates: [
+      'Reading Form 26 AS data...',
+      'Extracting vendor PANs and sections...',
+      'Parsing Tally payment registers...',
+      'Cross-referencing TDS ledger entries...',
+    ],
+    completionActions: ['Show TDS Details', 'Show Summary'],
+  },
+  'Matcher Agent': {
+    thinkingStates: [
+      'Learning matching rules from data patterns...',
+      'Running exact amount + PAN matching...',
+      'Fuzzy matching vendor names and dates...',
+      'Resolving multi-entry and split payments...',
+    ],
+    completionActions: ['Show Matches', 'View Unmatched', 'Show Summary'],
+  },
+  'TDS Checker': {
+    thinkingStates: [
+      'Validating TDS rates against Section rules...',
+      'Checking for missing Form 26 entries...',
+      'Flagging threshold exemptions under \u20B95,000...',
+      'Calculating missing TDS exposure...',
+    ],
+    completionActions: ['View Findings', 'Show Pending Issues', 'Show Summary'],
+  },
+  'Reporter Agent': {
+    thinkingStates: [
+      'Compiling reconciliation summary...',
+      'Generating section-wise breakdown...',
+      'Preparing downloadable reports...',
+    ],
+    completionActions: ['Show Summary', 'Export Report'],
+  },
+};
+
 function TdsRecon({ onBack }) {
   const [status, setStatus] = useState('idle'); // idle | running | done | error
   const [visibleEvents, setVisibleEvents] = useState([]);
@@ -18,6 +57,7 @@ function TdsRecon({ onBack }) {
     { role: 'assistant', content: 'Welcome to TDS Reconciliation. I can help you reconcile Form 26 against Tally books.', actions: ['Run Reconciliation', 'Upload Files'] },
   ]);
   const [chatInput, setChatInput] = useState('');
+  const [agentThinkingIdx, setAgentThinkingIdx] = useState({});
   const logRef = useRef(null);
   const chatEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -25,7 +65,33 @@ function TdsRecon({ onBack }) {
   // Auto-scroll chat
   useEffect(() => {
     if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [chatMessages, visibleEvents]);
+  }, [chatMessages, visibleEvents, agentThinkingIdx]);
+
+  // Cycle thinking states for the currently active agent
+  useEffect(() => {
+    if (status !== 'running') {
+      setAgentThinkingIdx({});
+      return;
+    }
+    const interval = setInterval(() => {
+      setAgentThinkingIdx(prev => {
+        const next = { ...prev };
+        // Find the active agent (last one without agent_done)
+        for (const e of visibleEvents) {
+          if (e.type === 'agent_start') next._activeAgent = e.agent;
+          if (e.type === 'agent_done' && next._activeAgent === e.agent) next._activeAgent = null;
+        }
+        const active = next._activeAgent;
+        if (active && AGENT_CONFIG[active]) {
+          const states = AGENT_CONFIG[active].thinkingStates;
+          next[active] = ((prev[active] || 0) + 1) % states.length;
+        }
+        delete next._activeAgent;
+        return next;
+      });
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [status, visibleEvents]);
 
   // Add assistant message helper
   const addAssistantMsg = (content, actions) => {
@@ -701,34 +767,64 @@ function TdsRecon({ onBack }) {
                 {/* Render agent blocks after the "Starting pipeline" assistant message */}
                 {mi === chatMessages.findIndex(m => m.content?.includes('Starting reconciliation')) && eventBlocks.length > 0 && (
                   <div className="tds-chat-agent-blocks">
-                    {eventBlocks.map((block, bi) => (
-                      <div key={bi} className="tds-agent-block">
-                        <div className="tds-agent-header">
-                          <div className={`tds-agent-icon ${getAgentIconClass(block.agent)}`}>
-                            {getAgentIconLetter(block.agent)}
+                    {eventBlocks.map((block, bi) => {
+                      const isDone = block.events.some(e => e.type === 'agent_done');
+                      const isActive = !isDone && !block.standalone && status === 'running';
+                      const config = AGENT_CONFIG[block.agent];
+                      const thinkingIdx = agentThinkingIdx[block.agent] || 0;
+                      const thinkingText = config?.thinkingStates?.[thinkingIdx] || null;
+
+                      return (
+                        <div key={bi} className={`tds-agent-block ${isActive ? 'active' : ''}`}>
+                          <div className="tds-agent-header">
+                            <div className={`tds-agent-icon ${getAgentIconClass(block.agent)}`}>
+                              {getAgentIconLetter(block.agent)}
+                            </div>
+                            <span className="tds-agent-name">{block.agent}</span>
+                            {isActive && (
+                              <span className="tds-agent-status-badge running">Working</span>
+                            )}
+                            {isDone && block.endTime != null && block.startTime != null && (
+                              <span className="tds-agent-time">
+                                {((block.endTime - block.startTime) / 1000).toFixed(1)}s
+                              </span>
+                            )}
+                            {isDone && (
+                              <span className="tds-agent-status-icon" style={{ color: 'var(--accent-green)' }}>{'\u2713'}</span>
+                            )}
                           </div>
-                          <span className="tds-agent-name">{block.agent}</span>
-                          {block.endTime != null && block.startTime != null && (
-                            <span className="tds-agent-time">
-                              {((block.endTime - block.startTime) / 1000).toFixed(1)}s
-                            </span>
+
+                          {/* Thinking indicator while agent is active */}
+                          {isActive && thinkingText && (
+                            <div className="tds-agent-thinking">
+                              <div className="tds-agent-thinking-dot" />
+                              <span className="tds-thinking-text">{thinkingText}</span>
+                            </div>
                           )}
-                          {block.events.some(e => e.type === 'agent_done') && (
-                            <span className="tds-agent-status-icon" style={{ color: 'var(--accent-green)' }}>{'\u2713'}</span>
+
+                          {/* Detail log lines */}
+                          {block.events
+                            .filter(e => e.type !== 'agent_start' && e.type !== 'agent_done')
+                            .map((e, ei) => (
+                              <div key={ei} className={`tds-log-line ${e.type}`} style={{ animationDelay: `${ei * 0.05}s` }}>
+                                <span className="log-prefix">
+                                  {e.type === 'detail' ? '\u251C\u2500' : e.type === 'success' ? '\u2713' : e.type === 'error' ? '\u2717' : e.type === 'warning' ? '\u26A0' : '\u2022'}
+                                </span>
+                                {e.message}
+                              </div>
+                            ))}
+
+                          {/* Completion action chips */}
+                          {isDone && config?.completionActions && (
+                            <div className="tds-agent-actions">
+                              {config.completionActions.map((action, ai) => (
+                                <button key={ai} className="tds-chat-action-chip small" onClick={() => handleActionClick(action)}>{action}</button>
+                              ))}
+                            </div>
                           )}
                         </div>
-                        {block.events
-                          .filter(e => e.type !== 'agent_start' && e.type !== 'agent_done')
-                          .map((e, ei) => (
-                            <div key={ei} className={`tds-log-line ${e.type}`} style={{ animationDelay: `${ei * 0.05}s` }}>
-                              <span className="log-prefix">
-                                {e.type === 'detail' ? '\u251C\u2500' : e.type === 'success' ? '\u2713' : e.type === 'error' ? '\u2717' : e.type === 'warning' ? '\u26A0' : '\u2022'}
-                              </span>
-                              {e.message}
-                            </div>
-                          ))}
-                      </div>
-                    ))}
+                      );
+                    })}
                     {status === 'running' && (
                       <div className="tds-typing">
                         <div className="tds-typing-dot" />
