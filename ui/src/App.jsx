@@ -62,6 +62,7 @@ export default function App() {
   const [activeView, setActiveView] = useState('dashboard');
   const [tdsReconActive, setTdsReconActive] = useState(false);
   const [paymentReconActive, setPaymentReconActive] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedRecon, setSelectedRecon] = useState(null);
   const [selectedJE, setSelectedJE] = useState(null);
@@ -236,7 +237,10 @@ export default function App() {
   return (
     <div className="app-container">
       {/* ═══ LEFT PANEL: Navigation ═══ */}
-      <aside className="left-panel">
+      <aside className={`left-panel ${navCollapsed ? 'collapsed' : ''}`}>
+        <button className="nav-collapse-btn" onClick={() => setNavCollapsed(prev => !prev)} title={navCollapsed ? 'Expand' : 'Collapse'}>
+          {navCollapsed ? '\u25B6' : '\u25C0'}
+        </button>
         <div className="brand">
           <img src={lekhaLogo} className="brand-logo-img" alt="Lekha AI" />
           <div className="brand-text">
