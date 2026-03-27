@@ -291,6 +291,7 @@ body {
 .recon-type-badge.accrual { background: rgba(70,114,115,0.12); color: var(--accent); }
 .recon-type-badge.tax { background: rgba(220,38,38,0.1); color: var(--accent-red); }
 .recon-type-badge.debt { background: rgba(151,160,175,0.15); color: var(--text-secondary); }
+.recon-type-badge.sales { background: rgba(129,140,248,0.15); color: #818cf8; }
 
 .recon-status-badge {
   font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;

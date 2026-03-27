@@ -291,17 +291,12 @@ export const phaseConfig = {
 // --- RECONCILIATION DATA ---
 export const reconciliations = [
   {
-    id: 'r1', account: 'HDFC Current A/c (001-234567)', type: 'bank',
-    glBalance: 2847562.50, supportingBalance: 2892341.00,
+    id: 'r1', account: 'Sales-Payment Reconciliation', type: 'sales',
+    glBalance: 1250000, supportingBalance: 1185000,
     reconcilingItems: [
-      { desc: 'Cheque #4521 — Fabric House (outstanding)', amount: -35000, type: 'outstanding_check' },
-      { desc: 'Cheque #4518 — Dye Works Ltd (outstanding)', amount: -12450, type: 'outstanding_check' },
-      { desc: 'NEFT from Lifestyle Int. (deposit in transit)', amount: 85000, type: 'deposit_in_transit' },
-      { desc: 'Bank charges March (not yet recorded)', amount: -1578.50, type: 'bank_charge' },
-      { desc: 'Interest credit (not yet recorded)', amount: 3250, type: 'interest' },
-      { desc: 'NACH bounce — Raj Textiles (not yet recorded)', amount: -84000, type: 'nsf' },
+      { desc: '13 unmatched transactions — invoice missing, payment failed, etc.', amount: -65000, type: 'outstanding_check' },
     ],
-    status: 'completed', variance: 0, owner: 'u3', reviewer: 'u2',
+    status: 'in_progress', variance: 65000, owner: 'u3', reviewer: 'u2',
   },
   {
     id: 'r2', account: 'ICICI Savings A/c (045-789012)', type: 'bank',

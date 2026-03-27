@@ -4,6 +4,7 @@ import {
   reconciliations, journalEntries, trialBalance, fluxData, activityLog
 } from './data/mockData';
 import TdsRecon from './TdsRecon';
+import PaymentRecon from './PaymentRecon';
 import './index.css';
 import lekhaLogo from '/lekha-logo.svg';
 
@@ -60,6 +61,7 @@ const priorityColor = (p) => {
 export default function App() {
   const [activeView, setActiveView] = useState('dashboard');
   const [tdsReconActive, setTdsReconActive] = useState(false);
+  const [paymentReconActive, setPaymentReconActive] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedRecon, setSelectedRecon] = useState(null);
   const [selectedJE, setSelectedJE] = useState(null);
@@ -131,7 +133,7 @@ export default function App() {
     setSelectedJE(null);
   };
 
-  const hasDetail = !tdsReconActive && (selectedTask || selectedRecon || selectedJE);
+  const hasDetail = !tdsReconActive && !paymentReconActive && (selectedTask || selectedRecon || selectedJE);
 
   // ─── Navigation Items ────────────────────────────────────
   const navItems = [
@@ -470,15 +472,22 @@ export default function App() {
           </div>
         )}
 
+        {/* ─── PAYMENT RECON VIEW ─── */}
+        {activeView === 'reconciliations' && paymentReconActive && (
+          <div className="view-content" style={{ maxWidth: 'none', height: 'calc(100vh - 20px)', padding: 0 }}>
+            <PaymentRecon onBack={() => setPaymentReconActive(false)} />
+          </div>
+        )}
+
         {/* ─── TDS RECON VIEW ─── */}
-        {activeView === 'reconciliations' && tdsReconActive && (
+        {activeView === 'reconciliations' && tdsReconActive && !paymentReconActive && (
           <div className="view-content" style={{ maxWidth: 'none', height: 'calc(100vh - 20px)' }}>
             <TdsRecon onBack={() => setTdsReconActive(false)} />
           </div>
         )}
 
         {/* ─── RECONCILIATIONS VIEW ─── */}
-        {activeView === 'reconciliations' && !tdsReconActive && (
+        {activeView === 'reconciliations' && !tdsReconActive && !paymentReconActive && (
           <div className="view-content">
             <div className="view-header">
               <h1>Reconciliations</h1>
@@ -494,7 +503,7 @@ export default function App() {
                   <div
                     key={r.id}
                     className={`recon-card ${r.status} ${selectedRecon?.id === r.id ? 'selected' : ''}`}
-                    onClick={() => r.id === 'r7' ? setTdsReconActive(true) : setSelectedRecon(r)}
+                    onClick={() => r.id === 'r7' ? setTdsReconActive(true) : r.id === 'r1' ? setPaymentReconActive(true) : setSelectedRecon(r)}
                   >
                     <div className="recon-card-header">
                       <span className={`recon-type-badge ${r.type}`}>{r.type.replace('_', ' ')}</span>
