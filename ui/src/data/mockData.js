@@ -341,7 +341,7 @@ export const reconciliations = [
     status: 'not_started', variance: null, owner: 'u2', reviewer: 'u1',
   },
   {
-    id: 'r7', account: 'TDS Payable (all sections)', type: 'tax',
+    id: 'r7', account: 'TDS Reconciliation (all sections)', type: 'tax',
     glBalance: 0, supportingBalance: 0, reconcilingItems: [],
     status: 'not_started', variance: null, owner: 'u3', reviewer: 'u2',
   },

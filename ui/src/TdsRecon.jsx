@@ -252,7 +252,7 @@ function TdsRecon({ onBack }) {
   }, [matches]);
 
   const sectionNames = {
-    '194A': 'Interest on Securities',
+    '194A': 'Interest (other than Interest on Securities)',
     '194C': 'Contractor / Freight',
     '194H': 'Commission / Brokerage',
     '194J(b)': 'Professional Fees',
@@ -363,7 +363,7 @@ function TdsRecon({ onBack }) {
 
       <div className="tds-header">
         <div className="tds-header-left">
-          <h1>TDS Payable (all sections)</h1>
+          <h1>TDS Reconciliation (all sections)</h1>
           <div className="tds-subtitle">FY 2024-25 | AY 2025-26 | Sections: 194A, 194C, 194H, 194J(b), 194Q</div>
         </div>
         <button
