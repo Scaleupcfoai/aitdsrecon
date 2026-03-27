@@ -61,6 +61,8 @@ function TdsRecon({ onBack }) {
   const logRef = useRef(null);
   const chatEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const eventQueueRef = useRef([]);
+  const drainTimerRef = useRef(null);
 
   // Auto-scroll chat
   useEffect(() => {
@@ -92,6 +94,49 @@ function TdsRecon({ onBack }) {
     }, 2500);
     return () => clearInterval(interval);
   }, [status, visibleEvents]);
+
+  // Drip-feed: reveal queued events one by one with delays
+  const drainQueue = () => {
+    if (drainTimerRef.current) return; // already draining
+    const next = () => {
+      const item = eventQueueRef.current.shift();
+      if (!item) { drainTimerRef.current = null; return; }
+
+      if (item._pipelineComplete) {
+        // Final event — set results and status
+        setResults(item.results || null);
+        setRunCount(prev => prev + 1);
+        setStatus('done');
+        const s = item.results?.reconciliation_summary;
+        if (s) {
+          const m = s.matching || {};
+          const c = s.compliance || {};
+          setChatMessages(prev => [...prev, {
+            role: 'assistant',
+            content: `Reconciliation complete!\n\n**${m.total_resolved || 0} entries resolved** (${m.matched_with_tds || 0} with TDS + ${m.below_threshold_resolved || 0} exempt)\n**${c.total_findings || 0} findings** (${c.errors || 0} errors, ${c.warnings || 0} warnings)\n**\u20B9${fmt(c.missing_tds_exposure || 0)}** missing TDS exposure\n\nWhat would you like to explore?`,
+            actions: ['Show Summary', 'Show Matches', 'View Findings', 'Export Report'],
+          }]);
+        }
+        drainTimerRef.current = null;
+        return;
+      }
+
+      setVisibleEvents(prev => [...prev, item]);
+
+      // Delay depends on event type: agent_start gets longer pause
+      const delay = item.type === 'agent_start' ? 1200
+        : item.type === 'agent_done' ? 800
+        : item.type === 'success' ? 600
+        : 400;
+      drainTimerRef.current = setTimeout(next, delay);
+    };
+    drainTimerRef.current = setTimeout(next, 100);
+  };
+
+  const enqueueEvent = (event) => {
+    eventQueueRef.current.push(event);
+    drainQueue();
+  };
 
   // Add assistant message helper
   const addAssistantMsg = (content, actions) => {
@@ -183,6 +228,9 @@ function TdsRecon({ onBack }) {
     setVisibleEvents([]);
     setReviewDecisions({});
     setResults(null);
+    // Clear any pending drip-feed from previous run
+    eventQueueRef.current = [];
+    if (drainTimerRef.current) { clearTimeout(drainTimerRef.current); drainTimerRef.current = null; }
     addAssistantMsg('Starting reconciliation pipeline. Running 4 agents: Parser \u2192 Matcher \u2192 TDS Checker \u2192 Reporter...');
 
     // If user uploaded files, upload them first
@@ -211,27 +259,14 @@ function TdsRecon({ onBack }) {
           if (event.type === 'keepalive') return;
 
           if (event.type === 'pipeline_complete') {
-            // Final event with results
-            setResults(event.results || null);
-            setRunCount(prev => prev + 1);
-            setStatus('done');
             evtSource.close();
-            // Add summary to chat
-            const s = event.results?.reconciliation_summary;
-            if (s) {
-              const m = s.matching || {};
-              const c = s.compliance || {};
-              setChatMessages(prev => [...prev, {
-                role: 'assistant',
-                content: `Reconciliation complete!\n\n**${m.total_resolved || 0} entries resolved** (${m.matched_with_tds || 0} with TDS + ${m.below_threshold_resolved || 0} exempt)\n**${c.total_findings || 0} findings** (${c.errors || 0} errors, ${c.warnings || 0} warnings)\n**\u20B9${fmt(c.missing_tds_exposure || 0)}** missing TDS exposure\n\nWhat would you like to explore?`,
-                actions: ['Show Summary', 'Show Matches', 'View Findings', 'Export Report'],
-              }]);
-            }
+            // Queue the final event so it drains after all agent events
+            enqueueEvent({ ...event, _pipelineComplete: true });
             return;
           }
 
-          // Real-time: add each event as it arrives
-          setVisibleEvents(prev => [...prev, event]);
+          // Queue event for progressive reveal
+          enqueueEvent(event);
         } catch (e) {
           // Ignore parse errors
         }
