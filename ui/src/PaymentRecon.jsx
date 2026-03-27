@@ -346,39 +346,39 @@ function PaymentRecon({ onBack }) {
         </div>
 
         {/* Chat */}
-        <div className="pr-chat-section">
-          <div className="pr-chat-header">
-            <span className="pr-pulse-dot"></span>
+        <div className="chat-section">
+          <div className="chat-header">
+            <span className="pulse-dot"></span>
             Lekha AI Assistant
           </div>
-          <div className="pr-chat-messages" ref={chatRef}>
+          <div className="chat-messages" ref={chatRef}>
             {messages.map((m, i) => (
-              <div key={i} className={`pr-chat-msg ${m.type}`}>
-                <div className="pr-msg-pr-label">{m.type === 'bot' ? 'Lekha AI' : 'You'}</div>
+              <div key={i} className={`chat-msg ${m.type}`}>
+                <div className="msg-label">{m.type === 'bot' ? 'Lekha AI' : 'You'}</div>
                 {m.text}
                 {m.actions && (
-                  <div className="pr-chat-actions">
+                  <div className="chat-actions">
                     {m.actions.map((a, j) => (
-                      <button key={j} className="pr-chat-pr-action-btn" onClick={() => sendMessage(a.action)}>{a.label}</button>
+                      <button key={j} className="chat-action-btn" onClick={() => sendMessage(a.action)}>{a.label}</button>
                     ))}
                   </div>
                 )}
               </div>
             ))}
             {isTyping && (
-              <div className="pr-chat-msg bot">
-                <div className="pr-msg-pr-label">Recon AI</div>
-                <div className="pr-typing-dots"><span></span><span></span><span></span></div>
+              <div className="chat-msg bot">
+                <div className="msg-label">Recon AI</div>
+                <div className="typing-dots"><span></span><span></span><span></span></div>
               </div>
             )}
           </div>
-          <div className="pr-suggestions">
+          <div className="suggestions">
             {(phase === 'results' ? chatSuggestions : ['Use sample data', 'How does this work?']).slice(0, 4).map((s, i) => (
-              <div key={i} className="pr-suggestion-chip" onClick={() => sendMessage(s)}>{s}</div>
+              <div key={i} className="suggestion-chip" onClick={() => sendMessage(s)}>{s}</div>
             ))}
           </div>
-          <div className="pr-chat-input-area">
-            <div className="pr-chat-input-wrap">
+          <div className="chat-input-area">
+            <div className="chat-input-wrap">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -387,7 +387,7 @@ function PaymentRecon({ onBack }) {
                 placeholder="Ask about reconciliation..."
                 rows={1}
               />
-              <button className="pr-chat-pr-send-btn" onClick={() => sendMessage(input)}>
+              <button className="chat-send-btn" onClick={() => sendMessage(input)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               </button>
             </div>
@@ -404,20 +404,20 @@ function PaymentRecon({ onBack }) {
             <div className="pr-loading-text">{loadingText}</div>
           </div>
         )}
-        <div className="pr-top-bar">
-          <div className="pr-pr-top-bar-left">
+        <div className="top-bar">
+          <div className="top-bar-left">
             <h2>Payment Reconciliation</h2>
-            <span className="pr-date-badge">March 11, 2026</span>
-            {reconStarted && <span className="pr-date-badge" style={{ borderColor: 'var(--accent-green)', color: 'var(--accent-green)' }}>Recon Complete</span>}
+            <span className="date-badge">March 11, 2026</span>
+            {reconStarted && <span className="date-badge" style={{ borderColor: 'var(--accent-green)', color: 'var(--accent-green)' }}>Recon Complete</span>}
           </div>
-          <div className="pr-pr-top-bar-right">
+          <div className="top-bar-right">
             {phase === 'results' && (
               <>
-                <button className="pr-top-btn" onClick={() => sendMessage('Sync latest data')}>
+                <button className="top-btn" onClick={() => sendMessage('Sync latest data')}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
                   Sync
                 </button>
-                <button className="pr-top-btn" onClick={() => sendMessage('Generate recon report')}>
+                <button className="top-btn" onClick={() => sendMessage('Generate recon report')}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                   Export
                 </button>
@@ -428,45 +428,45 @@ function PaymentRecon({ onBack }) {
 
         {/* PHASE: UPLOAD */}
         {phase === 'upload' && (
-          <div className="pr-upload-section">
-            <div className="pr-upload-area">
-              <div className="pr-pr-step-indicator">
-                <div className={`pr-step ${salesFile && paymentFile ? 'done' : 'active'}`}>
-                  <div className="pr-pr-step-num">1</div>
+          <div className="upload-section">
+            <div className="upload-area">
+              <div className="step-indicator">
+                <div className={`step ${salesFile && paymentFile ? 'done' : 'active'}`}>
+                  <div className="step-num">1</div>
                   Upload Files
                 </div>
-                <div className="pr-pr-step-line"></div>
-                <div className="pr-step">
-                  <div className="pr-pr-step-num">2</div>
+                <div className="step-line"></div>
+                <div className="step">
+                  <div className="step-num">2</div>
                   Map Columns
                 </div>
-                <div className="pr-pr-step-line"></div>
-                <div className="pr-step">
-                  <div className="pr-pr-step-num">3</div>
+                <div className="step-line"></div>
+                <div className="step">
+                  <div className="step-num">3</div>
                   View Results
                 </div>
               </div>
 
-              <div className={`pr-upload-box ${salesFile ? 'filled' : ''}`} onClick={() => handleFileUpload('sales')}>
-                <div className="pr-upload-icon">
+              <div className={`upload-box ${salesFile ? 'filled' : ''}`} onClick={() => handleFileUpload('sales')}>
+                <div className="upload-icon">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
                 <h3>{salesFile ? 'Sales Report Uploaded' : 'Upload Sales Report'}</h3>
                 <p>{salesFile ? '' : 'Drag & drop or click to browse (CSV, XLSX)'}</p>
-                {salesFile && <div className="pr-file-name">{salesFile} - 80 rows</div>}
+                {salesFile && <div className="file-name">{salesFile} - 80 rows</div>}
               </div>
 
-              <div className={`pr-upload-box ${paymentFile ? 'filled' : ''}`} onClick={() => handleFileUpload('payment')}>
-                <div className="pr-upload-icon">
+              <div className={`upload-box ${paymentFile ? 'filled' : ''}`} onClick={() => handleFileUpload('payment')}>
+                <div className="upload-icon">
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
                 <h3>{paymentFile ? 'Payment Report Uploaded' : 'Upload Payment Report'}</h3>
                 <p>{paymentFile ? '' : 'Razorpay settlement or payment export (CSV, XLSX)'}</p>
-                {paymentFile && <div className="pr-file-name">{paymentFile} - 77 rows</div>}
+                {paymentFile && <div className="file-name">{paymentFile} - 77 rows</div>}
               </div>
 
               {salesFile && paymentFile && (
-                <button className="pr-proceed-btn" onClick={proceedToMapping}>
+                <button className="proceed-btn" onClick={proceedToMapping}>
                   Continue to Column Mapping
                 </button>
               )}
@@ -476,53 +476,53 @@ function PaymentRecon({ onBack }) {
 
         {/* PHASE: COLUMN MAPPING */}
         {phase === 'mapping' && (
-          <div className="pr-upload-section">
-            <div className="pr-upload-area">
-              <div className="pr-pr-step-indicator">
-                <div className="pr-step done">
-                  <div className="pr-pr-step-num">1</div>
+          <div className="upload-section">
+            <div className="upload-area">
+              <div className="step-indicator">
+                <div className="step done">
+                  <div className="step-num">1</div>
                   Upload Files
                 </div>
-                <div className="pr-pr-step-line"></div>
-                <div className="pr-step active">
-                  <div className="pr-pr-step-num">2</div>
+                <div className="step-line"></div>
+                <div className="step active">
+                  <div className="step-num">2</div>
                   Map Columns
                 </div>
-                <div className="pr-pr-step-line"></div>
-                <div className="pr-step">
-                  <div className="pr-pr-step-num">3</div>
+                <div className="step-line"></div>
+                <div className="step">
+                  <div className="step-num">3</div>
                   View Results
                 </div>
               </div>
 
-              <div className="pr-column-mapping">
+              <div className="column-mapping">
                 <h3>Select Matching Parameters</h3>
                 <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>
                   Choose which columns to use for matching sales with payments
                 </p>
 
-                <div className="pr-mapping-row">
+                <div className="mapping-row">
                   <label>Primary Match Key</label>
                   <select value={mappings.matchKey} onChange={e => setMappings({ ...mappings, matchKey: e.target.value })}>
                     {columnOptions.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
 
-                <div className="pr-mapping-row">
+                <div className="mapping-row">
                   <label>Amount Column</label>
                   <select value={mappings.amountCol} onChange={e => setMappings({ ...mappings, amountCol: e.target.value })}>
                     {columnOptions.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
 
-                <div className="pr-mapping-row">
+                <div className="mapping-row">
                   <label>Date Column</label>
                   <select value={mappings.dateCol} onChange={e => setMappings({ ...mappings, dateCol: e.target.value })}>
                     {columnOptions.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
 
-                <div className="pr-mapping-row">
+                <div className="mapping-row">
                   <label>Amount Tolerance</label>
                   <select defaultValue="exact">
                     <option value="exact">Exact match</option>
@@ -532,7 +532,7 @@ function PaymentRecon({ onBack }) {
                   </select>
                 </div>
 
-                <button className="pr-proceed-btn" onClick={startRecon} disabled={mappings.matchKey === 'Select column...'}>
+                <button className="proceed-btn" onClick={startRecon} disabled={mappings.matchKey === 'Select column...'}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
                   Run Reconciliation
                 </button>
@@ -544,57 +544,57 @@ function PaymentRecon({ onBack }) {
         {/* PHASE: RESULTS */}
         {phase === 'results' && (
           <>
-            <div className="pr-status-cards">
-              <div className={`pr-status-card ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
-                <div className="pr-card-pr-label">Total Transactions</div>
-                <div className="pr-card-pr-value blue">{transactions.length}</div>
-                <div className="pr-card-sub">Rs {fmt(totalSales)}</div>
+            <div className="status-cards">
+              <div className={`status-card ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
+                <div className="card-label">Total Transactions</div>
+                <div className="card-value blue">{transactions.length}</div>
+                <div className="card-sub">Rs {fmt(totalSales)}</div>
               </div>
-              <div className={`pr-status-card ${filter === 'matched' ? 'active' : ''}`} onClick={() => setFilter('matched')}>
-                <div className="pr-card-pr-label">Matched</div>
-                <div className="pr-card-pr-value green">{matched}</div>
-                <div className="pr-card-sub">{matchRate}% match rate</div>
+              <div className={`status-card ${filter === 'matched' ? 'active' : ''}`} onClick={() => setFilter('matched')}>
+                <div className="card-label">Matched</div>
+                <div className="card-value green">{matched}</div>
+                <div className="card-sub">{matchRate}% match rate</div>
               </div>
-              <div className={`pr-status-card ${filter === 'issues' ? 'active' : ''}`} onClick={() => setFilter('issues')}>
-                <div className="pr-card-pr-label">Issues Found</div>
-                <div className="pr-card-pr-value red">{issues}</div>
-                <div className="pr-card-sub">Needs attention</div>
+              <div className={`status-card ${filter === 'issues' ? 'active' : ''}`} onClick={() => setFilter('issues')}>
+                <div className="card-label">Issues Found</div>
+                <div className="card-value red">{issues}</div>
+                <div className="card-sub">Needs attention</div>
               </div>
-              <div className="pr-status-card">
-                <div className="pr-card-pr-label">Settled</div>
-                <div className="pr-card-pr-value green">Rs {fmt(settledAmount)}</div>
-                <div className="pr-card-sub">Via Razorpay</div>
+              <div className="status-card">
+                <div className="card-label">Settled</div>
+                <div className="card-value green">Rs {fmt(settledAmount)}</div>
+                <div className="card-sub">Via Razorpay</div>
               </div>
-              <div className="pr-status-card">
-                <div className="pr-card-pr-label">At Risk</div>
-                <div className="pr-card-pr-value orange">Rs {fmt(atRisk)}</div>
-                <div className="pr-card-sub">Revenue exposure</div>
+              <div className="status-card">
+                <div className="card-label">At Risk</div>
+                <div className="card-value orange">Rs {fmt(atRisk)}</div>
+                <div className="card-sub">Revenue exposure</div>
               </div>
             </div>
 
-            <div className="pr-issue-bar">
+            <div className="issue-bar">
               {issueCategories.map(cat => (
-                <div key={cat.key} className={`pr-issue-chip ${filter === cat.key ? 'active' : ''}`}
+                <div key={cat.key} className={`issue-chip ${filter === cat.key ? 'active' : ''}`}
                   onClick={() => setFilter(filter === cat.key ? 'all' : cat.key)}>
-                  <div className="pr-chip-dot" style={{ background: cat.color }}></div>
-                  {cat.label} <span className="pr-chip-count">{cat.count}</span>
+                  <div className="chip-dot" style={{ background: cat.color }}></div>
+                  {cat.label} <span className="chip-count">{cat.count}</span>
                 </div>
               ))}
             </div>
 
-            <div className="pr-progress-row">
-              <span className="pr-progress-pr-label">Resolved</span>
-              <div className="pr-progress-bar">
-                <div className="pr-progress-fill" style={{ width: `${matchRate}%` }}></div>
+            <div className="progress-row">
+              <span className="progress-label">Resolved</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: `${matchRate}%` }}></div>
               </div>
-              <span className="pr-progress-pr-label">{matchRate}%</span>
+              <span className="progress-label">{matchRate}%</span>
             </div>
 
-            <div className="pr-table-section">
-              <div className="pr-table-header">
+            <div className="table-section">
+              <div className="table-header">
                 <h3>Transactions ({filtered.length} of {transactions.length})</h3>
               </div>
-              <div className="pr-table-wrap">
+              <div className="table-wrap">
                 {/* Issue Groups Accordion */}
                 {(filter === 'all' || filter === 'issues' ? issueCategories : issueCategories.filter(c => c.key === filter)).map(cat => {
                   const groupTxns = transactions.filter(t => t.status === cat.key);
@@ -603,17 +603,17 @@ function PaymentRecon({ onBack }) {
                   const isResolved = resolvedGroups.has(cat.key);
                   const totalAtRisk = Math.abs(groupTxns.reduce((s, t) => s + t.variance, 0));
                   return (
-                    <div key={cat.key} className={`pr-issue-group ${isResolved ? 'resolved' : ''}`}>
-                      <div className="pr-pr-issue-group-header" onClick={() => toggleGroup(cat.key)}>
-                        <div className="pr-pr-issue-group-left">
-                          <svg className={`pr-chevron ${isExpanded ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-                          <div className="pr-chip-dot" style={{ background: cat.color }}></div>
-                          <span className="pr-pr-issue-group-title">{cat.label}</span>
-                          <span className="pr-pr-issue-group-count">{groupTxns.length}</span>
-                          {isResolved && <span className="pr-resolved-badge">✓ Resolved</span>}
+                    <div key={cat.key} className={`issue-group ${isResolved ? 'resolved' : ''}`}>
+                      <div className="issue-group-header" onClick={() => toggleGroup(cat.key)}>
+                        <div className="issue-group-left">
+                          <svg className={`chevron ${isExpanded ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+                          <div className="chip-dot" style={{ background: cat.color }}></div>
+                          <span className="issue-group-title">{cat.label}</span>
+                          <span className="issue-group-count">{groupTxns.length}</span>
+                          {isResolved && <span className="resolved-badge">✓ Resolved</span>}
                         </div>
-                        <div className="pr-pr-issue-group-right">
-                          {totalAtRisk > 0 && <span className="pr-risk-amount">Rs {fmt(totalAtRisk)} at risk</span>}
+                        <div className="issue-group-right">
+                          {totalAtRisk > 0 && <span className="risk-amount">Rs {fmt(totalAtRisk)} at risk</span>}
                         </div>
                       </div>
 
@@ -621,21 +621,21 @@ function PaymentRecon({ onBack }) {
                         <>
                           {/* Category-level actions */}
                           {!isResolved && categoryActions[cat.key] && (
-                            <div className="pr-pr-issue-group-actions">
-                              <span className="pr-actions-pr-label">Next Steps:</span>
+                            <div className="issue-group-actions">
+                              <span className="actions-label">Next Steps:</span>
                               {categoryActions[cat.key].map((act, j) => (
-                                <button key={j} className="pr-cat-pr-action-btn" onClick={(e) => { e.stopPropagation(); handleCategoryAction(cat.key, act.id); }}>
-                                  <span className="pr-cat-action-icon">{act.icon}</span>
+                                <button key={j} className="cat-action-btn" onClick={(e) => { e.stopPropagation(); handleCategoryAction(cat.key, act.id); }}>
+                                  <span className="cat-action-icon">{act.icon}</span>
                                   <div>
-                                    <div className="pr-cat-action-pr-label">{act.label}</div>
-                                    <div className="pr-cat-action-desc">{act.desc}</div>
+                                    <div className="cat-action-label">{act.label}</div>
+                                    <div className="cat-action-desc">{act.desc}</div>
                                   </div>
                                 </button>
                               ))}
                             </div>
                           )}
                           {isResolved && (
-                            <div className="pr-pr-issue-group-resolved-msg">
+                            <div className="issue-group-resolved-msg">
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
                               All {groupTxns.length} transactions in this category have been resolved
                             </div>
@@ -655,12 +655,12 @@ function PaymentRecon({ onBack }) {
                               {groupTxns.map(txn => (
                                 <tr key={txn.orderId} className={selectedTxn?.orderId === txn.orderId ? 'selected' : ''}
                                   onClick={() => { setSelectedTxn(txn); setRightOpen(true); }}>
-                                  <td className="pr-mono">{txn.orderId}</td>
+                                  <td className="mono">{txn.orderId}</td>
                                   <td style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{txn.product}</td>
                                   <td>{txn.customer}</td>
-                                  <td className="pr-amt">Rs {fmt(txn.sellingPrice)}</td>
-                                  <td className="pr-amt">{txn.paymentAmount ? `Rs ${fmt(txn.paymentAmount)}` : '-'}</td>
-                                  <td className={`pr-amt ${txn.variance < 0 ? 'neg' : txn.variance > 0 ? 'pos' : ''}`}>
+                                  <td className="amt">Rs {fmt(txn.sellingPrice)}</td>
+                                  <td className="amt">{txn.paymentAmount ? `Rs ${fmt(txn.paymentAmount)}` : '-'}</td>
+                                  <td className={`amt ${txn.variance < 0 ? 'neg' : txn.variance > 0 ? 'pos' : ''}`}>
                                     {txn.variance !== 0 ? `Rs ${fmt(txn.variance)}` : '-'}
                                   </td>
                                 </tr>
@@ -678,14 +678,14 @@ function PaymentRecon({ onBack }) {
                   const matchedTxns = transactions.filter(t => t.status === 'matched');
                   const isExpanded = expandedGroups.has('matched');
                   return (
-                    <div className="pr-issue-group pr-matched-group">
-                      <div className="pr-pr-issue-group-header" onClick={() => toggleGroup('matched')}>
-                        <div className="pr-pr-issue-group-left">
-                          <svg className={`pr-chevron ${isExpanded ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-                          <div className="pr-chip-dot" style={{ background: 'var(--accent-green)' }}></div>
-                          <span className="pr-pr-issue-group-title">Matched</span>
-                          <span className="pr-pr-issue-group-count">{matchedTxns.length}</span>
-                          <span className="pr-resolved-badge">✓ Reconciled</span>
+                    <div className="issue-group matched-group">
+                      <div className="issue-group-header" onClick={() => toggleGroup('matched')}>
+                        <div className="issue-group-left">
+                          <svg className={`chevron ${isExpanded ? 'open' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+                          <div className="chip-dot" style={{ background: 'var(--accent-green)' }}></div>
+                          <span className="issue-group-title">Matched</span>
+                          <span className="issue-group-count">{matchedTxns.length}</span>
+                          <span className="resolved-badge">✓ Reconciled</span>
                         </div>
                       </div>
                       {isExpanded && (
@@ -704,12 +704,12 @@ function PaymentRecon({ onBack }) {
                             {matchedTxns.map(txn => (
                               <tr key={txn.orderId} className={selectedTxn?.orderId === txn.orderId ? 'selected' : ''}
                                 onClick={() => { setSelectedTxn(txn); setRightOpen(true); }}>
-                                <td className="pr-mono">{txn.orderId}</td>
+                                <td className="mono">{txn.orderId}</td>
                                 <td style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{txn.product}</td>
                                 <td>{txn.customer}</td>
-                                <td className="pr-amt">Rs {fmt(txn.sellingPrice)}</td>
-                                <td className="pr-amt">Rs {fmt(txn.paymentAmount)}</td>
-                                <td className="pr-mono" style={{ fontSize: 11 }}>{txn.settlementId}</td>
+                                <td className="amt">Rs {fmt(txn.sellingPrice)}</td>
+                                <td className="amt">Rs {fmt(txn.paymentAmount)}</td>
+                                <td className="mono" style={{ fontSize: 11 }}>{txn.settlementId}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -722,10 +722,10 @@ function PaymentRecon({ onBack }) {
             </div>
 
             {/* Close Recon Bar */}
-            <div className="pr-close-recon-bar">
+            <div className="close-recon-bar">
               <span>{matched} of {transactions.length} reconciled | {issues} pending</span>
-              <div className="pr-close-recon-actions">
-                <button className="pr-top-btn" onClick={() => sendMessage('Close and complete reconciliation')}>
+              <div className="close-recon-actions">
+                <button className="top-btn" onClick={() => sendMessage('Close and complete reconciliation')}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
                   Close Recon
                 </button>
@@ -736,89 +736,89 @@ function PaymentRecon({ onBack }) {
       </div>
 
       {/* RIGHT PANEL */}
-      <div className={`pr-right-panel ${!rightOpen || pr-phase !== 'results' ? 'collapsed' : ''}`}>
+      <div className={`right-panel ${!rightOpen || phase !== 'results' ? 'collapsed' : ''}`}>
         {selectedTxn ? (
           <>
-            <div className="pr-detail-header">
+            <div className="detail-header">
               <h3>Transaction Detail</h3>
-              <button className="pr-close-btn" onClick={() => setRightOpen(false)}>
+              <button className="close-btn" onClick={() => setRightOpen(false)}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
-            <div className="pr-detail-body">
-              <div className="pr-detail-section">
+            <div className="detail-body">
+              <div className="detail-section">
                 <h4>Order Information</h4>
-                <div className="pr-detail-row"><span className="pr-label">Order ID</span><span className="pr-value pr-mono">{selectedTxn.orderId}</span></div>
-                <div className="pr-detail-row"><span className="pr-label">Product</span><span className="pr-value">{selectedTxn.product}</span></div>
-                <div className="pr-detail-row"><span className="pr-label">SKU</span><span className="pr-value pr-mono">{selectedTxn.sku}</span></div>
-                <div className="pr-detail-row"><span className="pr-label">Customer</span><span className="pr-value">{selectedTxn.customer}</span></div>
-                <div className="pr-detail-row"><span className="pr-label">City</span><span className="pr-value">{selectedTxn.city}</span></div>
-                <div className="pr-detail-row"><span className="pr-label">Sale Amount</span><span className="pr-value">Rs {fmt(selectedTxn.sellingPrice)}</span></div>
-                <div className="pr-detail-row"><span className="pr-label">Discount</span><span className="pr-value" style={{ color: 'var(--accent-red)' }}>-Rs {fmt(selectedTxn.discount)}</span></div>
+                <div className="detail-row"><span className="label">Order ID</span><span className="value mono">{selectedTxn.orderId}</span></div>
+                <div className="detail-row"><span className="label">Product</span><span className="value">{selectedTxn.product}</span></div>
+                <div className="detail-row"><span className="label">SKU</span><span className="value mono">{selectedTxn.sku}</span></div>
+                <div className="detail-row"><span className="label">Customer</span><span className="value">{selectedTxn.customer}</span></div>
+                <div className="detail-row"><span className="label">City</span><span className="value">{selectedTxn.city}</span></div>
+                <div className="detail-row"><span className="label">Sale Amount</span><span className="value">Rs {fmt(selectedTxn.sellingPrice)}</span></div>
+                <div className="detail-row"><span className="label">Discount</span><span className="value" style={{ color: 'var(--accent-red)' }}>-Rs {fmt(selectedTxn.discount)}</span></div>
               </div>
 
-              <div className="pr-detail-section">
+              <div className="detail-section">
                 <h4>Payment Information</h4>
                 {selectedTxn.paymentId ? (
                   <>
-                    <div className="pr-detail-row"><span className="pr-label">Payment ID</span><span className="pr-value pr-mono">{selectedTxn.paymentId}</span></div>
-                    <div className="pr-detail-row"><span className="pr-label">Amount</span><span className="pr-value">Rs {fmt(selectedTxn.paymentAmount)}</span></div>
-                    <div className="pr-detail-row"><span className="pr-label">Gateway Fee</span><span className="pr-value" style={{ color: 'var(--accent-orange)' }}>Rs {fmt2(selectedTxn.fee)}</span></div>
-                    <div className="pr-detail-row"><span className="pr-label">Net Amount</span><span className="pr-value" style={{ color: 'var(--accent-green)' }}>Rs {fmt2(selectedTxn.netAmount)}</span></div>
-                    <div className="pr-detail-row"><span className="pr-label">Method</span><span className="pr-value">{selectedTxn.method.toUpperCase()}</span></div>
-                    <div className="pr-detail-row"><span className="pr-label">Settlement</span><span className="pr-value pr-mono">{selectedTxn.settlementId || 'Pending'}</span></div>
+                    <div className="detail-row"><span className="label">Payment ID</span><span className="value mono">{selectedTxn.paymentId}</span></div>
+                    <div className="detail-row"><span className="label">Amount</span><span className="value">Rs {fmt(selectedTxn.paymentAmount)}</span></div>
+                    <div className="detail-row"><span className="label">Gateway Fee</span><span className="value" style={{ color: 'var(--accent-orange)' }}>Rs {fmt2(selectedTxn.fee)}</span></div>
+                    <div className="detail-row"><span className="label">Net Amount</span><span className="value" style={{ color: 'var(--accent-green)' }}>Rs {fmt2(selectedTxn.netAmount)}</span></div>
+                    <div className="detail-row"><span className="label">Method</span><span className="value">{selectedTxn.method.toUpperCase()}</span></div>
+                    <div className="detail-row"><span className="label">Settlement</span><span className="value mono">{selectedTxn.settlementId || 'Pending'}</span></div>
                   </>
                 ) : (
                   <div style={{ color: 'var(--accent-red)', fontSize: 13, padding: '8px 0' }}>No payment found in Razorpay</div>
                 )}
               </div>
 
-              <div className="pr-detail-section">
+              <div className="detail-section">
                 <h4>Reconciliation</h4>
-                <div className="pr-detail-row">
-                  <span className="pr-label">Status</span>
-                  <span className={`pr-status-pill ${statusPillClass[selectedTxn.status]}`}>
-                    <span className="pr-pill-dot" style={{ background: 'currentColor' }}></span>
+                <div className="detail-row">
+                  <span className="label">Status</span>
+                  <span className={`status-pill ${statusPillClass[selectedTxn.status]}`}>
+                    <span className="pill-dot" style={{ background: 'currentColor' }}></span>
                     {statusLabels[selectedTxn.status]}
                   </span>
                 </div>
                 {selectedTxn.variance !== 0 && (
-                  <div className="pr-detail-row">
-                    <span className="pr-label">Variance</span>
-                    <span className="pr-value" style={{ color: selectedTxn.variance < 0 ? 'var(--accent-red)' : 'var(--accent-green)' }}>Rs {fmt(selectedTxn.variance)}</span>
+                  <div className="detail-row">
+                    <span className="label">Variance</span>
+                    <span className="value" style={{ color: selectedTxn.variance < 0 ? 'var(--accent-red)' : 'var(--accent-green)' }}>Rs {fmt(selectedTxn.variance)}</span>
                   </div>
                 )}
                 <div style={{ marginTop: 8, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{selectedTxn.note}</div>
               </div>
 
-              <div className="pr-terminal">
-                <div className="pr-pr-terminal-head">recon_engine.py</div>
-                <div className="pr-pr-terminal-body">
-                  <div className="pr-tl"><span className="pr-tc">$</span> python recon_engine.py --order {selectedTxn.orderId}</div>
-                  <div className="pr-tl"><span className="pr-tg">[OK]</span> Fetching Razorpay data...</div>
-                  <div className="pr-tl"><span className="pr-tg">[OK]</span> Fetching sale record...</div>
+              <div className="terminal">
+                <div className="terminal-head">recon_engine.py</div>
+                <div className="terminal-body">
+                  <div className="tl"><span className="tc">$</span> python recon_engine.py --order {selectedTxn.orderId}</div>
+                  <div className="tl"><span className="tg">[OK]</span> Fetching Razorpay data...</div>
+                  <div className="tl"><span className="tg">[OK]</span> Fetching sale record...</div>
                   {selectedTxn.paymentId ? (
-                    <div className="pr-tl"><span className="pr-tb">[FOUND]</span> {selectedTxn.paymentId}</div>
+                    <div className="tl"><span className="tb">[FOUND]</span> {selectedTxn.paymentId}</div>
                   ) : (
-                    <div className="pr-tl"><span className="pr-tr">[ERR]</span> No payment in Razorpay</div>
+                    <div className="tl"><span className="tr">[ERR]</span> No payment in Razorpay</div>
                   )}
                   {selectedTxn.status === 'matched' ? (
-                    <div className="pr-tl"><span className="pr-tg">[MATCH]</span> Rs {fmt(selectedTxn.sellingPrice)} == Rs {fmt(selectedTxn.paymentAmount)}</div>
+                    <div className="tl"><span className="tg">[MATCH]</span> Rs {fmt(selectedTxn.sellingPrice)} == Rs {fmt(selectedTxn.paymentAmount)}</div>
                   ) : (
-                    <div className="pr-tl"><span className="pr-ty">[ISSUE]</span> {statusLabels[selectedTxn.status]}</div>
+                    <div className="tl"><span className="ty">[ISSUE]</span> {statusLabels[selectedTxn.status]}</div>
                   )}
-                  <div className="pr-tl"><span className="pr-tg">[DONE]</span> Complete</div>
+                  <div className="tl"><span className="tg">[DONE]</span> Complete</div>
                 </div>
               </div>
             </div>
 
             {selectedTxn.actionOptions?.length > 0 && (
-              <div className="pr-detail-actions">
+              <div className="detail-actions">
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>
                   What would you like to do?
                 </div>
                 {selectedTxn.actionOptions.map((opt, i) => (
-                  <button key={i} className={`pr-action-btn ${opt.id === 'initiate_refund' ? 'danger' : ''}`}
+                  <button key={i} className={`action-btn ${opt.id === 'initiate_refund' ? 'danger' : ''}`}
                     onClick={() => {
                       if (opt.id === 'request_input') {
                         openEmailDraft(selectedTxn.orderId, selectedTxn.status);
@@ -827,14 +827,14 @@ function PaymentRecon({ onBack }) {
                       }
                     }}>
                     {opt.label}
-                    <span className="pr-btn-desc">{opt.desc}</span>
+                    <span className="btn-desc">{opt.desc}</span>
                   </button>
                 ))}
               </div>
             )}
             {selectedTxn.status === 'matched' && (
-              <div className="pr-detail-actions">
-                <button className="pr-action-btn success">
+              <div className="detail-actions">
+                <button className="action-btn success">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
                   Verified & Closed
                 </button>
@@ -842,7 +842,7 @@ function PaymentRecon({ onBack }) {
             )}
           </>
         ) : (
-          <div className="pr-empty-state">
+          <div className="empty-state">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text-muted)' }}>
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
@@ -854,16 +854,16 @@ function PaymentRecon({ onBack }) {
 
       {/* Email Modal */}
       {emailModal && (
-        <div className="pr-pr-modal-overlay" onClick={() => setEmailModal(null)}>
-          <div className="pr-modal" onClick={e => e.stopPropagation()}>
-            <div className="pr-pr-modal-header">
+        <div className="modal-overlay" onClick={() => setEmailModal(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
               <h3>Send Email</h3>
-              <button className="pr-close-btn" onClick={() => setEmailModal(null)}>
+              <button className="close-btn" onClick={() => setEmailModal(null)}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
-            <div className="pr-pr-modal-body">
-              <div className="pr-pr-modal-field">
+            <div className="modal-body">
+              <div className="modal-field">
                 <label>To (Email Address)</label>
                 <input
                   type="email"
@@ -873,14 +873,14 @@ function PaymentRecon({ onBack }) {
                   autoFocus
                 />
               </div>
-              <div className="pr-pr-modal-field">
+              <div className="modal-field">
                 <label>Subject</label>
                 <input
                   value={emailModal.subject}
                   onChange={e => setEmailModal({ ...emailModal, subject: e.target.value })}
                 />
               </div>
-              <div className="pr-pr-modal-field">
+              <div className="modal-field">
                 <label>Message</label>
                 <textarea
                   value={emailModal.body}
@@ -888,9 +888,9 @@ function PaymentRecon({ onBack }) {
                 />
               </div>
             </div>
-            <div className="pr-pr-modal-footer">
-              <button className="pr-pr-modal-btn pr-cancel" onClick={() => setEmailModal(null)}>Cancel</button>
-              <button className="pr-pr-modal-btn pr-send" onClick={sendEmail} disabled={!emailModal.to}>
+            <div className="modal-footer">
+              <button className="modal-btn cancel" onClick={() => setEmailModal(null)}>Cancel</button>
+              <button className="modal-btn send" onClick={sendEmail} disabled={!emailModal.to}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 Send Email
               </button>
