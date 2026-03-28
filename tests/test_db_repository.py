@@ -8,13 +8,22 @@ verify it, then clean it up. Safe to run multiple times.
 """
 
 import pytest
+from app.db.client import get_admin_client
 from app.db.repository import Repository
 
 
 @pytest.fixture
 def repo():
-    """Create a repository instance."""
-    return Repository()
+    """Create a repository using admin client (bypasses RLS for tests)."""
+    return Repository(client=get_admin_client())
+
+
+# ── Connection Test ──
+
+def test_supabase_connection(repo):
+    """Verify we can connect to Supabase and query a table."""
+    result = repo._client.table("ca_firm").select("id", count="exact").limit(0).execute()
+    assert result.count is not None  # connection works, got a count back
 
 
 @pytest.fixture
