@@ -26,12 +26,18 @@ from pathlib import Path
 from agents.event_logger import EventLogger, reset_logger
 
 
-def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) -> dict:
+def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, event_callback=None) -> dict:
     """Run the full TDS reconciliation pipeline.
+
+    Args:
+        event_callback: Optional callback for real-time SSE streaming.
+                        Called with each event dict as it happens.
 
     Returns a dict with: {events, summary, results_dir}
     """
     logger = reset_logger()
+    if event_callback:
+        logger.set_callback(event_callback)
     base = Path(__file__).parent
     parsed_dir = base / "data" / "parsed"
     results_dir = base / "data" / "results"

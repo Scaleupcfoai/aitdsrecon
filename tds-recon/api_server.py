@@ -91,12 +91,10 @@ def run_pipeline_with_upload():
         event_queue.put(event)
 
     def run_in_thread():
-        from agents.event_logger import reset_logger
         from reconcile import run_pipeline as _run
 
-        logger = reset_logger()
-        logger.set_callback(on_event)
-        result = _run(str(form26_path), str(tally_path))
+        # Pass callback directly — reconcile.py resets the logger internally
+        result = _run(str(form26_path), str(tally_path), event_callback=on_event)
 
         results_data = _load_results()
         event_queue.put({
@@ -130,12 +128,10 @@ def run_pipeline_stream():
         event_queue.put(event)
 
     def run_in_thread():
-        from agents.event_logger import reset_logger
         from reconcile import run_pipeline as _run
 
-        logger = reset_logger()
-        logger.set_callback(on_event)
-        result = _run()
+        # Pass callback directly — reconcile.py resets the logger internally
+        result = _run(event_callback=on_event)
 
         # Send final results as a special event
         results_data = _load_results()
