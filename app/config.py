@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     # ── Anthropic (added later — empty string means disabled) ──
     anthropic_api_key: str = ""
 
+    # ── LLM for column mapping (Groq free tier, swap to Anthropic later) ──
+    groq_api_key: str = ""
+    llm_model: str = "llama-3.3-70b-versatile"  # Groq model
+
     # ── File Storage ──
     storage_backend: Literal["local", "supabase"] = "local"
     local_storage_path: str = "data/uploads"
