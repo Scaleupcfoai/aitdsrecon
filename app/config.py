@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     # ── LLM for column mapping (Groq free tier, swap to Anthropic later) ──
     groq_api_key: str = ""
     llm_model: str = "llama-3.3-70b-versatile"  # Groq model
+    llm_provider: Literal["groq", "anthropic"] = "groq"
+    llm_temperature: float = 0.1  # low = more deterministic
+    llm_max_tokens: int = 2000
 
     # ── File Storage ──
     storage_backend: Literal["local", "supabase"] = "local"

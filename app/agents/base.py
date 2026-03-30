@@ -19,10 +19,11 @@ Usage:
 
 from app.db.repository import Repository
 from app.pipeline.events import EventEmitter
+from app.services.llm_client import LLMClient
 
 
 class AgentBase:
-    """Base class for all agents. Provides run context + DB + events."""
+    """Base class for all agents. Provides run context + DB + events + LLM."""
 
     def __init__(
         self,
@@ -32,6 +33,7 @@ class AgentBase:
         financial_year: str,
         db: Repository,
         events: EventEmitter,
+        llm: LLMClient | None = None,
     ):
         self.run_id = run_id
         self.company_id = company_id
@@ -39,6 +41,7 @@ class AgentBase:
         self.financial_year = financial_year
         self.db = db
         self.events = events
+        self.llm = llm or LLMClient(events=events)
 
     @property
     def agent_name(self) -> str:
