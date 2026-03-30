@@ -45,6 +45,15 @@ class ReporterAgent(AgentBase):
             "compliance": checker_summary.get("summary", {}),
         }
 
+        # LLM: Generate narrative executive brief
+        narrative = None
+        if self.llm and self.llm.available:
+            self.events.detail(self.agent_name, "Writing executive narrative...")
+            narrative = self._generate_narrative(match_summary, checker_summary, findings)
+            if narrative:
+                summary["narrative"] = narrative
+                self.events.emit(self.agent_name, f"Executive brief: {narrative[:150]}...", "llm_insight")
+
         # Write JSON summary
         summary_file = output_path / "reconciliation_summary.json"
         with open(summary_file, "w") as f:
@@ -63,11 +72,11 @@ class ReporterAgent(AgentBase):
             self._write_findings_csv(findings_file, findings)
             self.events.detail(self.agent_name, f"findings_report.csv ({len(findings)} rows)")
 
-        # Write Excel report
+        # Write Excel report (with narrative if available)
         try:
             excel_file = output_path / "tds_recon_report.xlsx"
-            self._write_excel_report(excel_file, matches, findings)
-            self.events.detail(self.agent_name, "tds_recon_report.xlsx (3 sheets)")
+            self._write_excel_report(excel_file, matches, findings, narrative)
+            self.events.detail(self.agent_name, "tds_recon_report.xlsx (4 sheets)")
         except Exception as e:
             self.events.warning(self.agent_name, f"Excel generation failed: {e}")
 
@@ -79,7 +88,7 @@ class ReporterAgent(AgentBase):
             "group_key": "executive_summary",
             "entry_count": match_summary.get("matched", 0),
             "total_amount": match_summary.get("total_resolved", 0),
-            "llm_summary": json.dumps(summary, default=str),
+            "llm_summary": narrative or json.dumps(summary, default=str),
             "status": "resolved" if checker_summary.get("summary", {}).get("errors", 0) == 0 else "needs_attention",
         }])
 
@@ -127,7 +136,7 @@ class ReporterAgent(AgentBase):
                 writer.writeheader()
                 writer.writerows(rows)
 
-    def _write_excel_report(self, filepath, matches, findings):
+    def _write_excel_report(self, filepath, matches, findings, narrative=None):
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
@@ -135,9 +144,24 @@ class ReporterAgent(AgentBase):
         header_font = Font(bold=True, size=11, color="FFFFFF")
         header_fill = PatternFill(start_color="467273", end_color="467273", fill_type="solid")
 
+        # Sheet 0: Executive Summary (if narrative available)
+        if narrative:
+            ws0 = wb.active
+            ws0.title = "Executive Summary"
+            ws0.cell(row=1, column=1, value="TDS Reconciliation — Executive Summary")
+            ws0.cell(row=1, column=1).font = Font(bold=True, size=14)
+            ws0.cell(row=2, column=1, value=f"Financial Year: {self.financial_year}")
+            ws0.cell(row=3, column=1, value=f"Run ID: {self.run_id}")
+            ws0.cell(row=5, column=1, value=narrative)
+            ws0.cell(row=5, column=1).alignment = Alignment(wrap_text=True)
+            ws0.column_dimensions["A"].width = 100
+
         # Sheet 1: Issues
-        ws1 = wb.active
-        ws1.title = "Issues for Review"
+        if narrative:
+            ws1 = wb.create_sheet("Issues for Review")
+        else:
+            ws1 = wb.active
+            ws1.title = "Issues for Review"
         headers = ["Sr.", "Severity", "Check", "Vendor", "Section", "Finding"]
         for col, h in enumerate(headers, 1):
             cell = ws1.cell(row=1, column=col, value=h)
@@ -180,3 +204,45 @@ class ReporterAgent(AgentBase):
 
         wb.save(str(filepath))
         wb.close()
+
+    def _generate_narrative(self, match_summary: dict, checker_summary: dict,
+                            findings: list[dict]) -> str | None:
+        """Ask LLM to write a professional narrative summary."""
+        from app.services.llm_prompts import REPORTER_NARRATIVE_SYSTEM, REPORTER_NARRATIVE_PROMPT
+
+        # Build matching summary text
+        matching_text = (
+            f"Total Form 26 entries in scope: {match_summary.get('total_form26', 'N/A')}\n"
+            f"Matched with TDS: {match_summary.get('matched', 0)}\n"
+            f"Below threshold (TDS=0): {match_summary.get('below_threshold', 0)}\n"
+            f"Total resolved: {match_summary.get('total_resolved', 0)}\n"
+            f"Unmatched: {match_summary.get('unmatched', 0)}\n"
+            f"By pass: {match_summary.get('by_pass', {})}"
+        )
+
+        # Build compliance text
+        comp = checker_summary.get("summary", {})
+        compliance_text = (
+            f"Total findings: {comp.get('total', 0)}\n"
+            f"Errors: {comp.get('errors', 0)}\n"
+            f"Warnings: {comp.get('warnings', 0)}\n"
+            f"Exposure: Rs {comp.get('exposure', 0):,.0f}"
+        )
+
+        # Top issues
+        errors = [f for f in findings if f.get("severity") == "error"]
+        top_issues_text = "\n".join(
+            f"- {f.get('vendor', 'Unknown')}: {f.get('message', '')[:100]}"
+            for f in errors[:5]
+        ) or "No critical issues found."
+
+        prompt = REPORTER_NARRATIVE_PROMPT.format(
+            financial_year=self.financial_year,
+            company_name=self.company_id[:8] + "...",  # will be replaced with real name later
+            matching_summary=matching_text,
+            compliance_summary=compliance_text,
+            top_issues=top_issues_text,
+        )
+
+        result = self.llm.complete(prompt, system=REPORTER_NARRATIVE_SYSTEM, agent_name=self.agent_name)
+        return result
