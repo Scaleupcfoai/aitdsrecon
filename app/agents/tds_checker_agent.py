@@ -27,147 +27,93 @@ from app.knowledge import (
 
 # Override the hardcoded expected_rate function to use knowledge base
 def expected_rate_from_kb(section: str, pan: str) -> float | None:
-    """Get expected TDS rate from knowledge base (primary) or hardcoded table (fallback)."""
+    """Get expected TDS rate from knowledge base."""
     entity = kb_get_entity_type(pan)
     if entity == "firm":
         entity = "individual_huf"
-    rate = kb_get_rate(section, entity)
-    if rate is not None:
-        return rate
-    # Fallback to hardcoded
-    return expected_rate(section, pan)
+    return kb_get_rate(section, entity)
 
 
 # ---------------------------------------------------------------------------
-# TDS Rules Engine — Indian Income Tax Act
+# TDS Rules Engine — built from knowledge base (tds_rules.json)
 # ---------------------------------------------------------------------------
 
-# Section → expense head mapping: which expense types belong under which section
-# Key = TDS section, Value = set of expense head keywords (lowercase)
-SECTION_EXPENSE_MAP = {
-    "194A": {
-        "keywords": {"interest", "loan"},
-        "description": "Interest other than interest on securities",
-    },
-    "194C": {
-        "keywords": {
-            "freight", "carriage", "transport", "logistics", "packing",
-            "printing", "stationary", "shop repair", "maintenance",
-            "computer repair", "contractor",
-        },
-        "description": "Payment to contractors/sub-contractors",
-    },
-    "194H": {
-        "keywords": {"brokerage", "commission"},
-        "description": "Commission or brokerage",
-    },
-    "194J(a)": {
-        "keywords": {"call centre", "technical"},
-        "description": "Fee for technical services (to call centre)",
-    },
-    "194J(b)": {
-        "keywords": {
-            "professional", "consultancy", "audit", "legal", "software",
-            "gst annual return", "domain",
-        },
-        "description": "Fee for professional/technical services",
-    },
-    "194Q": {
-        "keywords": {"purchase"},
-        "description": "Payment for purchase of goods",
-    },
-}
+def _build_section_expense_map() -> dict:
+    """Build SECTION_EXPENSE_MAP from knowledge base."""
+    from app.knowledge import get_sections
+    result = {}
+    for code, section in get_sections().items():
+        display_code = code
+        if "_a" in code: display_code = code.replace("_a", "(a)")
+        elif "_b" in code: display_code = code.replace("_b", "(b)")
+        keywords = section.get("expense_keywords", [])
+        if keywords:
+            result[display_code] = {
+                "keywords": set(kw.lower() for kw in keywords),
+                "description": section.get("description", section.get("name", "")),
+            }
+    return result
 
-# Expense heads that could be mis-classified between sections
-# advertisement can be 194C (if works contract) or 194J(b) (if professional)
-AMBIGUOUS_EXPENSE_HEADS = {
-    "advertisement": {
-        "likely_sections": ["194C", "194J(b)"],
-        "note": "Advertisement may be 194C (works contract / production) "
-                "or 194J(b) (professional/creative services). "
-                "Verify nature of service from invoice.",
-    },
-    "annual maintenance": {
-        "likely_sections": ["194C", "194J(b)"],
-        "note": "AMC may be 194C (if labour/facility) or 194J(b) "
-                "(if technical/software). Check contract terms.",
-    },
-    "software": {
-        "likely_sections": ["194J(b)", "194C"],
-        "note": "Software expenses are typically 194J(b) for royalty/license, "
-                "but 194C if it's a development contract.",
-    },
-}
 
-# TDS rate table: section → entity_type → rate (%)
-# entity_type: "individual_huf" or "company" (derived from PAN 4th char)
-TDS_RATES = {
-    "194A": {
-        "individual_huf": 10.0,
-        "company": 10.0,
-        "default": 10.0,
-    },
-    "194C": {
-        "individual_huf": 1.0,
-        "company": 2.0,
-        "default": 2.0,
-    },
-    "194H": {
-        "individual_huf": 2.0,    # 5% before Budget 2025, now 2%
-        "company": 2.0,           # 5% before Budget 2025, now 2%
-        "default": 2.0,
-    },
-    "194J(a)": {
-        "individual_huf": 2.0,
-        "company": 2.0,
-        "default": 2.0,
-    },
-    "194J(b)": {
-        "individual_huf": 10.0,
-        "company": 10.0,
-        "default": 10.0,
-    },
-    "194Q": {
-        "individual_huf": 0.1,
-        "company": 0.1,
-        "default": 0.1,
-    },
-}
+def _build_ambiguous_heads() -> dict:
+    """Build AMBIGUOUS_EXPENSE_HEADS from knowledge base."""
+    result = {}
+    for expense, guide in kb_get_ambiguous().items():
+        sections = guide.get("possible_sections", [])
+        # Convert 194J_b → 194J(b) format
+        display_sections = []
+        for s in sections:
+            if "_a" in s: display_sections.append(s.replace("_a", "(a)"))
+            elif "_b" in s: display_sections.append(s.replace("_b", "(b)"))
+            else: display_sections.append(s)
+        result[expense] = {
+            "likely_sections": display_sections,
+            "note": guide.get("classification_guide", ""),
+        }
+    return result
 
-# Threshold limits: section → {single_txn, aggregate_annual}
-# Below these limits, TDS need not be deducted
-TDS_THRESHOLDS = {
-    "194A": {
-        "aggregate_annual": 5000,
-        "single_txn": None,
-        "description": "Interest below ₹5,000 in a year exempt",
-    },
-    "194C": {
-        "single_txn": 30000,
-        "aggregate_annual": 100000,
-        "description": "Single payment ≤₹30,000 or aggregate ≤₹1,00,000 exempt",
-    },
-    "194H": {
-        "aggregate_annual": 15000,
-        "single_txn": None,
-        "description": "Commission below ₹15,000 in a year exempt",
-    },
-    "194J(a)": {
-        "aggregate_annual": 30000,
-        "single_txn": None,
-        "description": "Professional fees below ₹30,000 in a year exempt",
-    },
-    "194J(b)": {
-        "aggregate_annual": 30000,
-        "single_txn": None,
-        "description": "Professional fees below ₹30,000 in a year exempt",
-    },
-    "194Q": {
-        "aggregate_annual": 5000000,  # ₹50 lakh
-        "single_txn": None,
-        "description": "Purchase of goods below ₹50 lakh in a year exempt",
-    },
-}
+
+def _build_tds_rates() -> dict:
+    """Build TDS_RATES from knowledge base."""
+    from app.knowledge import get_sections
+    result = {}
+    for code, section in get_sections().items():
+        rate = section.get("rate", {})
+        if isinstance(rate, dict) and not rate.get("slab"):
+            display_code = code
+            if "_a" in code: display_code = code.replace("_a", "(a)")
+            elif "_b" in code: display_code = code.replace("_b", "(b)")
+            result[display_code] = {
+                k: v for k, v in rate.items()
+                if k not in ("note", "amendment", "slab") and isinstance(v, (int, float))
+            }
+            if "default" not in result[display_code] and rate.get("default"):
+                result[display_code]["default"] = rate["default"]
+    return result
+
+
+def _build_tds_thresholds() -> dict:
+    """Build TDS_THRESHOLDS from knowledge base."""
+    from app.knowledge import get_sections
+    result = {}
+    for code, section in get_sections().items():
+        threshold = section.get("threshold", {})
+        if isinstance(threshold, dict) and threshold.get("description"):
+            display_code = code
+            if "_a" in code: display_code = code.replace("_a", "(a)")
+            elif "_b" in code: display_code = code.replace("_b", "(b)")
+            result[display_code] = {
+                "aggregate_annual": threshold.get("aggregate_annual"),
+                "single_txn": threshold.get("single_payment"),
+                "description": threshold.get("description", ""),
+            }
+    return result
+
+
+SECTION_EXPENSE_MAP = _build_section_expense_map()
+AMBIGUOUS_EXPENSE_HEADS = _build_ambiguous_heads()
+TDS_RATES = _build_tds_rates()
+TDS_THRESHOLDS = _build_tds_thresholds()
 
 # GST rates for reverse-computing base amounts
 GST_RATES = [0.18, 0.12, 0.05, 0.28]
@@ -177,30 +123,13 @@ GST_RATES = [0.18, 0.12, 0.05, 0.28]
 # ---------------------------------------------------------------------------
 
 def entity_type_from_pan(pan: str) -> str:
-    """Derive entity type from PAN 4th character.
-    C = Company, P = Individual, H = HUF, F = Firm, etc."""
-    if not pan or len(pan) < 4:
-        return "unknown"
-    fourth = pan[3].upper()
-    if fourth == "C":
-        return "company"
-    elif fourth in ("P", "H"):
-        return "individual_huf"
-    elif fourth == "F":
-        return "firm"  # treated as individual_huf for TDS rates
-    else:
-        return "unknown"
+    """Derive entity type from PAN 4th character using knowledge base."""
+    return kb_get_entity_type(pan)
 
 
 def expected_rate(section: str, pan: str) -> float | None:
-    """Get expected TDS rate for a section + PAN combination."""
-    rates = TDS_RATES.get(section)
-    if not rates:
-        return None
-    etype = entity_type_from_pan(pan)
-    if etype == "firm":
-        etype = "individual_huf"  # firms use individual rate for most sections
-    return rates.get(etype, rates.get("default"))
+    """Get expected TDS rate using knowledge base."""
+    return expected_rate_from_kb(section, pan)
 
 
 def classify_expense_head(head: str) -> list[str]:
