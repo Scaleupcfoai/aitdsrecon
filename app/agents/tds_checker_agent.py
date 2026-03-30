@@ -16,6 +16,26 @@ from collections import defaultdict
 from datetime import datetime
 
 from app.agents.base import AgentBase
+from app.knowledge import (
+    get_section_rate as kb_get_rate,
+    get_threshold as kb_get_threshold,
+    get_expense_keywords as kb_get_keywords,
+    get_entity_type as kb_get_entity_type,
+    get_ambiguous_expenses as kb_get_ambiguous,
+)
+
+
+# Override the hardcoded expected_rate function to use knowledge base
+def expected_rate_from_kb(section: str, pan: str) -> float | None:
+    """Get expected TDS rate from knowledge base (primary) or hardcoded table (fallback)."""
+    entity = kb_get_entity_type(pan)
+    if entity == "firm":
+        entity = "individual_huf"
+    rate = kb_get_rate(section, entity)
+    if rate is not None:
+        return rate
+    # Fallback to hardcoded
+    return expected_rate(section, pan)
 
 
 # ---------------------------------------------------------------------------

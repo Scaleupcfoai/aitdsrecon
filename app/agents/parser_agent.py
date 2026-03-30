@@ -57,23 +57,48 @@ def safe_float(val) -> float:
         return 0.0
 
 
-# ── Expense type classification (for Tally entries) ──
+# ── Expense type classification (from knowledge base) ──
+# Reads expense keywords from tds_rules.json so they stay in sync
 
-EXPENSE_KEYWORDS = {
-    "interest_payment": ["interest paid", "interest on loan"],
-    "freight_expense": ["freight", "carriage", "transport", "logistics"],
-    "packing_expense": ["packing"],
-    "brokerage": ["brokerage", "commission"],
-    "rent": ["rent", "shop rent", "office rent"],
-    "consultancy": ["consultancy", "consulting"],
-    "professional_fees": ["professional", "legal", "audit fees", "gst annual return"],
-    "salary": ["salary", "bonus", "director's salary"],
-    "tds_deduction": ["tds payable"],
-    "insurance": ["insurance"],
-    "advertisement": ["advertisement"],
-    "software": ["software", "domain"],
-    "purchase": ["purchase"],
-}
+def _build_expense_keywords() -> dict:
+    """Build expense keywords from knowledge base."""
+    try:
+        from app.knowledge import get_sections
+        keywords = {}
+        section_to_type = {
+            "194A": "interest_payment", "194C": "freight_expense",
+            "194H": "brokerage", "194I_a": "rent", "194I_b": "rent",
+            "194J_a": "consultancy", "194J_b": "professional_fees",
+            "194D": "insurance", "194Q": "purchase", "192": "salary",
+            "194O": "ecommerce",
+        }
+        for code, section in get_sections().items():
+            exp_type = section_to_type.get(code, "other")
+            if exp_type != "other":
+                keywords[exp_type] = section.get("expense_keywords", [])
+        # Add non-section types
+        keywords["tds_deduction"] = ["tds payable"]
+        keywords["salary"] = keywords.get("salary", []) + ["bonus", "director's salary"]
+        return keywords
+    except Exception:
+        # Fallback if knowledge base not available
+        return {
+            "interest_payment": ["interest paid", "interest on loan"],
+            "freight_expense": ["freight", "carriage", "transport", "logistics"],
+            "packing_expense": ["packing"],
+            "brokerage": ["brokerage", "commission"],
+            "rent": ["rent", "shop rent", "office rent"],
+            "consultancy": ["consultancy", "consulting"],
+            "professional_fees": ["professional", "legal", "audit fees"],
+            "salary": ["salary", "bonus", "director's salary"],
+            "tds_deduction": ["tds payable"],
+            "insurance": ["insurance"],
+            "advertisement": ["advertisement"],
+            "software": ["software", "domain"],
+            "purchase": ["purchase"],
+        }
+
+EXPENSE_KEYWORDS = _build_expense_keywords()
 
 EXPENSE_TO_SECTION = {
     "interest_payment": "194A",

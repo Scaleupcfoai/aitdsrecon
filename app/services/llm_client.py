@@ -52,6 +52,7 @@ class LLMClient:
         json_mode: bool = False,
         temperature: float | None = None,
         max_tokens: int | None = None,
+        include_knowledge: bool = True,
     ) -> str | None:
         """Send a prompt to the LLM and return the response text.
 
@@ -62,12 +63,25 @@ class LLMClient:
             json_mode: If True, request JSON output format
             temperature: Override default (0.1)
             max_tokens: Override default (2000)
+            include_knowledge: If True, inject TDS knowledge base into system prompt
 
         Returns:
             Response text, or None if LLM unavailable/failed
         """
         if not self._client:
             return None
+
+        # Inject knowledge base into system prompt
+        if include_knowledge and system:
+            from app.knowledge import get_llm_context
+            knowledge_ctx = get_llm_context()
+            system = (
+                f"{system}\n\n"
+                f"IMPORTANT: Use ONLY the following verified TDS rules for any tax-related "
+                f"answers. Do NOT rely on your training data for rates, thresholds, or penalties. "
+                f"If the answer is not in the rules below, say 'I don't have verified data for this.'\n\n"
+                f"{knowledge_ctx}"
+            )
 
         temp = temperature if temperature is not None else settings.llm_temperature
         tokens = max_tokens if max_tokens is not None else settings.llm_max_tokens
@@ -146,12 +160,13 @@ class LLMClient:
         prompt: str,
         system: str = "",
         agent_name: str = "LLM",
+        include_knowledge: bool = True,
     ) -> dict | None:
         """Send a prompt and parse the response as JSON.
 
         Returns parsed dict, or None if failed.
         """
-        result = self.complete(prompt, system, agent_name, json_mode=True)
+        result = self.complete(prompt, system, agent_name, json_mode=True, include_knowledge=include_knowledge)
         if result is None:
             return None
         try:
