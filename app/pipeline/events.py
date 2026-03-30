@@ -5,6 +5,20 @@ Replaces the global singleton EventLogger from the MVP.
 Each pipeline run gets its own emitter with its own event list.
 Events can be streamed to UI via SSE callback.
 
+Event types for frontend rendering:
+- agent_start: Agent begins work → show agent header with spinner
+- agent_done: Agent complete → show checkmark, elapsed time
+- info: General status → show as log line
+- detail: Sub-step detail → show indented under agent
+- success: Positive result → show with green checkmark
+- warning: Non-critical issue → show with yellow warning
+- error: Critical issue → show with red X
+- llm_call: LLM is being called → show "💭 Asking LLM..." with preview
+- llm_response: LLM responded → show response time + token count
+- llm_insight: LLM produced a user-visible insight → show prominently in chat
+- human_needed: Decision requires human review → show with action button
+- pipeline_complete: All agents done → show final summary
+
 Usage:
     emitter = EventEmitter(run_id="abc-123")
     emitter.agent_start("Parser Agent", "Starting...")
@@ -16,18 +30,31 @@ import time
 from datetime import datetime
 
 
-class EventEmitter:
-    """Emits structured events for a single pipeline run.
+# All valid event types — frontend uses these to decide rendering
+EVENT_TYPES = {
+    "agent_start",    # Agent header with spinner
+    "agent_done",     # Agent complete with checkmark
+    "info",           # General log line
+    "detail",         # Indented sub-step
+    "success",        # Green checkmark result
+    "warning",        # Yellow warning
+    "error",          # Red error
+    "llm_call",       # "💭 Asking LLM..." — shows model + prompt preview
+    "llm_response",   # "LLM responded" — shows timing + tokens
+    "llm_insight",    # User-visible insight from LLM — rendered prominently
+    "human_needed",   # Needs human decision — rendered with action button
+    "pipeline_complete",  # Final event with summary
+}
 
-    Not global — each run_pipeline() call creates a new one.
-    Optionally calls a callback on every event (for SSE streaming).
-    """
+
+class EventEmitter:
+    """Emits structured events for a single pipeline run."""
 
     def __init__(self, run_id: str = "", callback=None):
         self.run_id = run_id
         self.events = []
         self._start_time = time.time()
-        self._callback = callback  # called on every emit (for SSE)
+        self._callback = callback
 
     def emit(self, agent: str, message: str, event_type: str = "info", data: dict | None = None):
         event = {
@@ -43,7 +70,11 @@ class EventEmitter:
         self.events.append(event)
 
         # Print for CLI/logs
-        prefix = {"success": "✓", "warning": "⚠", "error": "✗", "detail": "  ├─"}.get(event_type, "●")
+        prefix = {
+            "success": "✓", "warning": "⚠", "error": "✗",
+            "detail": "  ├─", "llm_call": "  💭", "llm_response": "  ✦",
+            "llm_insight": "  🔍", "human_needed": "  👤",
+        }.get(event_type, "●")
         print(f"  {prefix} [{agent}] {message}")
 
         # Fire callback for SSE streaming
