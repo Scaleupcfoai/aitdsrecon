@@ -1,16 +1,18 @@
 """
-Intelligent Column Mapper — takes any XLSX/CSV and figures out what each column means.
+Intelligent Column Mapper — takes any XLSX/CSV and maps columns to fields.
 
-3-step cross-verification:
-1. Rule-based + fuzzy matching → confidence score per column
-2. Send ALL columns to LLM (with headers + sample data + our fuzzy suggestions)
-3. Cross-verify: fuzzy agrees with LLM → auto-map. Disagreement → ask user.
+Approach 1 (no cross-verification):
+1. Fuzzy matching → confidence score per column
+2. confidence >= 0.8 → auto-map (done, no LLM needed)
+3. confidence < 0.8 → send ONLY uncertain columns to LLM
+4. LLM responds → done
+5. If LLM underconfident → flag for human review
 
-Saves confirmed mappings to column_map table for reuse (same company, same format = instant).
+Saves confirmed mappings to column_map table for reuse.
 
 Usage:
     from app.services.column_mapper import ColumnMapper
-    mapper = ColumnMapper(repo)
+    mapper = ColumnMapper(repo, llm)
     result = mapper.map_file("path/to/file.xlsx", company_id="abc-123")
 """
 
@@ -20,16 +22,15 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 import openpyxl
-from groq import Groq
 
-from app.config import settings
+from app.services.llm_client import LLMClient
+from app.services.llm_prompts import PARSER_COLUMN_MAP_SYSTEM, PARSER_COLUMN_MAP_PROMPT
 
 
 # ═══════════════════════════════════════════════════════════
-# Known field patterns — what we're looking for in any file
+# Known field patterns
 # ═══════════════════════════════════════════════════════════
 
-# Target fields for TDS entries (Form 26 side)
 TDS_FIELDS = {
     "party_name": {
         "keywords": ["name", "party", "vendor", "deductee", "payee", "particulars"],
@@ -37,11 +38,11 @@ TDS_FIELDS = {
     },
     "pan": {
         "keywords": ["pan", "pan no", "pan number", "permanent account"],
-        "description": "PAN number (10-char alphanumeric like AAACH1234A)",
+        "description": "PAN number (10-char alphanumeric)",
     },
     "tds_section": {
         "keywords": ["section", "tds section", "sec"],
-        "description": "TDS section (194A, 194C, 194H, 194J, etc.)",
+        "description": "TDS section (194A, 194C, etc.)",
     },
     "gross_amount": {
         "keywords": ["amount paid", "amt paid", "gross amount", "amount credited",
@@ -68,7 +69,6 @@ TDS_FIELDS = {
     },
 }
 
-# Target fields for ledger entries (books side)
 LEDGER_FIELDS = {
     "party_name": {
         "keywords": ["particulars", "party", "vendor", "name", "ledger"],
@@ -92,374 +92,172 @@ LEDGER_FIELDS = {
     },
 }
 
+AUTO_MAP_THRESHOLD = 0.8  # >= this confidence = auto-map, no LLM needed
+
 
 # ═══════════════════════════════════════════════════════════
 # Step 1: Read file headers + sample data
 # ═══════════════════════════════════════════════════════════
 
 def read_file_headers(filepath: str) -> list[dict]:
-    """Read headers and sample data from XLSX or CSV.
-
-    Returns list of sheet results, each with:
-        {sheet_name, header_row, headers: [{col_index, col_letter, name}], sample_rows: [[values]]}
-    """
+    """Read headers and sample data from XLSX or CSV."""
     path = Path(filepath)
-
     if path.suffix.lower() in (".xlsx", ".xls"):
         return _read_xlsx_headers(filepath)
     elif path.suffix.lower() == ".csv":
         return [_read_csv_headers(filepath)]
     else:
-        raise ValueError(f"Unsupported file type: {path.suffix}. Use XLSX or CSV.")
+        raise ValueError(f"Unsupported file type: {path.suffix}")
 
 
 def _read_xlsx_headers(filepath: str) -> list[dict]:
-    """Read headers from all sheets in an XLSX file."""
     wb = openpyxl.load_workbook(filepath, data_only=True)
     results = []
-
     for sheet_name in wb.sheetnames:
         ws = wb[sheet_name]
         if ws.max_row < 2:
-            continue  # empty sheet
+            continue
 
-        # Find header row — scan first 15 rows, pick the one with most text cells
-        best_row = 1
-        best_count = 0
+        # Find header row — row with most text cells in first 15 rows
+        best_row, best_count = 1, 0
         for row_num in range(1, min(16, ws.max_row + 1)):
-            text_count = 0
-            for col in range(1, min(ws.max_column + 1, 100)):
-                val = ws.cell(row_num, col).value
-                if val and isinstance(val, str) and not val.replace(".", "").replace(",", "").isdigit():
-                    text_count += 1
+            text_count = sum(
+                1 for col in range(1, min(ws.max_column + 1, 100))
+                if ws.cell(row_num, col).value and isinstance(ws.cell(row_num, col).value, str)
+                and not ws.cell(row_num, col).value.replace(".", "").replace(",", "").isdigit()
+            )
             if text_count > best_count:
                 best_count = text_count
                 best_row = row_num
 
-        # Extract headers
-        headers = []
-        for col in range(1, ws.max_column + 1):
-            val = ws.cell(best_row, col).value
-            if val:
-                headers.append({
-                    "col_index": col,
-                    "col_letter": openpyxl.utils.get_column_letter(col),
-                    "name": str(val).strip(),
-                })
+        headers = [
+            {"col_index": col, "col_letter": openpyxl.utils.get_column_letter(col),
+             "name": str(ws.cell(best_row, col).value).strip()}
+            for col in range(1, ws.max_column + 1)
+            if ws.cell(best_row, col).value
+        ]
 
-        # Extract 3 sample data rows (after header)
+        # 3 sample data rows after header
         sample_rows = []
         for row_num in range(best_row + 1, min(best_row + 4, ws.max_row + 1)):
-            row_data = []
-            for col in range(1, ws.max_column + 1):
-                val = ws.cell(row_num, col).value
-                row_data.append(str(val) if val is not None else "")
-            # Skip if row is all empty or is a total row
+            row_data = [str(ws.cell(row_num, col).value) if ws.cell(row_num, col).value is not None else ""
+                        for col in range(1, ws.max_column + 1)]
             if any(row_data) and not any("total" in str(v).lower() for v in row_data[:3]):
                 sample_rows.append(row_data)
 
         if headers:
             results.append({
-                "sheet_name": sheet_name,
-                "header_row": best_row,
-                "headers": headers,
-                "sample_rows": sample_rows[:3],
-                "total_rows": ws.max_row - best_row,
-                "total_cols": len(headers),
+                "sheet_name": sheet_name, "header_row": best_row,
+                "headers": headers, "sample_rows": sample_rows[:3],
+                "total_rows": ws.max_row - best_row, "total_cols": len(headers),
             })
-
     wb.close()
     return results
 
 
 def _read_csv_headers(filepath: str) -> dict:
-    """Read headers from a CSV file."""
     with open(filepath, encoding="utf-8-sig") as f:
-        reader = csv.reader(f)
-        rows = []
-        for i, row in enumerate(reader):
-            rows.append(row)
-            if i >= 5:
-                break
+        rows = [row for i, row in zip(range(6), csv.reader(f))]
 
-    # First row with multiple text values is the header
-    header_row_idx = 0
+    header_idx = 0
     for i, row in enumerate(rows):
-        text_count = sum(1 for v in row if v and not v.replace(".", "").replace(",", "").isdigit())
-        if text_count >= 3:
-            header_row_idx = i
+        if sum(1 for v in row if v and not v.replace(".", "").replace(",", "").isdigit()) >= 3:
+            header_idx = i
             break
 
-    headers = [
-        {"col_index": j + 1, "col_letter": chr(65 + j) if j < 26 else f"C{j}", "name": v.strip()}
-        for j, v in enumerate(rows[header_row_idx]) if v.strip()
-    ]
-
-    sample_rows = rows[header_row_idx + 1: header_row_idx + 4]
-
+    headers = [{"col_index": j + 1, "col_letter": chr(65 + j) if j < 26 else f"C{j}", "name": v.strip()}
+               for j, v in enumerate(rows[header_idx]) if v.strip()]
     return {
-        "sheet_name": "CSV",
-        "header_row": header_row_idx + 1,
-        "headers": headers,
-        "sample_rows": sample_rows,
-        "total_rows": "unknown",
-        "total_cols": len(headers),
+        "sheet_name": "CSV", "header_row": header_idx + 1,
+        "headers": headers, "sample_rows": rows[header_idx + 1: header_idx + 4],
+        "total_rows": "unknown", "total_cols": len(headers),
     }
 
 
 # ═══════════════════════════════════════════════════════════
-# Step 2: Fuzzy matching — score each column against known fields
+# Step 2: Fuzzy matching
 # ═══════════════════════════════════════════════════════════
 
 def fuzzy_match_columns(headers: list[dict], field_definitions: dict) -> list[dict]:
-    """For each header, find the best matching field using keyword similarity.
-
-    Returns list of:
-        {col_name, suggested_field, confidence, method}
-    """
+    """Score each column against known fields using keyword similarity."""
     results = []
-
     for header in headers:
         col_name = header["name"].lower().strip()
-        best_field = None
-        best_score = 0.0
-        best_method = "none"
+        best_field, best_score, best_method = None, 0.0, "none"
 
         for field_name, field_def in field_definitions.items():
             for keyword in field_def["keywords"]:
-                keyword_lower = keyword.lower()
-
-                # Exact match
-                if col_name == keyword_lower:
-                    score = 1.0
-                    method = "exact"
-                # Column contains the keyword
-                elif keyword_lower in col_name:
-                    score = 0.7 + (len(keyword_lower) / len(col_name)) * 0.2
-                    method = "contains"
-                # Keyword contains the column name
-                elif col_name in keyword_lower:
-                    score = 0.6 + (len(col_name) / len(keyword_lower)) * 0.2
-                    method = "reverse_contains"
-                # Sequence similarity
+                kw = keyword.lower()
+                if col_name == kw:
+                    score, method = 1.0, "exact"
+                elif kw in col_name:
+                    score, method = 0.7 + (len(kw) / len(col_name)) * 0.2, "contains"
+                elif col_name in kw:
+                    score, method = 0.6 + (len(col_name) / len(kw)) * 0.2, "reverse_contains"
                 else:
-                    score = SequenceMatcher(None, col_name, keyword_lower).ratio()
-                    method = "sequence"
+                    score, method = SequenceMatcher(None, col_name, kw).ratio(), "sequence"
 
                 if score > best_score:
-                    best_score = score
-                    best_field = field_name
-                    best_method = method
+                    best_score, best_field, best_method = score, field_name, method
 
         results.append({
-            "col_name": header["name"],
-            "col_index": header["col_index"],
-            "suggested_field": best_field,
-            "confidence": round(best_score, 2),
-            "method": best_method,
+            "col_name": header["name"], "col_index": header["col_index"],
+            "suggested_field": best_field, "confidence": round(best_score, 2), "method": best_method,
         })
-
     return results
 
 
 # ═══════════════════════════════════════════════════════════
-# Step 3: LLM verification — send headers + fuzzy results to Groq
+# Step 3: LLM for uncertain columns only (Approach 1)
 # ═══════════════════════════════════════════════════════════
 
-LLM_SYSTEM_PROMPT = """You are an expert accountant who understands Indian accounting file formats — Tally exports, Form 26 TDS registers, Trial Balances, and expense ledgers.
-
-Given a list of column headers, sample data, and suggested mappings from a fuzzy matching system, your job is to:
-1. Verify or correct each column mapping
-2. Identify the document type (Form 26, Tally Journal, Tally GST Exp, Tally Purchase, Trial Balance, Expense Ledger)
-3. Flag any columns that need human review
-
-For each column, respond with:
-- field: the correct target field name (or "skip" for irrelevant columns, or "unknown" if unsure)
-- confidence: your confidence (0.0 to 1.0)
-- reason: brief explanation
-
-Respond in valid JSON format only. No markdown, no explanation outside JSON."""
-
-
-def llm_verify_mappings(
+def llm_map_uncertain(
+    uncertain_columns: list[dict],
     sheet_name: str,
-    headers: list[dict],
     sample_rows: list[list],
-    fuzzy_results: list[dict],
-) -> dict:
-    """Send columns + fuzzy suggestions to LLM for verification.
+    llm: LLMClient | None = None,
+) -> list[dict]:
+    """Send ONLY uncertain columns (confidence < 0.8) to LLM.
 
-    Returns:
-        {
-            document_type: "form26" | "tally_journal" | "tally_gst_exp" | ...,
-            mappings: [{col_name, field, confidence, reason}],
-            needs_user_review: [col_names that LLM isn't sure about]
-        }
+    Returns list of {col_name, field, confidence, reason}.
     """
-    if not settings.groq_api_key:
-        # LLM not available — return fuzzy results as-is
-        return {
-            "document_type": "unknown",
-            "mappings": [
-                {
-                    "col_name": r["col_name"],
-                    "field": r["suggested_field"] if r["confidence"] >= 0.9 else "unknown",
-                    "confidence": r["confidence"],
-                    "reason": f"Fuzzy match ({r['method']}), LLM not available",
-                }
-                for r in fuzzy_results
-            ],
-            "needs_user_review": [r["col_name"] for r in fuzzy_results if r["confidence"] < 0.9],
-        }
+    if not uncertain_columns:
+        return []
 
-    # Build the prompt
-    columns_info = []
-    for fr in fuzzy_results:
-        # Get sample values for this column
-        col_idx = fr["col_index"] - 1
-        sample_values = []
-        for row in sample_rows:
-            if col_idx < len(row) and row[col_idx]:
-                sample_values.append(str(row[col_idx])[:50])
+    if not llm or not llm.available:
+        # No LLM — return uncertain columns as-is (flagged for human review)
+        return [
+            {"col_name": c["col_name"], "field": c["suggested_field"] or "unknown",
+             "confidence": c["confidence"], "reason": "LLM unavailable, fuzzy only"}
+            for c in uncertain_columns
+        ]
 
-        columns_info.append({
-            "column_name": fr["col_name"],
-            "fuzzy_suggestion": fr["suggested_field"],
-            "fuzzy_confidence": fr["confidence"],
-            "sample_values": sample_values[:3],
-        })
-
-    user_prompt = f"""Sheet: "{sheet_name}"
-Total columns: {len(headers)}
-
-Columns with fuzzy matching results and sample data:
-{_format_columns_for_llm(columns_info)}
-
-Available target fields for TDS entries: {list(TDS_FIELDS.keys())}
-Available target fields for ledger entries: {list(LEDGER_FIELDS.keys())}
-
-Respond with JSON:
-{{
-    "document_type": "form26 | tally_journal | tally_gst_exp | tally_purchase | trial_balance | expense_ledger",
-    "mappings": [
-        {{"col_name": "...", "field": "...", "confidence": 0.95, "reason": "..."}}
-    ],
-    "needs_user_review": ["col_name1", "col_name2"]
-}}"""
-
-    try:
-        client = Groq(api_key=settings.groq_api_key)
-        response = client.chat.completions.create(
-            model=settings.llm_model,
-            messages=[
-                {"role": "system", "content": LLM_SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=0.1,  # low temperature = more deterministic
-            max_tokens=2000,
-            response_format={"type": "json_object"},
+    # Build prompt with uncertain columns + sample data
+    col_descriptions = []
+    for c in uncertain_columns:
+        col_idx = c["col_index"] - 1
+        samples = [row[col_idx] for row in sample_rows if col_idx < len(row) and row[col_idx]][:3]
+        col_descriptions.append(
+            f'  - "{c["col_name"]}" (fuzzy suggested: {c["suggested_field"]}, '
+            f'confidence: {c["confidence"]}) | samples: {samples}'
         )
-        import json
-        result = json.loads(response.choices[0].message.content)
-        return result
-    except Exception as e:
-        # LLM failed — fall back to fuzzy results
-        print(f"[ColumnMapper] LLM call failed: {e}")
-        return {
-            "document_type": "unknown",
-            "mappings": [
-                {
-                    "col_name": r["col_name"],
-                    "field": r["suggested_field"] if r["confidence"] >= 0.9 else "unknown",
-                    "confidence": r["confidence"],
-                    "reason": f"Fuzzy only (LLM error: {str(e)[:50]})",
-                }
-                for r in fuzzy_results
-            ],
-            "needs_user_review": [r["col_name"] for r in fuzzy_results if r["confidence"] < 0.9],
-        }
 
+    prompt = PARSER_COLUMN_MAP_PROMPT.format(
+        sheet_name=sheet_name,
+        uncertain_columns="\n".join(col_descriptions),
+    )
 
-def _format_columns_for_llm(columns_info: list[dict]) -> str:
-    """Format column info for LLM prompt."""
-    lines = []
-    for c in columns_info:
-        samples = ", ".join(c["sample_values"]) if c["sample_values"] else "no data"
-        lines.append(
-            f'  - "{c["column_name"]}" → fuzzy suggests "{c["fuzzy_suggestion"]}" '
-            f'(confidence: {c["fuzzy_confidence"]}) | samples: [{samples}]'
-        )
-    return "\n".join(lines)
+    result = llm.complete_json(prompt, system=PARSER_COLUMN_MAP_SYSTEM, agent_name="Parser Agent")
 
+    if not result or "mappings" not in result:
+        # LLM failed — flag everything for human review
+        return [
+            {"col_name": c["col_name"], "field": "unknown",
+             "confidence": 0.0, "reason": "LLM returned no result"}
+            for c in uncertain_columns
+        ]
 
-# ═══════════════════════════════════════════════════════════
-# Step 4: Cross-verify fuzzy vs LLM
-# ═══════════════════════════════════════════════════════════
-
-def cross_verify(fuzzy_results: list[dict], llm_result: dict) -> list[dict]:
-    """Compare fuzzy and LLM results. Agreement = high confidence. Disagreement = flag.
-
-    Returns final mapping list:
-        [{col_name, field, confidence, source, needs_review}]
-    """
-    llm_mappings = {m["col_name"]: m for m in llm_result.get("mappings", [])}
-    needs_review = set(llm_result.get("needs_user_review", []))
-    final = []
-
-    for fr in fuzzy_results:
-        col_name = fr["col_name"]
-        fuzzy_field = fr["suggested_field"]
-        fuzzy_conf = fr["confidence"]
-
-        llm_m = llm_mappings.get(col_name, {})
-        llm_field = llm_m.get("field", "unknown")
-        llm_conf = llm_m.get("confidence", 0)
-        llm_reason = llm_m.get("reason", "")
-
-        if llm_field in ("skip", "unknown", None):
-            # LLM says skip or doesn't know
-            if fuzzy_conf >= 0.9:
-                # Fuzzy is very confident — trust it but flag
-                final.append({
-                    "col_name": col_name,
-                    "field": fuzzy_field,
-                    "confidence": fuzzy_conf * 0.8,  # discount slightly
-                    "source": "fuzzy_only",
-                    "reason": f"LLM unsure, fuzzy confident ({fr['method']})",
-                    "needs_review": col_name in needs_review,
-                })
-            else:
-                # Both unsure — skip or flag
-                final.append({
-                    "col_name": col_name,
-                    "field": llm_field if llm_field != "unknown" else fuzzy_field,
-                    "confidence": max(fuzzy_conf, llm_conf) * 0.5,
-                    "source": "unresolved",
-                    "reason": llm_reason or "Neither fuzzy nor LLM confident",
-                    "needs_review": True,
-                })
-        elif fuzzy_field == llm_field:
-            # AGREEMENT — highest confidence
-            final.append({
-                "col_name": col_name,
-                "field": llm_field,
-                "confidence": min(1.0, (fuzzy_conf + llm_conf) / 2 + 0.1),  # boost for agreement
-                "source": "both_agree",
-                "reason": llm_reason,
-                "needs_review": False,
-            })
-        else:
-            # DISAGREEMENT — trust LLM but flag for review
-            final.append({
-                "col_name": col_name,
-                "field": llm_field,
-                "confidence": llm_conf * 0.7,  # discount for disagreement
-                "source": "llm_override",
-                "reason": f"LLM: {llm_reason}. Fuzzy suggested: {fuzzy_field}",
-                "needs_review": True,
-            })
-
-    return final
+    return result["mappings"]
 
 
 # ═══════════════════════════════════════════════════════════
@@ -467,103 +265,117 @@ def cross_verify(fuzzy_results: list[dict], llm_result: dict) -> list[dict]:
 # ═══════════════════════════════════════════════════════════
 
 class ColumnMapper:
-    """Intelligent column mapper — reads any file, maps columns, saves to DB.
+    """Map columns in any file using Approach 1.
+
+    Flow:
+    1. Check DB for saved mappings (instant if same company/format)
+    2. Fuzzy match all columns
+    3. confidence >= 0.8 → auto-map
+    4. confidence < 0.8 → send to LLM
+    5. LLM underconfident → flag for human
 
     Usage:
-        mapper = ColumnMapper(repo)
-        result = mapper.map_file("path/to/file.xlsx", company_id="abc-123", file_type="tds")
+        mapper = ColumnMapper(repo, llm)
+        result = mapper.map_file("file.xlsx", company_id="abc", file_type="tds")
     """
 
-    def __init__(self, repo=None):
+    def __init__(self, repo=None, llm: LLMClient | None = None):
         self.repo = repo
+        self.llm = llm
 
     def map_file(self, filepath: str, company_id: str = "",
                  file_type: str = "auto") -> dict:
-        """Map columns in a file. Returns mapping result.
+        """Map columns in a file. Returns mapping result."""
 
-        Args:
-            filepath: Path to XLSX or CSV file
-            company_id: If set, checks for saved mappings first
-            file_type: "tds", "ledger", or "auto" (detect from content)
-
-        Returns:
-            {
-                sheets: [{
-                    sheet_name, document_type, header_row,
-                    mappings: [{col_name, field, confidence, source, needs_review}],
-                    needs_user_review: [col_names],
-                }]
-            }
-        """
-        # Check for saved mappings first
+        # Check saved mappings first
         if company_id and self.repo and file_type != "auto":
             saved = self.repo.column_maps.get_confirmed(company_id, file_type)
             if saved:
-                return {
-                    "sheets": [{
-                        "sheet_name": "saved",
-                        "document_type": "saved",
-                        "header_row": 0,
-                        "mappings": [
-                            {"col_name": s.source_column, "field": s.mapped_to,
-                             "confidence": 1.0, "source": "saved", "needs_review": False}
-                            for s in saved
-                        ],
-                        "needs_user_review": [],
-                        "from_cache": True,
-                    }],
-                }
+                return {"sheets": [{
+                    "sheet_name": "saved", "document_type": "saved", "header_row": 0,
+                    "mappings": [
+                        {"col_name": s.source_column, "field": s.mapped_to,
+                         "confidence": 1.0, "source": "saved", "needs_review": False}
+                        for s in saved
+                    ],
+                    "needs_user_review": [], "from_cache": True,
+                }]}
 
-        # Read file headers + sample data
+        # Read file
         sheets = read_file_headers(filepath)
-
         result_sheets = []
+
         for sheet in sheets:
-            # Pick field definitions based on file_type or auto-detect
+            # Pick field definitions
             fields = TDS_FIELDS if file_type == "tds" else LEDGER_FIELDS
             if file_type == "auto":
-                # If headers contain TDS-specific keywords, use TDS fields
                 all_headers = " ".join(h["name"].lower() for h in sheet["headers"])
-                if any(kw in all_headers for kw in ["section", "tax deducted", "tds", "deduction"]):
-                    fields = TDS_FIELDS
-                else:
-                    fields = LEDGER_FIELDS
+                fields = TDS_FIELDS if any(kw in all_headers for kw in ["section", "tax deducted", "tds"]) else LEDGER_FIELDS
 
-            # Step 1: Fuzzy match
+            # Step 1: Fuzzy match all columns
             fuzzy_results = fuzzy_match_columns(sheet["headers"], fields)
 
-            # Step 2: LLM verify
-            llm_result = llm_verify_mappings(
-                sheet["sheet_name"],
-                sheet["headers"],
-                sheet["sample_rows"],
-                fuzzy_results,
-            )
+            # Step 2: Split by confidence
+            auto_mapped = [r for r in fuzzy_results if r["confidence"] >= AUTO_MAP_THRESHOLD]
+            uncertain = [r for r in fuzzy_results if r["confidence"] < AUTO_MAP_THRESHOLD]
 
-            # Step 3: Cross-verify
-            final_mappings = cross_verify(fuzzy_results, llm_result)
+            # Step 3: Send uncertain to LLM
+            llm_results = llm_map_uncertain(uncertain, sheet["sheet_name"], sheet["sample_rows"], self.llm)
+
+            # Build final mappings
+            final_mappings = []
+
+            # Auto-mapped (high confidence fuzzy)
+            for r in auto_mapped:
+                final_mappings.append({
+                    "col_name": r["col_name"], "field": r["suggested_field"],
+                    "confidence": r["confidence"], "source": "fuzzy_auto",
+                    "needs_review": False,
+                })
+
+            # LLM-mapped (was uncertain)
+            llm_map = {m["col_name"]: m for m in llm_results}
+            for r in uncertain:
+                llm_m = llm_map.get(r["col_name"], {})
+                llm_field = llm_m.get("field", "unknown")
+                llm_conf = llm_m.get("confidence", 0)
+                llm_reason = llm_m.get("reason", "")
+
+                needs_review = llm_field in ("unknown", None) or llm_conf < 0.6
+                final_mappings.append({
+                    "col_name": r["col_name"],
+                    "field": llm_field if llm_field not in ("unknown", None) else r["suggested_field"],
+                    "confidence": llm_conf if llm_conf > 0 else r["confidence"],
+                    "source": "llm" if llm_field not in ("unknown", None) else "uncertain",
+                    "reason": llm_reason,
+                    "needs_review": needs_review,
+                })
 
             needs_review = [m["col_name"] for m in final_mappings if m.get("needs_review")]
 
             result_sheets.append({
                 "sheet_name": sheet["sheet_name"],
-                "document_type": llm_result.get("document_type", "unknown"),
+                "document_type": "auto_detected",
                 "header_row": sheet["header_row"],
                 "total_rows": sheet["total_rows"],
                 "mappings": final_mappings,
                 "needs_user_review": needs_review,
+                "stats": {
+                    "total_columns": len(fuzzy_results),
+                    "auto_mapped": len(auto_mapped),
+                    "llm_mapped": len([m for m in final_mappings if m["source"] == "llm"]),
+                    "needs_review": len(needs_review),
+                },
             })
 
-            # Save confirmed mappings to DB (confidence > 0.8 and not needing review)
+            # Save confirmed mappings to DB
             if company_id and self.repo:
                 ft = "tds" if fields == TDS_FIELDS else "ledger"
                 for m in final_mappings:
                     if m["confidence"] >= 0.8 and not m.get("needs_review"):
                         self.repo.column_maps.upsert(
-                            company_id=company_id,
-                            file_type=ft,
-                            source_column=m["col_name"],
-                            mapped_to=m["field"],
+                            company_id=company_id, file_type=ft,
+                            source_column=m["col_name"], mapped_to=m["field"],
                             confidence=m["confidence"],
                         )
 

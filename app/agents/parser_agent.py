@@ -128,9 +128,32 @@ class ParserAgent(AgentBase):
     def run(self, form26_path: str, tally_path: str) -> dict:
         """Parse both files and write entries to database.
 
-        Returns summary: {tds_count, ledger_count, sections}
+        Uses column mapper (with LLM) to identify columns if format is unknown.
+        Returns summary: {tds_count, ledger_count, sections, column_mapping}
         """
         self.events.agent_start(self.agent_name, "Starting Parser Agent...")
+
+        # Run column mapper to understand file structure
+        from app.services.column_mapper import ColumnMapper
+        mapper = ColumnMapper(repo=self.db, llm=self.llm)
+
+        # Map Form 26 columns
+        f26_mapping = mapper.map_file(form26_path, company_id=self.company_id, file_type="tds")
+        if f26_mapping["sheets"]:
+            stats = f26_mapping["sheets"][0].get("stats", {})
+            self.events.detail(self.agent_name,
+                f"Form 26 columns: {stats.get('auto_mapped', 0)} auto-mapped, "
+                f"{stats.get('llm_mapped', 0)} LLM-mapped, "
+                f"{stats.get('needs_review', 0)} need review")
+
+        # Map Tally columns
+        tally_mapping = mapper.map_file(tally_path, company_id=self.company_id, file_type="ledger")
+        if tally_mapping["sheets"]:
+            for sheet in tally_mapping["sheets"]:
+                stats = sheet.get("stats", {})
+                self.events.detail(self.agent_name,
+                    f"{sheet['sheet_name']}: {stats.get('auto_mapped', 0)} auto, "
+                    f"{stats.get('llm_mapped', 0)} LLM, {stats.get('needs_review', 0)} review")
 
         # Parse Form 26
         tds_entries = self._parse_form26(form26_path)
@@ -154,6 +177,10 @@ class ParserAgent(AgentBase):
             "tds_count": tds_count,
             "ledger_count": ledger_count,
             "sections": sorted(sections),
+            "column_mapping": {
+                "form26": f26_mapping,
+                "tally": tally_mapping,
+            },
         }
 
     def _parse_form26(self, filepath: str) -> list[dict]:
