@@ -164,3 +164,106 @@ aitdsrecon/                    ← repo root
 | RLS | Day 2 | Row-level security filters data per firm |
 | pytest fixtures | Day 2 | Setup before yield, cleanup after yield |
 | @lru_cache | Day 2 | Function returns cached result after first call |
+| LLM Client pattern | Day 1R | Unified interface, swap provider in one place |
+| Prompt templates | Day 1R | Version-controlled prompts, {placeholders} filled at runtime |
+| SSE event emission | Day 1R | Every LLM call emits event → UI shows "thinking" |
+| Graceful fallback | Day 1R | LLM returns None on failure → agent uses deterministic result |
+| Approach 1 (column mapping) | Day 2R | confidence >= 0.8 auto-map, < 0.8 send to LLM only |
+| Dynamic parser | Day 2R | Column mapper output drives parser — zero hardcoded positions |
+| Expense classification | Day 2R | Keyword-based → TDS section mapping (freight→194C, etc.) |
+
+---
+
+## Day 1 (Rework) — LLM Client + Prompt Templates
+
+**Date:** 2026-03-29
+**Hours:** ~5
+
+### What was built
+| File | Purpose |
+|------|---------|
+| `app/services/llm_client.py` | Unified LLM client — all agents call `self.llm.complete()` |
+| `app/services/llm_prompts.py` | 14 prompt templates for all 7 agents |
+| `tests/test_llm_client.py` | 5 tests (availability, complete, JSON, fallback, events) |
+
+### What I learned
+
+**1. LLM Client as a single interface**
+- All 7 agents use the same `LLMClient` class
+- Currently uses Groq (free). Swap to Anthropic = change one line in config
+- Every LLM call emits an SSE event: `llm_call` (starting) and `llm_response` (done)
+- If LLM fails → returns `None` → agent falls back to deterministic logic (never crashes)
+- JSON mode: `complete_json()` requests structured output, parses it, handles malformed JSON
+
+**2. Prompt engineering as version-controlled templates**
+- Each agent has a SYSTEM prompt (who it is) and a USER prompt (what to do)
+- Templates use `{placeholders}` filled at runtime with actual data
+- All prompts in one file → change a prompt, all agents update
+- Example: `MATCHER_AMBIGUOUS_PROMPT` includes Form 26 entry + candidate Tally entries + asks LLM to reason about the match
+
+**3. AgentBase now has LLM**
+- `self.llm` available in every agent automatically
+- Agents don't import Groq directly — they use the abstraction
+
+---
+
+## Day 2 (Rework) — Column Mapper Approach 1 + Dynamic Parser
+
+**Date:** 2026-03-29
+**Hours:** ~6
+
+### What was built
+| File | Purpose |
+|------|---------|
+| `app/services/column_mapper.py` | REWRITTEN — Approach 1 (no cross-verify) |
+| `app/agents/parser_agent.py` | REWRITTEN — fully dynamic, zero hardcoded positions |
+| `tests/test_column_mapper.py` | REWRITTEN — Approach 1 tests |
+
+### What I learned
+
+**1. Approach 1 vs Approach 2 (column mapping)**
+- Approach 2 (old): fuzzy → send ALL to LLM → cross-verify fuzzy vs LLM → flag disagreements
+- Approach 1 (new): fuzzy → if >= 0.8 auto-map (done) → if < 0.8 send ONLY uncertain to LLM → done
+- Simpler, cheaper, faster. Cross-verify adds complexity we don't need yet.
+- We'll add cross-verify later IF accuracy needs it (data-driven decision, not premature)
+
+**2. Why hardcoded column positions are bad**
+- Old parser: `row[1].value` = name, `row[3].value` = amount. Works for ONE specific file format.
+- New client has columns in different order? Parser breaks.
+- Dynamic parser: column mapper tells us "party_name is column 5" → parser reads column 5
+- Same parser works for ANY client's file format. Zero code changes needed per client.
+
+**3. How the dynamic parser works**
+```
+Column mapper: "Name" → party_name (col B), "Section" → tds_section (col C), ...
+                     ↓
+field_to_col = {"party_name": 1, "tds_section": 2, "gross_amount": 3, ...}
+                     ↓
+For each row: values["party_name"] = row[field_to_col["party_name"]].value
+```
+No `row[1]`, no `row[3]`. Only `values["party_name"]`, `values["gross_amount"]`.
+
+**4. Tally 2D registers — unmapped columns as data**
+- Tally's Journal Register has 68 columns. Only 5 are meta (Date, Particulars, Voucher, Value, Total).
+- The other 63 are expense account heads (Interest Paid, Freight Charges, etc.)
+- Column mapper maps the 5 meta columns. Parser collects the other 63 as `expense_heads` dict.
+- Each expense head is classified (freight→194C, brokerage→194H) for section assignment.
+
+**5. Expense classification chain**
+```
+Column name "Freight Charges_18%"
+    → classify_expense() → "freight_expense" (keyword match)
+    → EXPENSE_TO_SECTION → "194C"
+    → Stored in ledger_entry.tds_section
+    → Matcher uses this to match against Form 26 194C entries
+```
+
+### Issues resolved
+- Parser was using hardcoded `row[1]`, `row[3]` etc. — completely replaced with dynamic field lookup
+- Column mapper was doing unnecessary cross-verification — simplified to Approach 1
+
+---
+
+## Day 3 (Rework) — (Upcoming)
+
+**Plan:** Matcher Agent Pass 6 — LLM-assisted matching for ambiguous cases that deterministic passes can't resolve.
