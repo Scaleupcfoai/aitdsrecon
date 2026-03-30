@@ -685,6 +685,12 @@ class TdsCheckerAgent(AgentBase):
         if section_findings:
             self.events.detail(self.agent_name, f"Check 1: {len(section_findings)} section issues")
 
+        # Check 1b: LLM classification for ambiguous sections
+        ambiguous = [f for f in section_findings if f.get("status") == "review"]
+        if ambiguous and self.llm and self.llm.available:
+            self.events.detail(self.agent_name, f"  Sending {len(ambiguous)} ambiguous expenses to LLM...")
+            self._llm_classify_sections(ambiguous)
+
         # Check 2: Rate Validation
         rate_findings = [f for m in matches if (f := check_rate(m))]
         all_findings.extend(rate_findings)
@@ -712,10 +718,18 @@ class TdsCheckerAgent(AgentBase):
         if missing_findings:
             self.events.detail(self.agent_name, f"Check 5: {len(missing_findings)} missing TDS cases")
 
-        # Write findings to DB as discrepancy actions
+        # Count by severity
         errors = [f for f in all_findings if f.get("severity") == "error"]
         warnings = [f for f in all_findings if f.get("severity") == "warning"]
         exposure = sum(f.get("aggregate_amount", 0) for f in errors)
+
+        # LLM: Write remediation advice for error findings
+        if errors and self.llm and self.llm.available:
+            self.events.detail(self.agent_name, f"Writing remediation advice for {len(errors)} errors...")
+            self._llm_write_remediations(errors)
+
+        # Write findings to DB as discrepancy_action rows
+        self._write_findings_to_db(all_findings)
 
         self.events.success(
             self.agent_name,
@@ -778,3 +792,110 @@ class TdsCheckerAgent(AgentBase):
             "purchase_gst_exp_register": {"entries": gst_entries},
             "purchase_register": {"entries": purchase_entries},
         }
+
+    def _llm_classify_sections(self, ambiguous_findings: list[dict]):
+        """Ask LLM to classify ambiguous expense heads (e.g., advertisement → 194C or 194J?)."""
+        from app.services.llm_prompts import CHECKER_SECTION_SYSTEM, CHECKER_SECTION_PROMPT
+
+        for finding in ambiguous_findings:
+            vendor = finding.get("vendor", "")
+            expense_heads = finding.get("expense_heads", [])
+            current_section = finding.get("form26_section", "")
+            amount = finding.get("form26_amount", finding.get("aggregate_amount", 0))
+
+            prompt = CHECKER_SECTION_PROMPT.format(
+                vendor_name=vendor,
+                expense_head=", ".join(expense_heads) if isinstance(expense_heads, list) else str(expense_heads),
+                amount=f"{amount:,.0f}" if isinstance(amount, (int, float)) else str(amount),
+                current_section=current_section,
+            )
+
+            result = self.llm.complete_json(prompt, system=CHECKER_SECTION_SYSTEM, agent_name=self.agent_name)
+
+            if result:
+                correct_section = result.get("correct_section", "")
+                confidence = result.get("confidence", 0)
+                reasoning = result.get("reasoning", "")
+                is_correct = result.get("is_current_correct", True)
+
+                # Update the finding with LLM classification
+                finding["llm_classification"] = {
+                    "correct_section": correct_section,
+                    "confidence": confidence,
+                    "reasoning": reasoning,
+                }
+
+                if is_correct:
+                    # LLM confirms current section is correct — downgrade to info
+                    finding["severity"] = "info"
+                    finding["message"] = f"Section {current_section} confirmed by AI: {reasoning}"
+                    self.events.emit(self.agent_name,
+                        f"LLM confirms: {vendor} → {current_section} is correct ({reasoning[:80]})",
+                        "llm_insight")
+                elif confidence >= 0.7:
+                    # LLM says wrong section — upgrade to error
+                    finding["severity"] = "error"
+                    finding["message"] = (f"Section {current_section} likely incorrect for {vendor}. "
+                                          f"AI suggests {correct_section}: {reasoning}")
+                    self.events.emit(self.agent_name,
+                        f"LLM: {vendor} should be {correct_section}, not {current_section}",
+                        "llm_insight")
+                else:
+                    # LLM unsure — keep as warning, flag for human
+                    finding["message"] = f"Ambiguous section for {vendor}. AI unsure: {reasoning}"
+                    self.events.emit(self.agent_name,
+                        f"LLM unsure about {vendor} section. Flagged for review.",
+                        "human_needed")
+
+    def _llm_write_remediations(self, error_findings: list[dict]):
+        """Ask LLM to write CA-level remediation advice for each error finding."""
+        from app.services.llm_prompts import CHECKER_REMEDIATION_SYSTEM, CHECKER_REMEDIATION_PROMPT
+
+        # Build findings list for prompt
+        findings_text = []
+        for i, f in enumerate(error_findings):
+            findings_text.append(
+                f"[{i}] {f.get('severity', 'error').upper()} — {f.get('vendor', 'Unknown')}\n"
+                f"    Section: {f.get('form26_section', f.get('expected_section', ''))}\n"
+                f"    Amount: Rs {f.get('aggregate_amount', f.get('form26_amount', 0)):,.0f}\n"
+                f"    Finding: {f.get('message', '')}"
+            )
+
+        prompt = CHECKER_REMEDIATION_PROMPT.format(
+            findings_list="\n\n".join(findings_text)
+        )
+
+        result = self.llm.complete_json(prompt, system=CHECKER_REMEDIATION_SYSTEM, agent_name=self.agent_name)
+
+        if result and "remediations" in result:
+            for remediation in result["remediations"]:
+                idx = remediation.get("finding_index", 0)
+                if idx < len(error_findings):
+                    error_findings[idx]["remediation"] = {
+                        "what_is_wrong": remediation.get("what_is_wrong", ""),
+                        "why_it_matters": remediation.get("why_it_matters", ""),
+                        "action_steps": remediation.get("action_steps", []),
+                        "deadline": remediation.get("deadline", ""),
+                        "penalty_risk": remediation.get("penalty_risk", ""),
+                        "priority": remediation.get("priority", "medium"),
+                    }
+
+            self.events.emit(self.agent_name,
+                f"LLM wrote remediation advice for {len(result['remediations'])} findings",
+                "llm_insight")
+
+    def _write_findings_to_db(self, findings: list[dict]):
+        """Write all findings to discrepancy_action table."""
+        # We need match_result_ids to link findings. For now, create without link
+        # TODO: link to specific match_result rows when available
+        for f in findings:
+            try:
+                self.db.discrepancies.create(
+                    match_result_id=f.get("_match_result_id", "00000000-0000-0000-0000-000000000000"),
+                    stage=f.get("check", ""),
+                    llm_reasoning=f.get("llm_classification", {}).get("reasoning", "")
+                                  if f.get("llm_classification") else f.get("message", ""),
+                    proposed_action=f.get("remediation") if f.get("remediation") else {"message": f.get("message", "")},
+                )
+            except Exception:
+                pass  # Skip if FK constraint fails (no match_result_id)
