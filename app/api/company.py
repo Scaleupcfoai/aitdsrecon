@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from app.dependencies import get_db, get_current_user
+from app.dependencies import get_db, get_current_user, UserContext
 from app.db.repository import Repository
 
 router = APIRouter(tags=["company"])
@@ -22,10 +22,10 @@ class CreateCompanyRequest(BaseModel):
 @router.get("/companies")
 def list_companies(
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """List all companies for the current firm."""
-    companies = db.companies.list_by_firm(user["firm_id"])
+    companies = db.companies.list_by_firm(user.firm_id)
     return [{"id": c.id, "company_name": c.company_name, "pan": c.pan,
              "company_type": c.company_type} for c in companies]
 
@@ -34,11 +34,11 @@ def list_companies(
 def create_company(
     req: CreateCompanyRequest,
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """Create a new company under the current firm."""
     company = db.companies.create(
-        firm_id=user["firm_id"],
+        firm_id=user.firm_id,
         company_name=req.company_name,
         pan=req.pan,
         tan=req.tan or None,

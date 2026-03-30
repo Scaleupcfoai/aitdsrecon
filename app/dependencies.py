@@ -1,32 +1,29 @@
 """
 FastAPI dependencies — injected into route handlers.
 
+Auth: uses Supabase JWT verification from app/auth/.
+DB: uses admin client (service_role) for backend operations.
+LLM: creates LLM client instance.
+
 Usage in routers:
     @router.get("/api/something")
-    def something(db: Repository = Depends(get_db), user = Depends(get_current_user)):
+    def something(db = Depends(get_db), user = Depends(get_current_user)):
         ...
 """
 
 from app.db.client import get_admin_client
 from app.db.repository import Repository
 from app.services.llm_client import LLMClient
-from app.pipeline.events import EventEmitter
+
+# Re-export auth dependencies so routers can import from one place
+from app.auth.dependencies import get_current_user, UserContext, require_firm_id
 
 
 def get_db() -> Repository:
-    """Get repository instance. Uses admin client for now (auth added Day 11)."""
+    """Get repository instance with admin client (backend operations)."""
     return Repository(client=get_admin_client())
 
 
 def get_llm() -> LLMClient:
     """Get LLM client instance."""
     return LLMClient()
-
-
-def get_current_user() -> dict:
-    """Get current user. Placeholder — returns hardcoded user until auth is wired (Day 11)."""
-    return {
-        "user_id": "placeholder-user",
-        "email": "dev@lekha.ai",
-        "firm_id": "placeholder-firm",
-    }

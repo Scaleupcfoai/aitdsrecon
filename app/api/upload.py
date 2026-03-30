@@ -5,7 +5,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, File, UploadFile, Depends
 
-from app.dependencies import get_db, get_llm, get_current_user
+from app.dependencies import get_db, get_llm, get_current_user, UserContext
 from app.db.repository import Repository
 from app.services.llm_client import LLMClient
 from app.services.column_mapper import ColumnMapper
@@ -20,13 +20,13 @@ async def upload_files(
     form26: UploadFile = File(...),
     tally: UploadFile = File(...),
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """Upload Form 26 and Tally XLSX files."""
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-    form26_path = UPLOAD_DIR / f"{user['firm_id']}_form26.xlsx"
-    tally_path = UPLOAD_DIR / f"{user['firm_id']}_tally.xlsx"
+    form26_path = UPLOAD_DIR / f"{user.firm_id}_form26.xlsx"
+    tally_path = UPLOAD_DIR / f"{user.firm_id}_tally.xlsx"
 
     with open(form26_path, "wb") as f:
         shutil.copyfileobj(form26.file, f)

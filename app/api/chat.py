@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from app.dependencies import get_db, get_current_user
+from app.dependencies import get_db, get_current_user, UserContext
 from app.db.repository import Repository
 from app.agents.chat_agent import ChatAgent
 
@@ -26,7 +26,7 @@ class ChatMessage(BaseModel):
 def send_chat(
     msg: ChatMessage,
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """Send a message and get a complete response."""
     agent = _get_or_create_session(user, msg.company_id, msg.run_id, db)
@@ -38,7 +38,7 @@ def send_chat(
 def stream_chat(
     msg: ChatMessage,
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """Send a message and stream the response via SSE."""
     agent = _get_or_create_session(user, msg.company_id, msg.run_id, db)
@@ -53,21 +53,21 @@ def stream_chat(
 
 
 @router.post("/chat/reset")
-def reset_chat(user: dict = Depends(get_current_user)):
+def reset_chat(user: UserContext = Depends(get_current_user)):
     """Clear conversation history."""
-    session_key = user["user_id"]
+    session_key = user.user_id
     if session_key in _chat_sessions:
         _chat_sessions[session_key].reset_history()
     return {"status": "reset"}
 
 
-def _get_or_create_session(user: dict, company_id: str, run_id: str,
+def _get_or_create_session(user: UserContext, company_id: str, run_id: str,
                             db: Repository) -> ChatAgent:
     """Get existing chat session or create new one."""
-    session_key = user["user_id"]
+    session_key = user.user_id
     if session_key not in _chat_sessions:
         _chat_sessions[session_key] = ChatAgent(
-            db=db, firm_id=user["firm_id"],
+            db=db, firm_id=user.firm_id,
             company_id=company_id or "default",
             run_id=run_id or None,
         )

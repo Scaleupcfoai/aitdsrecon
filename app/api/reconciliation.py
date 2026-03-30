@@ -8,7 +8,7 @@ from pathlib import Path
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
-from app.dependencies import get_db, get_current_user
+from app.dependencies import get_db, get_current_user, UserContext
 from app.db.repository import Repository
 from app.pipeline.orchestrator import run_reconciliation
 
@@ -22,10 +22,10 @@ def start_reconciliation(
     company_id: str,
     financial_year: str = "2024-25",
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """Start a reconciliation run (non-streaming). Returns when complete."""
-    firm_id = user["firm_id"]
+    firm_id = user.firm_id
     form26_path = str(UPLOAD_DIR / f"{firm_id}_form26.xlsx")
     tally_path = str(UPLOAD_DIR / f"{firm_id}_tally.xlsx")
 
@@ -45,7 +45,7 @@ def stream_reconciliation(
     company_id: str,
     financial_year: str = "2024-25",
     db: Repository = Depends(get_db),
-    user: dict = Depends(get_current_user),
+    user: UserContext = Depends(get_current_user),
 ):
     """Run reconciliation with real-time SSE streaming.
 
@@ -56,7 +56,7 @@ def stream_reconciliation(
     def on_event(event):
         event_queue.put(event)
 
-    firm_id = user["firm_id"]
+    firm_id = user.firm_id
     form26_path = str(UPLOAD_DIR / f"{firm_id}_form26.xlsx")
     tally_path = str(UPLOAD_DIR / f"{firm_id}_tally.xlsx")
 
