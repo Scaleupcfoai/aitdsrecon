@@ -698,6 +698,16 @@ class MatcherAgent(AgentBase):
         if m5:
             self.events.detail(self.agent_name, f"  Pass 5: {len(m5)} aggregated matches")
 
+        # ── Pass 6: LLM-Assisted Match (for remaining unmatched) ──
+        m6 = []
+        unmatched_f26 = [e for e in f26_in_scope if not e.get("_matched")]
+        if unmatched_f26 and self.llm and self.llm.available:
+            self.events.detail(self.agent_name, f"  Pass 6: Sending {len(unmatched_f26)} unmatched entries to LLM...")
+            m6 = self._pass6_llm_match(unmatched_f26, tally_194a + tally_194c)
+            all_matches.extend(m6)
+            if m6:
+                self.events.detail(self.agent_name, f"  Pass 6: {len(m6)} LLM-assisted matches")
+
         # Count results
         matched_count = sum(1 for e in f26_in_scope if e.get("_matched"))
         unmatched_count = len(f26_in_scope) - matched_count
@@ -744,6 +754,7 @@ class MatcherAgent(AgentBase):
                 "pass3_exempt": len(all_exemptions),
                 "pass4_fuzzy": len(m4),
                 "pass5_aggregated": len(m5),
+                "pass6_llm_match": len(m6),
             },
         }
 
@@ -810,6 +821,112 @@ class MatcherAgent(AgentBase):
                 "account_postings": raw.get("account_postings", {}) if isinstance(raw, dict) else {},
             })
         return result
+
+    def _pass6_llm_match(self, unmatched_f26: list[dict], all_tally: list[dict]) -> list[dict]:
+        """Pass 6: LLM reasons about ambiguous matches.
+
+        For each unmatched Form 26 entry, find candidate Tally entries
+        (name similarity > 0.3) and ask LLM if any is the correct match.
+        """
+        from app.services.llm_prompts import MATCHER_AMBIGUOUS_SYSTEM, MATCHER_AMBIGUOUS_PROMPT
+
+        matches = []
+        unmatched_tally = [t for t in all_tally if not t.get("_matched")]
+
+        for f26 in unmatched_f26:
+            if f26.get("_matched"):
+                continue
+
+            # Find candidates with at least some name similarity
+            candidates = []
+            for tally in unmatched_tally:
+                if tally.get("_matched"):
+                    continue
+                sim = name_similarity(f26["vendor_name"], tally["party_name"])
+                if sim > 0.3:
+                    candidates.append({
+                        "index": len(candidates),
+                        "party_name": tally["party_name"],
+                        "amount": tally["amount"],
+                        "date": tally.get("date", ""),
+                        "expense_type": tally.get("tally_source", ""),
+                        "name_similarity": round(sim, 2),
+                        "_entry": tally,  # keep reference for marking matched
+                    })
+
+            if not candidates:
+                continue  # no candidates at all — truly unmatched
+
+            # Sort by similarity, take top 5
+            candidates.sort(key=lambda c: -c["name_similarity"])
+            top_candidates = candidates[:5]
+
+            # Build prompt
+            candidates_text = "\n".join(
+                f"  [{c['index']}] {c['party_name']} | Rs {c['amount']:,.0f} | "
+                f"Date: {c['date']} | Type: {c['expense_type']} | Name sim: {c['name_similarity']}"
+                for c in top_candidates
+            )
+
+            prompt = MATCHER_AMBIGUOUS_PROMPT.format(
+                f26_vendor=f26["vendor_name"],
+                f26_section=f26["section"],
+                f26_amount=f"{f26['amount_paid']:,.0f}",
+                f26_date=f26.get("amount_paid_date", ""),
+                f26_pan=f26.get("pan", ""),
+                candidates=candidates_text,
+            )
+
+            # Ask LLM
+            result = self.llm.complete_json(prompt, system=MATCHER_AMBIGUOUS_SYSTEM, agent_name=self.agent_name)
+
+            if not result:
+                continue  # LLM failed — skip this entry
+
+            if result.get("match_found") and result.get("matched_candidate_index") is not None:
+                idx = result["matched_candidate_index"]
+                if idx < len(top_candidates):
+                    candidate = top_candidates[idx]
+                    confidence = result.get("confidence", 0.7)
+                    reasoning = result.get("reasoning", "")
+
+                    if confidence >= 0.6:
+                        # LLM is confident enough — create match
+                        tally_entry = candidate["_entry"]
+
+                        self.events.emit(
+                            self.agent_name,
+                            f"LLM matched: {f26['vendor_name']} → {candidate['party_name']} "
+                            f"({confidence:.0%} confidence)",
+                            "llm_insight",
+                        )
+
+                        match_entry = {
+                            "pass": 6,
+                            "pass_name": "llm_match",
+                            "confidence": confidence,
+                            "form26_entry": _clean_entry(f26),
+                            "tally_entries": [_clean_entry(tally_entry)],
+                            "match_details": {
+                                "strategy": "llm_reasoning",
+                                "reasoning": reasoning,
+                                "amount_explanation": result.get("amount_explanation", ""),
+                                "candidates_considered": len(top_candidates),
+                            },
+                        }
+                        matches.append(match_entry)
+                        f26["_matched"] = True
+                        tally_entry["_matched"] = True
+                    else:
+                        # LLM underconfident — flag for human review
+                        self.events.emit(
+                            self.agent_name,
+                            f"LLM unsure about {f26['vendor_name']} → {candidate['party_name']} "
+                            f"({confidence:.0%}). Flagged for review.",
+                            "human_needed",
+                        )
+
+        return matches
 
     def _matches_to_db_format(self, matches: list[dict]) -> list[dict]:
         """Convert match results to DB format for bulk insert."""
