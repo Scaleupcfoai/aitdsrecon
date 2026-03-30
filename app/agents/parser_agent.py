@@ -1,12 +1,14 @@
 """
-Parser Agent — Parse Form 26 + Tally XLSX into database entries.
+Parser Agent — Parse any XLSX/CSV file using column mapper output.
 
-Reads XLSX files, extracts structured data, writes to:
-- tds_entry table (Form 26 deductions)
-- ledger_entry table (Tally expenses)
+Zero hardcoded column positions. The column mapper tells us which column
+is party_name, which is amount, etc. The parser reads values from those
+mapped positions.
 
-Preserves ALL parsing logic from MVP (tds-recon/agents/parser_agent.py).
-Changes: writes to DB instead of JSON files, uses EventEmitter instead of global logger.
+Flow:
+1. Column mapper identifies file structure (header row, column mappings)
+2. Parser reads rows using the mapped column positions
+3. Writes to ledger_entry and tds_entry tables
 """
 
 import re
@@ -15,6 +17,7 @@ from datetime import datetime, date
 import openpyxl
 
 from app.agents.base import AgentBase
+from app.services.column_mapper import ColumnMapper, read_file_headers
 
 
 # ── Helpers ──
@@ -23,14 +26,17 @@ def clean_name(raw_name: str) -> dict:
     """Parse Form 26 name field: 'Adi Debnath (34); PAN: AAAAA0001A' → {name, id, pan}"""
     if not raw_name:
         return {"name": "", "id": "", "pan": ""}
-    match = re.match(r"^(.+?)\s*\((\d+)\);\s*PAN:\s*(\S+)", raw_name)
+    match = re.match(r"^(.+?)\s*\((\d+)\);\s*PAN:\s*(\S+)", str(raw_name))
     if match:
         return {"name": match.group(1).strip(), "id": match.group(2), "pan": match.group(3)}
-    return {"name": raw_name.strip(), "id": "", "pan": ""}
+    # Try PAN-only pattern
+    match2 = re.match(r"^(.+?);\s*PAN:\s*(\S+)", str(raw_name))
+    if match2:
+        return {"name": match2.group(1).strip(), "id": "", "pan": match2.group(2)}
+    return {"name": str(raw_name).strip(), "id": "", "pan": ""}
 
 
 def to_date_str(val) -> str | None:
-    """Convert date/datetime to ISO string for DB storage."""
     if val is None:
         return None
     if isinstance(val, datetime):
@@ -38,12 +44,11 @@ def to_date_str(val) -> str | None:
     if isinstance(val, date):
         return val.isoformat()
     if isinstance(val, str):
-        return val[:10]  # assume ISO format
+        return val[:10]
     return str(val)[:10]
 
 
 def safe_float(val) -> float:
-    """Convert value to float, defaulting to 0."""
     if val is None:
         return 0.0
     try:
@@ -52,59 +57,23 @@ def safe_float(val) -> float:
         return 0.0
 
 
-# ── Column classification (from MVP — dynamic detection) ──
+# ── Expense type classification (for Tally entries) ──
 
-GST_COLUMN_PATTERNS = {"input c gst", "input s gst", "input i gst", "c gst", "s gst", "i gst", "igst", "cgst", "sgst"}
-
-META_COLUMNS_GST_EXP = {"Date", "Particulars", "Voucher No.", "Value", "Addl. Cost", "Gross Total", "Rounded (+/-)"}
-JOURNAL_META_COLUMNS = {"Date", "Particulars", "Voucher No.", "Value", "Gross Total"}
-
-LOAN_COLUMN_PATTERN = re.compile(r"^(.+?)\s*\(Loan\)$", re.IGNORECASE)
-
-
-def _is_gst_column(col_name: str) -> bool:
-    return col_name.lower().strip() in GST_COLUMN_PATTERNS or \
-           "gst" in col_name.lower() and ("input" in col_name.lower() or
-           col_name.strip() in {"C GST", "S GST", "I GST"})
-
-
-def _is_expense_column(col_name: str) -> bool:
-    return col_name not in META_COLUMNS_GST_EXP and not _is_gst_column(col_name)
-
-
-def _classify_journal_entry(postings: dict) -> str:
-    """Classify a journal entry by which account heads are posted."""
-    keys = set(postings.keys())
-    if "Interest Paid" in keys:
-        return "interest_payment"
-    if "TDS Payable" in keys and len(keys) == 1:
-        return "tds_deduction"
-    if "Freight Charges" in keys:
-        return "freight_expense"
-    if "Packing Charges" in keys:
-        return "packing_expense"
-    if "Salary & Bonus" in keys or "Director's Salary" in keys:
-        return "salary"
-    if "Brokerage and Commission" in keys:
-        return "brokerage"
-    if "Shop Rent" in keys:
-        return "rent"
-    if "Consultancy Charges" in keys:
-        return "consultancy"
-    if "Professonal Charges" in keys:
-        return "professional_fees"
-    if "Audit Fees" in keys or "Outstanding Audit Fees" in keys:
-        return "audit_fees"
-    if "TDS Payable" in keys:
-        return "tds_deduction"
-    if any(re.match(r"^[A-Z][a-z]+(?: [A-Z][a-z]+){1,3}$", k) for k in keys):
-        return "salary"
-    if "Cash Discount" in keys or "Discount (CD)" in keys:
-        return "discount"
-    return "other"
-
-
-# ── Map expense type to TDS section ──
+EXPENSE_KEYWORDS = {
+    "interest_payment": ["interest paid", "interest on loan"],
+    "freight_expense": ["freight", "carriage", "transport", "logistics"],
+    "packing_expense": ["packing"],
+    "brokerage": ["brokerage", "commission"],
+    "rent": ["rent", "shop rent", "office rent"],
+    "consultancy": ["consultancy", "consulting"],
+    "professional_fees": ["professional", "legal", "audit fees", "gst annual return"],
+    "salary": ["salary", "bonus", "director's salary"],
+    "tds_deduction": ["tds payable"],
+    "insurance": ["insurance"],
+    "advertisement": ["advertisement"],
+    "software": ["software", "domain"],
+    "purchase": ["purchase"],
+}
 
 EXPENSE_TO_SECTION = {
     "interest_payment": "194A",
@@ -114,8 +83,22 @@ EXPENSE_TO_SECTION = {
     "rent": "194I(b)",
     "consultancy": "194J(b)",
     "professional_fees": "194J(b)",
-    "audit_fees": "194J(b)",
+    "insurance": "194D",
+    "advertisement": "194C",  # default, may be 194J(b) — checker will validate
+    "software": "194J(b)",
+    "purchase": "194Q",
 }
+
+
+def classify_expense(text: str) -> str:
+    """Classify expense type from column name or account head."""
+    if not text:
+        return "other"
+    lower = text.lower()
+    for exp_type, keywords in EXPENSE_KEYWORDS.items():
+        if any(kw in lower for kw in keywords):
+            return exp_type
+    return "other"
 
 
 # ═══════════════════════════════════════════════════════════
@@ -126,48 +109,43 @@ class ParserAgent(AgentBase):
     agent_name = "Parser Agent"
 
     def run(self, form26_path: str, tally_path: str) -> dict:
-        """Parse both files and write entries to database.
+        """Parse both files using column mapper output. Zero hardcoded positions.
 
-        Uses column mapper (with LLM) to identify columns if format is unknown.
-        Returns summary: {tds_count, ledger_count, sections, column_mapping}
+        Returns: {tds_count, ledger_count, sections, column_mapping}
         """
         self.events.agent_start(self.agent_name, "Starting Parser Agent...")
 
-        # Run column mapper to understand file structure
-        from app.services.column_mapper import ColumnMapper
+        # Step 1: Column mapper identifies structure
         mapper = ColumnMapper(repo=self.db, llm=self.llm)
 
-        # Map Form 26 columns
         f26_mapping = mapper.map_file(form26_path, company_id=self.company_id, file_type="tds")
-        if f26_mapping["sheets"]:
-            stats = f26_mapping["sheets"][0].get("stats", {})
-            self.events.detail(self.agent_name,
-                f"Form 26 columns: {stats.get('auto_mapped', 0)} auto-mapped, "
-                f"{stats.get('llm_mapped', 0)} LLM-mapped, "
-                f"{stats.get('needs_review', 0)} need review")
-
-        # Map Tally columns
         tally_mapping = mapper.map_file(tally_path, company_id=self.company_id, file_type="ledger")
-        if tally_mapping["sheets"]:
-            for sheet in tally_mapping["sheets"]:
-                stats = sheet.get("stats", {})
-                self.events.detail(self.agent_name,
-                    f"{sheet['sheet_name']}: {stats.get('auto_mapped', 0)} auto, "
-                    f"{stats.get('llm_mapped', 0)} LLM, {stats.get('needs_review', 0)} review")
 
-        # Parse Form 26
-        tds_entries = self._parse_form26(form26_path)
-        tds_count = self.db.entries.bulk_insert_tds(tds_entries)
-        sections = set(e["tds_section"] for e in tds_entries)
+        # Log mapping stats
+        for sheet_result in f26_mapping.get("sheets", []):
+            stats = sheet_result.get("stats", {})
+            self.events.detail(self.agent_name,
+                f"Form 26 columns: {stats.get('auto_mapped', 0)} auto + "
+                f"{stats.get('llm_mapped', 0)} LLM + {stats.get('needs_review', 0)} review")
+
+        for sheet_result in tally_mapping.get("sheets", []):
+            stats = sheet_result.get("stats", {})
+            self.events.detail(self.agent_name,
+                f"{sheet_result['sheet_name']}: {stats.get('auto_mapped', 0)} auto + "
+                f"{stats.get('llm_mapped', 0)} LLM + {stats.get('needs_review', 0)} review")
+
+        # Step 2: Parse Form 26 using mapped columns
+        tds_entries = self._parse_with_mapping(form26_path, f26_mapping, entry_type="tds")
+        tds_count = self.db.entries.bulk_insert_tds(tds_entries) if tds_entries else 0
+        sections = set(e["tds_section"] for e in tds_entries if e.get("tds_section"))
         self.events.detail(self.agent_name, f"Form 26: {tds_count} entries across {len(sections)} sections")
-        self.events.detail(self.agent_name, f"Sections: {', '.join(sorted(sections))}")
 
-        # Parse Tally
-        ledger_entries = self._parse_tally(tally_path)
-        ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries)
+        # Step 3: Parse Tally using mapped columns
+        ledger_entries = self._parse_with_mapping(tally_path, tally_mapping, entry_type="ledger")
+        ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries) if ledger_entries else 0
         self.events.detail(self.agent_name, f"Tally: {ledger_count} ledger entries")
 
-        # Update run progress
+        # Update run status
         self.db.runs.update_status(self.run_id, "processing")
 
         self.events.success(self.agent_name, f"Parsed {tds_count} TDS + {ledger_count} ledger entries")
@@ -177,299 +155,228 @@ class ParserAgent(AgentBase):
             "tds_count": tds_count,
             "ledger_count": ledger_count,
             "sections": sorted(sections),
-            "column_mapping": {
-                "form26": f26_mapping,
-                "tally": tally_mapping,
+            "column_mapping": {"form26": f26_mapping, "tally": tally_mapping},
+        }
+
+    def _parse_with_mapping(self, filepath: str, mapping_result: dict, entry_type: str) -> list[dict]:
+        """Parse a file using column mapper output. No hardcoded positions.
+
+        Args:
+            filepath: XLSX or CSV path
+            mapping_result: output from ColumnMapper.map_file()
+            entry_type: "tds" or "ledger"
+        """
+        all_entries = []
+
+        for sheet_result in mapping_result.get("sheets", []):
+            if sheet_result.get("from_cache"):
+                # Saved mapping — still need to read the actual file
+                pass
+
+            # Build field → column_index lookup from mappings
+            field_to_col = {}
+            for m in sheet_result.get("mappings", []):
+                if m.get("field") and m["field"] not in ("skip", "unknown"):
+                    field_to_col[m["field"]] = m.get("col_index", 0) - 1  # 0-based
+
+            if not field_to_col:
+                continue
+
+            # Read the actual file data
+            sheet_name = sheet_result.get("sheet_name", "")
+            header_row = sheet_result.get("header_row", 1)
+
+            entries = self._read_rows_with_field_map(
+                filepath, sheet_name, header_row, field_to_col, entry_type
+            )
+            all_entries.extend(entries)
+
+        return all_entries
+
+    def _read_rows_with_field_map(
+        self, filepath: str, sheet_name: str, header_row: int,
+        field_to_col: dict, entry_type: str,
+    ) -> list[dict]:
+        """Read rows from a sheet using the field→column mapping."""
+
+        if filepath.lower().endswith(".csv"):
+            return self._read_csv_rows(filepath, header_row, field_to_col, entry_type)
+
+        wb = openpyxl.load_workbook(filepath, data_only=True)
+
+        # Find the sheet
+        if sheet_name and sheet_name in wb.sheetnames:
+            ws = wb[sheet_name]
+        elif sheet_name == "saved":
+            # Saved mapping — use first sheet or find by headers
+            ws = wb[wb.sheetnames[0]]
+        else:
+            ws = wb[wb.sheetnames[0]]
+
+        entries = []
+        for row in ws.iter_rows(min_row=header_row + 1, max_row=ws.max_row):
+            # Extract values using the field map
+            values = {}
+            for field_name, col_idx in field_to_col.items():
+                if col_idx < len(row):
+                    values[field_name] = row[col_idx].value
+
+            # Skip empty/total rows
+            if not any(values.values()):
+                continue
+            first_val = str(list(values.values())[0] or "")
+            if "total" in first_val.lower() or "grand" in first_val.lower():
+                continue
+
+            if entry_type == "tds":
+                entry = self._build_tds_entry(values)
+            else:
+                entry = self._build_ledger_entry(values, ws, row, header_row, field_to_col)
+
+            if entry:
+                entries.append(entry)
+
+        wb.close()
+        return entries
+
+    def _read_csv_rows(self, filepath, header_row, field_to_col, entry_type):
+        """Read CSV rows using field map."""
+        import csv
+        entries = []
+        with open(filepath, encoding="utf-8-sig") as f:
+            reader = csv.reader(f)
+            for i, row in enumerate(reader):
+                if i < header_row:
+                    continue
+                values = {}
+                for field_name, col_idx in field_to_col.items():
+                    if col_idx < len(row):
+                        values[field_name] = row[col_idx]
+                if not any(values.values()):
+                    continue
+                if entry_type == "tds":
+                    entry = self._build_tds_entry(values)
+                else:
+                    entry = self._build_ledger_entry_simple(values)
+                if entry:
+                    entries.append(entry)
+        return entries
+
+    def _build_tds_entry(self, values: dict) -> dict | None:
+        """Build a tds_entry dict from mapped field values."""
+        party_raw = values.get("party_name", "")
+        if not party_raw:
+            return None
+
+        parsed = clean_name(str(party_raw))
+        pan = values.get("pan") or parsed["pan"]
+        section = str(values.get("tds_section", "")).strip()
+        if not section:
+            return None
+
+        return {
+            "reconciliation_run_id": self.run_id,
+            "company_id": self.company_id,
+            "financial_year": self.financial_year,
+            "party_name": parsed["name"],
+            "pan": pan,
+            "tds_section": section,
+            "tds_amount": safe_float(values.get("tds_amount")),
+            "gross_amount": safe_float(values.get("gross_amount")),
+            "date_of_deduction": to_date_str(values.get("date_of_deduction")),
+            "raw_data": {
+                "vendor_id": parsed["id"],
+                "tax_rate_pct": safe_float(values.get("tax_rate")),
+                "certificate_number": values.get("certificate_number"),
             },
         }
 
-    def _parse_form26(self, filepath: str) -> list[dict]:
-        """Parse Form 26 XLSX → list of dicts ready for tds_entry table."""
-        wb = openpyxl.load_workbook(filepath, data_only=True)
+    def _build_ledger_entry(self, values: dict, ws, row, header_row, field_to_col) -> dict | None:
+        """Build a ledger_entry dict from mapped field values.
 
-        # Find the sheet (try common names)
-        sheet_names = wb.sheetnames
-        ws = None
-        for name in ["Deduction Details", "Sheet1", sheet_names[0]]:
-            if name in sheet_names:
-                ws = wb[name]
-                break
-        if ws is None:
-            ws = wb[sheet_names[0]]
+        For Tally multi-column registers (Journal, GST Exp), also collects
+        unmapped columns as expense heads / account postings.
+        """
+        party = str(values.get("party_name", "")).strip()
+        if not party:
+            return None
 
-        # Find header row (scan first 15 rows for "Name" or "Section")
-        header_row = 4  # default
-        for row_num in range(1, 16):
-            for col in range(1, 15):
-                val = ws.cell(row_num, col).value
-                if val and "section" in str(val).lower():
-                    header_row = row_num
-                    break
+        amount = safe_float(values.get("amount"))
 
-        entries = []
-        for row in ws.iter_rows(min_row=header_row + 1, max_row=ws.max_row):
-            raw_name = row[1].value
-            section = row[2].value
+        # Collect ALL non-mapped, non-zero columns as expense data
+        # These are the expense heads in Tally's 2D registers
+        mapped_cols = set(field_to_col.values())
+        expense_heads = {}
+        gst_amounts = {}
 
-            if not raw_name or not section:
-                continue
-            if "Total" in str(raw_name) or "Grand" in str(raw_name):
-                continue
-
-            parsed = clean_name(str(raw_name))
-            entry = {
-                "reconciliation_run_id": self.run_id,
-                "company_id": self.company_id,
-                "financial_year": self.financial_year,
-                "party_name": parsed["name"],
-                "pan": parsed["pan"],
-                "tds_section": str(section).strip(),
-                "tds_amount": safe_float(row[9].value) if len(row) > 9 else 0,  # Tax Deducted
-                "gross_amount": safe_float(row[3].value),  # Amount Paid
-                "date_of_deduction": to_date_str(row[4].value),  # Date
-                "raw_data": {
-                    "vendor_id": parsed["id"],
-                    "income_tax": safe_float(row[5].value) if len(row) > 5 else 0,
-                    "surcharge": safe_float(row[6].value) if len(row) > 6 else 0,
-                    "cess": safe_float(row[7].value) if len(row) > 7 else 0,
-                    "tax_rate_pct": safe_float(row[8].value) if len(row) > 8 else 0,
-                    "tax_deducted_date": to_date_str(row[10].value) if len(row) > 10 else None,
-                    "non_deduction_reason": str(row[11].value or "") if len(row) > 11 else "",
-                },
-            }
-            entries.append(entry)
-
-        wb.close()
-        return entries
-
-    def _parse_tally(self, filepath: str) -> list[dict]:
-        """Parse Tally XLSX → list of dicts ready for ledger_entry table."""
-        wb = openpyxl.load_workbook(filepath, data_only=True)
-        all_entries = []
-
-        # Parse each sheet type
-        for sheet_name in wb.sheetnames:
-            ws = wb[sheet_name]
-            name_lower = sheet_name.lower()
-
-            if "journal" in name_lower:
-                entries = self._parse_journal_register(ws)
-                self.events.detail(self.agent_name, f"Journal Register: {len(entries)} entries")
-            elif "gst" in name_lower and ("exp" in name_lower or "purchase" in name_lower):
-                entries = self._parse_gst_exp_register(ws)
-                self.events.detail(self.agent_name, f"GST Exp Register: {len(entries)} entries")
-            elif "purchase" in name_lower:
-                entries = self._parse_purchase_register(ws)
-                self.events.detail(self.agent_name, f"Purchase Register: {len(entries)} entries")
-            else:
-                continue
-
-            all_entries.extend(entries)
-
-        wb.close()
-        return all_entries
-
-    def _parse_journal_register(self, ws) -> list[dict]:
-        """Parse Journal Register → ledger entries."""
+        # Read headers for this sheet
         headers = {}
-        # Find header row
-        header_row = 7
-        for row_num in range(1, 15):
-            val = ws.cell(row_num, 1).value
-            if val and str(val).strip() == "Date":
-                header_row = row_num
-                break
-
         for cell in ws[header_row]:
             if cell.value:
-                headers[cell.column_letter] = str(cell.value).strip()
+                headers[cell.column - 1] = str(cell.value).strip()
 
-        entries = []
-        for row in ws.iter_rows(min_row=header_row + 1, max_row=ws.max_row):
-            date_val = row[0].value
-            particulars = row[1].value
-            voucher_no = row[2].value
-            gross_total = row[4].value if len(row) > 4 else None
-
-            if particulars and "Grand Total" in str(particulars):
+        for col_idx, cell in enumerate(row):
+            if col_idx in mapped_cols:
+                continue  # already mapped to a field
+            if cell.value is None or cell.value == 0:
                 continue
-            if gross_total is None and date_val is None:
+            col_name = headers.get(col_idx, "")
+            if not col_name:
                 continue
 
-            account_postings = {}
-            for cell in row:
-                col_letter = cell.column_letter
-                if col_letter in headers and cell.value is not None and cell.value != 0:
-                    col_name = headers[col_letter]
-                    if col_name in JOURNAL_META_COLUMNS:
-                        continue
-                    account_postings[col_name] = cell.value
+            # Classify as GST or expense
+            col_lower = col_name.lower()
+            if any(kw in col_lower for kw in ["gst", "cgst", "sgst", "igst", "input c", "input s", "input i"]):
+                gst_amounts[col_name] = safe_float(cell.value)
+            elif col_name not in ("Date", "Particulars", "Voucher No.", "Value", "Gross Total",
+                                   "Addl. Cost", "Rounded (+/-)", "Rounded"):
+                expense_heads[col_name] = safe_float(cell.value)
 
-            if not account_postings:
-                continue
-
-            entry_type = _classify_journal_entry(account_postings)
-
-            # Extract loan party for interest entries
-            loan_party = None
-            if "Interest Paid" in account_postings:
-                for col_name in account_postings:
-                    m = LOAN_COLUMN_PATTERN.match(col_name)
-                    if m:
-                        loan_party = m.group(1).strip()
-                        break
-
-            # Determine TDS section from entry type
-            tds_section = EXPENSE_TO_SECTION.get(entry_type)
-
-            entry = {
-                "reconciliation_run_id": self.run_id,
-                "company_id": self.company_id,
-                "financial_year": self.financial_year,
-                "party_name": loan_party or str(particulars or "").strip(),
-                "expense_type": entry_type,
-                "amount": safe_float(gross_total),
-                "tds_section": tds_section,
-                "invoice_number": str(voucher_no or "").strip(),
-                "invoice_date": to_date_str(date_val),
-                "raw_data": {
-                    "source": "journal_register",
-                    "account_postings": {k: float(v) if isinstance(v, (int, float)) else str(v)
-                                         for k, v in account_postings.items()},
-                    "loan_party": loan_party,
-                },
-            }
-            entries.append(entry)
-
-        return entries
-
-    def _parse_gst_exp_register(self, ws) -> list[dict]:
-        """Parse Purchase GST Exp Register → ledger entries."""
-        headers = {}
-        header_row = 7
-        for row_num in range(1, 15):
-            val = ws.cell(row_num, 1).value
-            if val and str(val).strip() == "Date":
-                header_row = row_num
+        # Determine expense type from expense heads
+        exp_type = "other"
+        for head in expense_heads:
+            classified = classify_expense(head)
+            if classified != "other":
+                exp_type = classified
                 break
 
-        for cell in ws[header_row]:
-            if cell.value:
-                headers[cell.column_letter] = str(cell.value).strip()
+        tds_section = EXPENSE_TO_SECTION.get(exp_type)
+        total_gst = sum(gst_amounts.values()) if gst_amounts else None
 
-        entries = []
-        for row in ws.iter_rows(min_row=header_row + 1, max_row=ws.max_row):
-            date_val = row[0].value
-            particulars = row[1].value
-            voucher_no = row[2].value
+        return {
+            "reconciliation_run_id": self.run_id,
+            "company_id": self.company_id,
+            "financial_year": self.financial_year,
+            "party_name": party,
+            "expense_type": exp_type,
+            "amount": amount if amount else safe_float(sum(expense_heads.values())),
+            "gst_amount": total_gst,
+            "tds_section": tds_section,
+            "invoice_number": str(values.get("invoice_number", "")).strip() or None,
+            "invoice_date": to_date_str(values.get("invoice_date")),
+            "raw_data": {
+                "expense_heads": expense_heads if expense_heads else None,
+                "gst_breakup": gst_amounts if gst_amounts else None,
+            },
+        }
 
-            if particulars and "Grand Total" in str(particulars):
-                continue
-            if date_val is None and particulars is None:
-                continue
+    def _build_ledger_entry_simple(self, values: dict) -> dict | None:
+        """Build a ledger_entry from simple (CSV) field values."""
+        party = str(values.get("party_name", "")).strip()
+        if not party:
+            return None
 
-            gross_total = None
-            expense_heads = {}
-            gst_amounts = {}
+        exp_type = classify_expense(values.get("expense_type", ""))
 
-            for cell in row:
-                col_letter = cell.column_letter
-                if col_letter not in headers or cell.value is None or cell.value == 0:
-                    continue
-                col_name = headers[col_letter]
-
-                if col_name == "Gross Total":
-                    gross_total = cell.value
-                elif _is_gst_column(col_name):
-                    gst_amounts[col_name] = cell.value
-                elif _is_expense_column(col_name):
-                    expense_heads[col_name] = cell.value
-
-            if not expense_heads and not gst_amounts:
-                continue
-
-            base_amount = sum(expense_heads.values())
-            total_gst = sum(gst_amounts.values())
-
-            entry = {
-                "reconciliation_run_id": self.run_id,
-                "company_id": self.company_id,
-                "financial_year": self.financial_year,
-                "party_name": str(particulars or "").strip(),
-                "expense_type": "; ".join(sorted(expense_heads.keys())),
-                "amount": safe_float(base_amount),
-                "gst_amount": safe_float(total_gst),
-                "invoice_number": str(voucher_no or "").strip(),
-                "invoice_date": to_date_str(date_val),
-                "raw_data": {
-                    "source": "gst_exp_register",
-                    "gross_total": safe_float(gross_total) if gross_total else None,
-                    "expense_heads": {k: float(v) for k, v in expense_heads.items()},
-                    "gst_breakup": {k: float(v) for k, v in gst_amounts.items()},
-                },
-            }
-            entries.append(entry)
-
-        return entries
-
-    def _parse_purchase_register(self, ws) -> list[dict]:
-        """Parse Purchase Register → ledger entries."""
-        headers = {}
-        header_row = 7
-        for row_num in range(1, 15):
-            val = ws.cell(row_num, 1).value
-            if val and str(val).strip() == "Date":
-                header_row = row_num
-                break
-
-        for cell in ws[header_row]:
-            if cell.value:
-                headers[cell.column_letter] = str(cell.value).strip()
-
-        entries = []
-        for row in ws.iter_rows(min_row=header_row + 1, max_row=ws.max_row):
-            date_val = row[0].value
-            particulars = row[1].value
-            voucher_no = row[2].value
-
-            if particulars and "Grand Total" in str(particulars):
-                continue
-            if date_val is None and particulars is None:
-                continue
-
-            amounts = {}
-            for cell in row:
-                col_letter = cell.column_letter
-                if col_letter not in headers or cell.value is None:
-                    continue
-                col_name = headers[col_letter]
-                if col_name not in ("Date", "Particulars", "Voucher No."):
-                    amounts[col_name] = cell.value
-
-            if not amounts:
-                continue
-
-            gross_total = amounts.get("Gross Total", 0)
-            total_gst = safe_float(amounts.get("Input C GST", 0)) + \
-                        safe_float(amounts.get("Input S GST", 0)) + \
-                        safe_float(amounts.get("Input I GST", 0))
-
-            entry = {
-                "reconciliation_run_id": self.run_id,
-                "company_id": self.company_id,
-                "financial_year": self.financial_year,
-                "party_name": str(particulars or "").strip(),
-                "expense_type": "purchase",
-                "amount": safe_float(gross_total),
-                "gst_amount": safe_float(total_gst),
-                "invoice_number": str(voucher_no or "").strip(),
-                "invoice_date": to_date_str(date_val),
-                "raw_data": {
-                    "source": "purchase_register",
-                    "amounts": {k: float(v) if isinstance(v, (int, float)) else str(v)
-                                for k, v in amounts.items()},
-                },
-            }
-            entries.append(entry)
-
-        return entries
+        return {
+            "reconciliation_run_id": self.run_id,
+            "company_id": self.company_id,
+            "financial_year": self.financial_year,
+            "party_name": party,
+            "expense_type": exp_type,
+            "amount": safe_float(values.get("amount")),
+            "tds_section": EXPENSE_TO_SECTION.get(exp_type),
+            "invoice_number": str(values.get("invoice_number", "")).strip() or None,
+            "invoice_date": to_date_str(values.get("invoice_date")),
+            "raw_data": None,
+        }
