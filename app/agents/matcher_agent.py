@@ -651,6 +651,13 @@ class MatcherAgent(AgentBase):
         self.events.detail(self.agent_name, f"In scope: {len(f26_in_scope)} Form 26 entries ({', '.join(sorted(target_sections))})")
         self.events.detail(self.agent_name, f"Tally: {len(tally_194a)} 194A + {len(tally_194c)} 194C entries")
 
+        # Edge case: no entries to match
+        if not f26_in_scope:
+            self.events.warning(self.agent_name, "No Form 26 entries in scope — nothing to match")
+            self._last_matches = []
+            return {"total_form26": 0, "matched": 0, "unmatched": 0,
+                    "below_threshold": 0, "total_resolved": 0, "by_pass": {}}
+
         # Split F26 by section
         f26_194a = [e for e in f26_in_scope if e["section"] == "194A"]
         f26_194c = [e for e in f26_in_scope if e["section"] == "194C"]

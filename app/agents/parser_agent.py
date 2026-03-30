@@ -49,8 +49,20 @@ def to_date_str(val) -> str | None:
 
 
 def safe_float(val) -> float:
+    """Convert value to float. Handles None, strings with commas, text, negatives."""
     if val is None:
         return 0.0
+    if isinstance(val, (int, float)):
+        return float(val)
+    if isinstance(val, str):
+        # Remove commas, spaces, currency symbols
+        cleaned = val.replace(",", "").replace(" ", "").replace("₹", "").replace("Rs", "").replace("rs", "").strip()
+        if not cleaned or cleaned == "-":
+            return 0.0
+        try:
+            return float(cleaned)
+        except ValueError:
+            return 0.0
     try:
         return float(val)
     except (ValueError, TypeError):
@@ -137,8 +149,22 @@ class ParserAgent(AgentBase):
         """Parse both files using column mapper output. Zero hardcoded positions.
 
         Returns: {tds_count, ledger_count, sections, column_mapping}
+        Raises: ValueError if files don't exist or are unreadable.
         """
         self.events.agent_start(self.agent_name, "Starting Parser Agent...")
+
+        # Validate files exist
+        from pathlib import Path
+        if not Path(form26_path).exists():
+            raise ValueError(f"Form 26 file not found: {form26_path}")
+        if not Path(tally_path).exists():
+            raise ValueError(f"Tally file not found: {tally_path}")
+
+        # Validate file extensions
+        for fpath, label in [(form26_path, "Form 26"), (tally_path, "Tally")]:
+            ext = Path(fpath).suffix.lower()
+            if ext not in (".xlsx", ".xls", ".csv"):
+                raise ValueError(f"{label} has unsupported format '{ext}'. Use XLSX, XLS, or CSV.")
 
         # Step 1: Column mapper identifies structure
         mapper = ColumnMapper(repo=self.db, llm=self.llm)

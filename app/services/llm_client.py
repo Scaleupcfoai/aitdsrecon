@@ -164,20 +164,46 @@ class LLMClient:
     ) -> dict | None:
         """Send a prompt and parse the response as JSON.
 
+        Handles: empty response, non-JSON, markdown-wrapped JSON,
+        JSON arrays (takes first element), string confidence values.
         Returns parsed dict, or None if failed.
         """
         result = self.complete(prompt, system, agent_name, json_mode=True, include_knowledge=include_knowledge)
-        if result is None:
+        if not result or not result.strip():
             return None
         try:
-            return json.loads(result)
+            parsed = json.loads(result)
+            # If LLM returned a list, take first element
+            if isinstance(parsed, list):
+                parsed = parsed[0] if parsed else None
+            if isinstance(parsed, dict):
+                # Fix confidence as string (some LLMs do "0.85" instead of 0.85)
+                for key in ("confidence",):
+                    if key in parsed and isinstance(parsed[key], str):
+                        try:
+                            parsed[key] = float(parsed[key])
+                        except ValueError:
+                            parsed[key] = 0.0
+            return parsed
         except json.JSONDecodeError:
-            # Try to extract JSON from the response (sometimes LLM wraps in markdown)
+            # Try to extract JSON from markdown-wrapped response
             try:
                 start = result.index("{")
                 end = result.rindex("}") + 1
-                return json.loads(result[start:end])
+                parsed = json.loads(result[start:end])
+                if isinstance(parsed, dict):
+                    return parsed
             except (ValueError, json.JSONDecodeError):
-                if self.events:
-                    self.events.emit(agent_name, "LLM returned invalid JSON, falling back", "warning")
-                return None
+                pass
+            # Try array extraction
+            try:
+                start = result.index("[")
+                end = result.rindex("]") + 1
+                parsed = json.loads(result[start:end])
+                if isinstance(parsed, list) and parsed:
+                    return parsed[0] if isinstance(parsed[0], dict) else None
+            except (ValueError, json.JSONDecodeError):
+                pass
+            if self.events:
+                self.events.emit(agent_name, f"LLM returned invalid JSON: {result[:50]}...", "warning")
+            return None
