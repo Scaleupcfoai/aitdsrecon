@@ -28,13 +28,24 @@ def create_app() -> FastAPI:
     )
 
     # CORS
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    if settings.environment == "local":
+        # Local dev — allow everything
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=False,  # can't use credentials with wildcard origin
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+    else:
+        # Production — restricted origins with credentials
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=settings.cors_origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
     # Mount routers
     app.include_router(auth_router, prefix="/api")
