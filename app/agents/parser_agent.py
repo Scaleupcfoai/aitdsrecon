@@ -148,7 +148,8 @@ class ParserAgent(AgentBase):
     def run(self, form26_path: str, tally_path: str) -> dict:
         """Parse both files using column mapper output. Zero hardcoded positions.
 
-        Returns: {tds_count, ledger_count, sections, column_mapping}
+        Auto-detects company from file headers and creates if not exists.
+        Returns: {tds_count, ledger_count, sections, column_mapping, company}
         Raises: ValueError if files don't exist or are unreadable.
         """
         self.events.agent_start(self.agent_name, "Starting Parser Agent...")
@@ -165,6 +166,16 @@ class ParserAgent(AgentBase):
             ext = Path(fpath).suffix.lower()
             if ext not in (".xlsx", ".xls", ".csv"):
                 raise ValueError(f"{label} has unsupported format '{ext}'. Use XLSX, XLS, or CSV.")
+
+        # Auto-detect company from file headers
+        company_info = self._detect_company(form26_path, tally_path)
+        if company_info.get("name"):
+            self.events.detail(self.agent_name, f"Company detected: {company_info['name']}")
+            # Auto-create company if not exists
+            company = self._ensure_company(company_info)
+            if company:
+                self.company_id = company.id
+                self.events.detail(self.agent_name, f"Company ID: {company.id}")
 
         # Step 1: Column mapper identifies structure
         mapper = ColumnMapper(repo=self.db, llm=self.llm)
@@ -207,6 +218,7 @@ class ParserAgent(AgentBase):
             "ledger_count": ledger_count,
             "sections": sorted(sections),
             "column_mapping": {"form26": f26_mapping, "tally": tally_mapping},
+            "company": company_info if 'company_info' in dir() else {},
         }
 
     def _parse_with_mapping(self, filepath: str, mapping_result: dict, entry_type: str) -> list[dict]:
@@ -431,3 +443,88 @@ class ParserAgent(AgentBase):
             "invoice_date": to_date_str(values.get("invoice_date")),
             "raw_data": None,
         }
+
+    # ═══ Auto-detect company from file headers ═══
+
+    def _detect_company(self, form26_path: str, tally_path: str) -> dict:
+        """Read company name from file headers (row 1).
+
+        Form 26 row 1: "HPC LTD"
+        Form 26 row 2: "Deduction details (Form-26Q) for the period ..."
+        Tally row 1: "HPC LTD"
+        Tally row 3: "CIN: U13101WB2001PTC123456"
+        """
+        import openpyxl
+        from pathlib import Path
+
+        info = {"name": "", "form_type": "", "period": "", "cin": ""}
+
+        # Try Form 26 first
+        try:
+            if Path(form26_path).suffix.lower() in (".xlsx", ".xls"):
+                wb = openpyxl.load_workbook(form26_path, data_only=True)
+                ws = wb[wb.sheetnames[0]]
+                # Row 1: company name
+                for col in range(1, 10):
+                    val = ws.cell(1, col).value
+                    if val and isinstance(val, str) and len(val.strip()) > 2:
+                        info["name"] = val.strip()
+                        break
+                # Row 2: form type + period
+                for col in range(1, 10):
+                    val = ws.cell(2, col).value
+                    if val and isinstance(val, str) and "form" in val.lower():
+                        info["period"] = val.strip()
+                        if "26Q" in val:
+                            info["form_type"] = "26Q"
+                        elif "24Q" in val:
+                            info["form_type"] = "24Q"
+                        break
+                wb.close()
+        except Exception:
+            pass
+
+        # Supplement from Tally if Form 26 didn't have it
+        if not info["name"]:
+            try:
+                if Path(tally_path).suffix.lower() in (".xlsx", ".xls"):
+                    wb = openpyxl.load_workbook(tally_path, data_only=True)
+                    ws = wb[wb.sheetnames[0]]
+                    val = ws.cell(1, 1).value
+                    if val and isinstance(val, str):
+                        info["name"] = val.strip()
+                    # Row 3: CIN
+                    val3 = ws.cell(3, 1).value
+                    if val3 and isinstance(val3, str) and "CIN" in val3.upper():
+                        info["cin"] = val3.replace("CIN:", "").replace("CIN", "").strip()
+                    wb.close()
+            except Exception:
+                pass
+
+        return info
+
+    def _ensure_company(self, company_info: dict):
+        """Create company in DB if it doesn't already exist for this firm."""
+        name = company_info.get("name", "")
+        if not name:
+            return None
+
+        try:
+            # Check if company already exists for this firm
+            existing = self.db.companies.list_by_firm(self.firm_id)
+            for c in existing:
+                if c.company_name.lower().strip() == name.lower().strip():
+                    return c  # already exists
+
+            # Create new company
+            company = self.db.companies.create(
+                firm_id=self.firm_id,
+                company_name=name,
+                pan="",  # will be filled from data later
+                company_type="company",
+            )
+            self.events.detail(self.agent_name, f"Auto-created company: {name}")
+            return company
+        except Exception as e:
+            self.events.warning(self.agent_name, f"Could not auto-create company: {str(e)[:50]}")
+            return None
