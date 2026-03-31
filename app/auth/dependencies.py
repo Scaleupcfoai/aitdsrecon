@@ -37,9 +37,9 @@ def get_current_user(authorization: str = Header(default="")) -> UserContext:
     # If no auth header and we're in local dev, return placeholder
     if not authorization and settings.environment == "local":
         return UserContext(
-            user_id="local-dev-user",
+            user_id="00000000-0000-0000-0000-000000000001",
             email="dev@lekha.ai",
-            firm_id="local-dev-firm",
+            firm_id="00000000-0000-0000-0000-000000000001",
             role="authenticated",
         )
 

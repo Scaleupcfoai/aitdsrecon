@@ -48,8 +48,8 @@ def test_local_dev_no_auth():
         pytest.skip("Only for local environment")
 
     user = get_current_user(authorization="")
-    assert user.user_id == "local-dev-user"
-    assert user.firm_id == "local-dev-firm"
+    assert user.user_id == "00000000-0000-0000-0000-000000000001"
+    assert user.firm_id == "00000000-0000-0000-0000-000000000001"
     print(f"Local dev user: {user.user_id}")
 
 
@@ -81,7 +81,7 @@ def test_auth_me_local_dev():
     response = client.get("/api/auth/me")
     assert response.status_code == 200
     data = response.json()
-    assert data["user_id"] == "local-dev-user"
+    assert data["user_id"] == "00000000-0000-0000-0000-000000000001"
     print(f"Auth me: {data}")
 
 
