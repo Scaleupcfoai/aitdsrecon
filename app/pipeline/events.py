@@ -44,7 +44,12 @@ EVENT_TYPES = {
     "llm_insight",    # User-visible insight from LLM — rendered prominently
     "human_needed",   # Needs human decision — rendered with action button
     "pipeline_complete",  # Final event with summary
+    "question",           # Pipeline needs user input — renders with options
 }
+
+
+# Pending answers — shared between SSE thread and answer endpoint
+_pending_answers: dict[str, dict | None] = {}
 
 
 class EventEmitter:
@@ -101,6 +106,58 @@ class EventEmitter:
 
     def agent_done(self, agent: str, message: str = "Done"):
         self.emit(agent, message, "agent_done")
+
+    def question(
+        self,
+        agent: str,
+        message: str,
+        question_id: str,
+        options: list[dict],
+        allow_text_input: bool = True,
+        multi_select: bool = False,
+    ) -> dict | None:
+        """Emit a question event and block until the user answers.
+
+        Args:
+            agent: which agent is asking
+            message: question text
+            question_id: unique ID for this question
+            options: [{id, label, description}, ...]
+            allow_text_input: allow free text answer
+            multi_select: allow multiple selections
+
+        Returns:
+            User's answer: {selected: [ids], text_input: str | None}
+            or None if timeout (60 seconds)
+        """
+        self.emit(agent, message, "question", {
+            "question_id": question_id,
+            "options": options,
+            "allow_text_input": allow_text_input,
+            "multi_select": multi_select,
+        })
+
+        # Block and wait for answer
+        _pending_answers[question_id] = None
+
+        # Poll for answer (max 60 seconds)
+        import time
+        for _ in range(120):  # 120 * 0.5s = 60 seconds
+            if _pending_answers.get(question_id) is not None:
+                answer = _pending_answers.pop(question_id)
+                self.emit(agent, f"User answered: {answer.get('selected', [])}", "info")
+                return answer
+            time.sleep(0.5)
+
+        # Timeout — remove pending and return None
+        _pending_answers.pop(question_id, None)
+        self.emit(agent, "Question timed out — using default action", "warning")
+        return None
+
+    @staticmethod
+    def set_answer(question_id: str, answer: dict):
+        """Set the answer for a pending question (called from API endpoint)."""
+        _pending_answers[question_id] = answer
 
     def get_events(self) -> list[dict]:
         return self.events

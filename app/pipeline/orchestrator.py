@@ -139,6 +139,40 @@ def run_reconciliation(
         match_result = {"matched": 0, "unmatched": 0, "total_form26": 0}
 
     # ══════════════════════════════════════════════════════
+    # Decision Point: Unmatched entries — ask user what to do
+    # ══════════════════════════════════════════════════════
+    unmatched = match_result.get("unmatched", 0) if match_result else 0
+    if unmatched > 0:
+        import uuid
+        q_id = f"q_{uuid.uuid4().hex[:8]}"
+        answer = events.question(
+            agent="Matcher Agent",
+            message=f"{unmatched} entries could not be matched. How should I proceed?",
+            question_id=q_id,
+            options=[
+                {"id": "flag_review", "label": "Flag for review",
+                 "description": "Add unmatched entries to manual review queue"},
+                {"id": "mark_exempt", "label": "Mark as exempt",
+                 "description": "Below threshold — no TDS required"},
+                {"id": "retry_fuzzy", "label": "Retry with relaxed matching",
+                 "description": "Lower similarity threshold to 25%"},
+            ],
+            allow_text_input=True,
+            multi_select=False,
+        )
+        if answer:
+            selected = answer.get("selected", [])
+            if "retry_fuzzy" in selected:
+                events.detail("Matcher Agent", "Re-running with relaxed threshold...")
+                # TODO: re-run matcher with lower threshold
+            elif "mark_exempt" in selected:
+                events.detail("Matcher Agent", "Marking unmatched as exempt")
+            else:
+                events.detail("Matcher Agent", "Unmatched entries flagged for review")
+        else:
+            events.detail("Matcher Agent", "No user response — flagging for review (default)")
+
+    # ══════════════════════════════════════════════════════
     # Step 3: TDS Checker Agent
     # ══════════════════════════════════════════════════════
     try:

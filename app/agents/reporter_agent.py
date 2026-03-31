@@ -36,13 +36,49 @@ class ReporterAgent(AgentBase):
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
 
-        # Build executive summary
+        # Build executive summary — structured for frontend contract
+        matching_raw = match_summary or {}
+        compliance_raw = checker_summary.get("summary", {})
+
+        # Calculate section-wise breakdown from matches
+        section_wise = self._build_section_wise(matches)
+
+        # Calculate matched TDS amount
+        matched_tds = sum(
+            m.get("form26_entry", {}).get("tax_deducted", 0) or 0
+            for m in matches
+        )
+
+        # Build frontend-compatible summary
+        total_form26 = matching_raw.get("total_form26", 0)
+        matched_count = matching_raw.get("matched", 0)
+        below_threshold = matching_raw.get("below_threshold", 0)
+        total_resolved = matching_raw.get("total_resolved", matched_count + below_threshold)
+        match_rate = round(total_resolved / max(total_resolved + matching_raw.get("unmatched", 0), 1) * 100, 1)
+
         summary = {
             "run_id": self.run_id,
             "company_id": self.company_id,
             "financial_year": self.financial_year,
-            "matching": match_summary,
-            "compliance": checker_summary.get("summary", {}),
+            "matching": {
+                "total_resolved": total_resolved,
+                "matched_with_tds": matched_count,
+                "below_threshold_resolved": below_threshold,
+                "form26_in_scope": total_form26,
+                "match_rate_pct": match_rate,
+                "unmatched": matching_raw.get("unmatched", 0),
+                "by_pass": matching_raw.get("by_pass", {}),
+            },
+            "compliance": {
+                "total_findings": compliance_raw.get("total", 0),
+                "errors": compliance_raw.get("errors", 0),
+                "warnings": compliance_raw.get("warnings", 0),
+                "missing_tds_exposure": compliance_raw.get("exposure", 0),
+            },
+            "amounts": {
+                "matched_tds": matched_tds,
+            },
+            "section_wise": section_wise,
         }
 
         # LLM: Generate narrative executive brief
@@ -99,6 +135,28 @@ class ReporterAgent(AgentBase):
         self.events.agent_done(self.agent_name, "Complete")
 
         return summary
+
+    def _build_section_wise(self, matches: list[dict]) -> dict:
+        """Build section-wise breakdown for frontend accordion."""
+        sections = {}
+        for m in matches:
+            f26 = m.get("form26_entry", {})
+            section = f26.get("section", "Unknown")
+            if section not in sections:
+                sections[section] = {
+                    "form26_count": 0,
+                    "matched_count": 0,
+                    "form26_amount": 0,
+                    "form26_tds": 0,
+                    "matched_amount": 0,
+                }
+            s = sections[section]
+            s["form26_count"] += 1
+            s["matched_count"] += 1
+            s["form26_amount"] += f26.get("amount_paid", 0) or 0
+            s["form26_tds"] += f26.get("tax_deducted", 0) or 0
+            s["matched_amount"] += f26.get("amount_paid", 0) or 0
+        return sections
 
     def _write_match_csv(self, filepath, matches):
         rows = []

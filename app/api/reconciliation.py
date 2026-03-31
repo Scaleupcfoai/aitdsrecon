@@ -1,4 +1,4 @@
-"""Reconciliation router — run pipeline, get status, stream events."""
+"""Reconciliation router — run pipeline, get status, stream events, answer questions."""
 
 import json
 import queue
@@ -7,10 +7,12 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 
 from app.dependencies import get_db, get_current_user, UserContext
 from app.db.repository import Repository
 from app.pipeline.orchestrator import run_reconciliation
+from app.pipeline.events import EventEmitter
 
 router = APIRouter(tags=["reconciliation"])
 
@@ -99,6 +101,26 @@ def stream_reconciliation(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+class AnswerRequest(BaseModel):
+    question_id: str
+    selected: list[str] = []
+    text_input: str | None = None
+
+
+@router.post("/answer")
+def submit_answer(req: AnswerRequest):
+    """Submit user answer to a pipeline question.
+
+    Called when the pipeline emits a 'question' event and the user
+    selects an option or types a response in the UI.
+    """
+    EventEmitter.set_answer(req.question_id, {
+        "selected": req.selected,
+        "text_input": req.text_input,
+    })
+    return {"status": "ok", "question_id": req.question_id}
 
 
 @router.get("/reconciliation/status/{run_id}")
