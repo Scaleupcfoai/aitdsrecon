@@ -311,6 +311,24 @@ def get_rules():
     return {"rules": db, "summary": summary}
 
 
+class AnswerRequest(BaseModel):
+    question_id: str
+    selected: list[str] = []
+    text_input: str | None = None
+
+
+@app.post("/api/answer")
+def submit_answer(request: AnswerRequest):
+    """Submit an answer to a pipeline decision point question."""
+    from agents.event_logger import get_logger
+    logger = get_logger()
+    logger.set_answer(request.question_id, {
+        "selected": request.selected,
+        "text_input": request.text_input,
+    })
+    return {"status": "ok", "question_id": request.question_id}
+
+
 class ReviewDecision(BaseModel):
     vendor: str
     decision: str

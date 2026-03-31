@@ -136,6 +136,27 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, 
         logger.success("Matcher Agent", f"Total resolved: {total_resolved} entries")
     logger.agent_done("Matcher Agent", "Matching complete")
 
+    # Ask user about unmatched entries if any exist
+    unmatched_count = summary.get("form26_unmatched", 0)
+    if unmatched_count > 0:
+        answer = logger.question(
+            "Matcher Agent",
+            "q_unmatched",
+            f"{unmatched_count} entries in Form 26 could not be matched to Tally records. How should I proceed?",
+            options=[
+                {"id": "flag_review", "label": "Flag for review", "description": "Add to manual review queue for human verification"},
+                {"id": "mark_exempt", "label": "Mark as exempt", "description": "Treat as below-threshold or exempt entries"},
+                {"id": "retry_fuzzy", "label": "Retry with relaxed matching", "description": "Lower similarity threshold from 40% to 25%"},
+            ],
+            allow_text_input=True,
+            multi_select=False,
+        )
+        if answer:
+            selected = answer.get("selected", [])
+            logger.detail("Matcher Agent", f"User decided: {', '.join(selected)}")
+            if answer.get("text_input"):
+                logger.detail("Matcher Agent", f"User note: {answer['text_input']}")
+
     # ---- Step 3: TDS Checker ----
     logger.agent_start("TDS Checker", "Starting TDS Checker Agent...")
     from agents.tds_checker_agent import run as checker_run
