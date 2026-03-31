@@ -65,6 +65,7 @@ class ChatAgent:
     def _build_system_prompt(self) -> str:
         """Build system prompt with knowledge base injected."""
         knowledge = get_llm_context()
+        has_run = bool(self.run_id)
         return (
             f"{CHAT_SYSTEM_PROMPT}\n\n"
             f"IMPORTANT: Use ONLY the following verified TDS rules. "
@@ -73,7 +74,12 @@ class ChatAgent:
             f"Current context:\n"
             f"- Firm ID: {self.firm_id}\n"
             f"- Company ID: {self.company_id}\n"
-            f"- Latest run ID: {self.run_id or 'No run yet'}\n"
+            f"- Latest run ID: {self.run_id or 'No run yet'}\n\n"
+            f"TOOL USAGE RULES:\n"
+            f"- Call ONE tool at a time. Wait for its result before deciding next step.\n"
+            f"- {'Reconciliation data IS available. You can query results, findings, and matches.' if has_run else 'No reconciliation has been run yet. Do NOT call get_results_summary, get_match_details, get_findings, or explain_finding — they will fail. Instead, tell the user to run reconciliation first.'}\n"
+            f"- If the user asks a general TDS question, answer directly from the knowledge base — no tools needed.\n"
+            f"- Only call run_reconciliation if the user explicitly asks to run/start the pipeline.\n"
         )
 
     def chat(self, message: str) -> str:
@@ -162,8 +168,8 @@ class ChatAgent:
         self.conversation_history.append({"role": "user", "content": message})
 
         # Handle tool calls (non-streaming — tools need complete args)
-        max_loops = 5
-        for _ in range(max_loops):
+        max_loops = 3  # Reduced from 5 — prevents runaway tool chains
+        for loop_idx in range(max_loops):
             response = self._client.chat.completions.create(
                 model=settings.llm_model,
                 messages=[
