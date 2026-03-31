@@ -279,6 +279,12 @@ class ParserAgent(AgentBase):
             entries = self._read_rows_with_field_map(
                 filepath, sheet_name, header_row, field_to_col, entry_type
             )
+            # Tag each entry with its source sheet
+            for entry in entries:
+                if entry.get("raw_data") is None:
+                    entry["raw_data"] = {}
+                if isinstance(entry["raw_data"], dict):
+                    entry["raw_data"]["source_sheet"] = sheet_name
             all_entries.extend(entries)
 
         return all_entries
@@ -433,13 +439,17 @@ class ParserAgent(AgentBase):
         tds_section = EXPENSE_TO_SECTION.get(exp_type)
         total_gst = sum(gst_amounts.values()) if gst_amounts else None
 
+        gross_amount = amount if amount else safe_float(sum(expense_heads.values()))
+        # Base amount = gross minus GST (for TDS matching — TDS is on base, not gross)
+        base_amount = gross_amount - total_gst if total_gst and total_gst > 0 else gross_amount
+
         return {
             "reconciliation_run_id": self.run_id,
             "company_id": self.company_id,
             "financial_year": self.financial_year,
             "party_name": party,
             "expense_type": exp_type,
-            "amount": amount if amount else safe_float(sum(expense_heads.values())),
+            "amount": gross_amount,
             "gst_amount": total_gst,
             "tds_section": tds_section,
             "invoice_number": str(values.get("invoice_number", "")).strip() or None,
@@ -447,6 +457,7 @@ class ParserAgent(AgentBase):
             "raw_data": {
                 "expense_heads": expense_heads if expense_heads else None,
                 "gst_breakup": gst_amounts if gst_amounts else None,
+                "base_amount": base_amount if total_gst else None,
             },
         }
 

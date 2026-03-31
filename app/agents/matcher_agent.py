@@ -787,32 +787,60 @@ class MatcherAgent(AgentBase):
         return result
 
     def _ledger_to_tally_format(self, ledger_entries) -> list[dict]:
-        """Convert LedgerEntry DB models to the dict format pass functions expect."""
+        """Convert LedgerEntry DB models to the dict format pass functions expect.
+
+        Key: computes base_amount (gross - GST) for TDS matching.
+        Form 26 records TDS on BASE amount. Tally stores GROSS (with GST).
+        Without this conversion, amount comparisons fail systematically.
+        """
         result = []
         for e in ledger_entries:
             raw = e.raw_data or {} if hasattr(e, 'raw_data') else {}
             if isinstance(raw, str):
                 import json
                 raw = json.loads(raw)
-            source = raw.get("source", "") if isinstance(raw, dict) else ""
+            if not isinstance(raw, dict):
+                raw = {}
 
-            # Determine section hint from expense_type
-            section_hint = None
-            if e.expense_type in ("interest_payment",):
-                section_hint = "194A"
-            elif e.expense_type in ("freight_expense", "packing_expense", "purchase") or source in ("gst_exp_register", "purchase_register"):
-                section_hint = "194C"
-            elif e.expense_type in ("brokerage",):
-                section_hint = "194H"
-            elif e.expense_type in ("rent",):
-                section_hint = "194I(b)"
-            elif e.expense_type in ("consultancy", "professional_fees", "audit_fees"):
-                section_hint = "194J(b)"
+            # Detect source from sheet name (set by parser)
+            source_sheet = raw.get("source_sheet", "").lower()
+            has_gst = bool(e.gst_amount and float(e.gst_amount or 0) > 0)
 
-            tally_source = "journal_interest" if e.expense_type == "interest_payment" else \
-                           "journal_freight" if e.expense_type == "freight_expense" else \
-                           "gst_exp" if source == "gst_exp_register" else \
-                           "purchase" if source == "purchase_register" else "other"
+            # Determine source type from sheet name + expense type
+            if "journal" in source_sheet:
+                tally_source = "journal_interest" if e.expense_type == "interest_payment" else "journal_freight"
+            elif "gst" in source_sheet or "expense" in source_sheet:
+                tally_source = "gst_exp"
+            elif "purchase" in source_sheet:
+                tally_source = "purchase"
+            else:
+                tally_source = "journal_freight" if e.expense_type == "freight_expense" else \
+                               "journal_interest" if e.expense_type == "interest_payment" else \
+                               "gst_exp" if has_gst else "other"
+
+            # Determine section hint from expense_type + source
+            section_hint = e.tds_section  # Use parser's classification first
+            if not section_hint:
+                if e.expense_type in ("interest_payment",):
+                    section_hint = "194A"
+                elif e.expense_type in ("freight_expense", "packing_expense", "purchase") or tally_source in ("gst_exp", "purchase", "journal_freight"):
+                    section_hint = "194C"
+                elif e.expense_type in ("brokerage",):
+                    section_hint = "194H"
+                elif e.expense_type in ("rent",):
+                    section_hint = "194I(b)"
+                elif e.expense_type in ("consultancy", "professional_fees", "audit_fees"):
+                    section_hint = "194J(b)"
+
+            # Compute base amount (gross - GST) for TDS matching
+            gross_amount = float(e.amount or 0)
+            gst_amount = float(e.gst_amount or 0)
+            # Use pre-computed base_amount from parser if available
+            base_amount = float(raw.get("base_amount", 0)) if raw.get("base_amount") else None
+            if base_amount is None and gst_amount > 0:
+                base_amount = gross_amount - gst_amount
+            if base_amount is None:
+                base_amount = gross_amount  # No GST → base = gross
 
             result.append({
                 "_db_id": e.id,
@@ -820,7 +848,10 @@ class MatcherAgent(AgentBase):
                 "_below_threshold": False,
                 "_section_hint": section_hint,
                 "party_name": e.party_name or "",
-                "amount": float(e.amount or 0),
+                "amount": base_amount,  # Use BASE for matching (TDS is on base)
+                "gross_amount": gross_amount,
+                "total_gst": gst_amount,
+                "amount_is_base": True,
                 "date": e.invoice_date or "",
                 "voucher_no": e.invoice_number or "",
                 "tally_source": tally_source,
