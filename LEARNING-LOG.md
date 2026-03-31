@@ -264,6 +264,265 @@ Column name "Freight Charges_18%"
 
 ---
 
+## Day 3R — Matcher Pass 6 (LLM-Assisted Matching)
+
+**Hours:** ~6
+
+### What was built
+| File | Purpose |
+|------|---------|
+| `app/agents/matcher_agent.py` | Added Pass 6 — LLM resolves ambiguous matches |
+| `tests/test_matcher_llm.py` | 7 tests with MockLLMClient |
+
+### What I learned
+- **Pass 6 is a fallback, not a replacement.** Deterministic passes (1-5) run first. Only unmatched entries go to LLM. This saves API cost — most entries match without LLM.
+- **MockLLMClient pattern:** Create a mock that returns predefined responses. Test the logic without real API calls. All tests run in <1 second.
+- **Confidence threshold:** LLM confidence >= 0.6 → auto-match. < 0.6 → flag for human. The threshold is a design choice, not a technical one.
+- **Event types:** `llm_insight` (match confirmed), `human_needed` (unsure). Frontend renders these differently.
+
+---
+
+## Day 4 — TDS Checker LLM (Section + Remediation)
+
+**Hours:** ~5
+
+### What was built
+- `app/agents/tds_checker_agent.py` — LLM section classification + remediation writing
+- `tests/test_checker_llm.py` — 7 tests
+
+### What I learned
+- **Ambiguous expenses:** "Advertisement" can be 194C (works contract) or 194J(b) (professional). Deterministic rules can't decide — LLM looks at vendor name + expense context to classify.
+- **Remediation writing:** LLM writes CA-level advice: what's wrong, why it matters, action steps, deadline, penalty risk. Not template text — specific to each vendor and amount.
+- **Discrepancy actions in DB:** Findings now stored in `discrepancy_action` table with `llm_reasoning` and `proposed_action`.
+
+---
+
+## Day 5 — Reporter LLM (Narrative Summaries)
+
+**Hours:** ~5
+
+### What was built
+- `app/agents/reporter_agent.py` — LLM narrative generation
+- `tests/test_reporter_llm.py` — 4 tests
+
+### What I learned
+- **LLM narratives vs templates:** Instead of "3 errors, 5 warnings", LLM writes: "We found 3 vendors where TDS was not deducted — Kamal Kishor (Rs 16,845 brokerage)..." with specific vendor names, amounts, sections.
+- **Excel with narrative:** New "Executive Summary" sheet in the Excel report with the LLM-generated narrative.
+- **Graceful fallback:** LLM fails → reports still generate with all data (CSV, Excel, JSON). Just no narrative text.
+
+---
+
+## Day 5.5 — TDS Knowledge Base
+
+**Hours:** ~4
+
+### What was built
+| File | Purpose |
+|------|---------|
+| `app/knowledge/tds_rules.json` | 16 TDS sections, rates, thresholds, penalties, due dates, forms |
+| `app/knowledge/__init__.py` | Loader — get_section_rate(), get_threshold(), get_llm_context() |
+
+### What I learned
+- **BLACK BOX RISK:** LLMs trained on data that may be outdated. Budget 2025 changed 194H from 5% to 2%. LLM might still say 5%. Unacceptable for a financial product.
+- **Solution: Knowledge Base + LLM as reasoning engine.** We maintain verified rules in `tds_rules.json`. Every LLM prompt includes: "Use ONLY these rules. Do NOT use training data." LLM reasons on controlled data, not unknown training data.
+- **Single source of truth:** Budget changes? Update one JSON file. All 7 agents, all 14 prompts update automatically.
+- **78 keyword→section mappings** auto-generated from knowledge base. No hardcoded Python dicts anywhere.
+
+---
+
+## Day 6 — Learning Agent (pgvector + Patterns)
+
+**Hours:** ~7
+
+### What was built
+- `app/agents/learning_agent.py` — record decisions, extract patterns, pgvector similarity
+- `tests/test_learning_agent.py` — 9 tests
+
+### What I learned
+- **pgvector:** PostgreSQL extension for storing vector embeddings. When user marks "Xpress Cargo" as below threshold, we store the pattern as a 1536-dimension vector. Later, when "VRL Logistics" appears, pgvector finds the similar pattern.
+- **HNSW index:** Hierarchical Navigable Small World — fast approximate nearest neighbor search. Already created in Supabase schema.
+- **Pseudo-embeddings:** Real embeddings need an API call (OpenAI/Anthropic). For now, using hash-based pseudo-embeddings as placeholder. Same infrastructure, swap later.
+- **Pass 0:** Learning Agent runs BEFORE Matcher. Applies learned rules (below_threshold, ignore) to mark entries before matching starts.
+
+---
+
+## Day 7 — Chat Agent (100% LLM + Tools)
+
+**Hours:** ~6
+
+### What was built
+- `app/agents/chat_agent.py` — agentic loop with 6 tools
+- `tests/test_chat_agent.py` — 10 tests
+
+### What I learned
+- **Agentic loop:** User message → LLM → LLM calls tool → execute tool → feed result back → LLM responds. This loop repeats until LLM gives a final text response (no more tool calls).
+- **Tool calling:** LLM decides WHICH tool to call based on user's message. "Why is Anderson flagged?" → LLM calls `explain_finding("Anderson")`. "Run reconciliation" → LLM calls `run_reconciliation()`.
+- **System prompt = personality + knowledge.** 6,532 chars including TDS knowledge base. The LLM IS a knowledgeable CA who can also run agents.
+- **Streaming:** `chat_stream()` yields tokens + tool call status. UI shows "🔧 Calling get_findings..." between response chunks.
+
+---
+
+## Day 8 — Orchestrator (All Agents Wired)
+
+**Hours:** ~5
+
+### What was built
+- `app/pipeline/orchestrator.py` — rewritten with LLM client, error handling, Learning Pass 0
+
+### What I learned
+- **Error isolation:** Each agent runs in its own try/catch. Parser fails → full stop (no data). Matcher fails → Checker + Reporter still run with partial data. No single agent can crash the entire pipeline.
+- **Shared LLM client:** One `LLMClient` instance shared across all agents in a run. Events scoped to run_id.
+- **Status tracking:** `reconciliation_run` table tracks: processing_status (parsing → matching → checking → reporting → done), current_section. UI can poll this.
+
+---
+
+## Day 9 — FastAPI App (22 Endpoints)
+
+**Hours:** ~7
+
+### What was built
+- `app/main.py` — app factory
+- 6 routers: upload, reconciliation, reports, chat, company, auth
+- `app/dependencies.py` — get_db, get_llm, get_current_user
+
+### What I learned
+- **Dependency injection:** `Depends(get_db)` in route signature → FastAPI creates Repository and passes it. No global state. Each request gets its own dependencies.
+- **SSE endpoint pattern:** Start pipeline in background thread → push events to queue → yield from queue as SSE data → frontend receives in real-time.
+- **App factory:** `create_app()` returns configured FastAPI instance. Can create multiple instances for testing with different configs.
+
+---
+
+## Day 10 — SSE Event Types
+
+**Hours:** ~2
+
+### What I learned
+- **12 event types** — each rendered differently in the UI: agent_start (spinner), agent_done (checkmark), llm_call (💭), llm_insight (prominent), human_needed (action button).
+- **The "Claude Code" feel:** Every LLM call is visible to the user. They see "Parser asking LLM to classify 3 columns..." then "LLM mapped: 'Amt Paid' → gross_amount". Transparency builds trust.
+
+---
+
+## Day 11 — Auth (Supabase JWT)
+
+**Hours:** ~6
+
+### What was built
+- `app/auth/jwt.py` — verify_token()
+- `app/auth/dependencies.py` — UserContext dataclass, get_current_user
+- `tests/test_auth.py` — 8 tests
+
+### What I learned
+- **JWT verification:** Supabase signs tokens with a secret. Backend decodes and extracts user_id, email, firm_id. 401 if invalid/expired.
+- **Local dev fallback:** No auth header in local env → returns placeholder user. No friction during development.
+- **UserContext dataclass:** Type-safe user info throughout the app. `user.firm_id` not `user["firm_id"]`.
+
+---
+
+## Days 12-13 — Integration + Logic Tests
+
+**Hours:** ~11
+
+### What was built
+- `tests/conftest.py` — shared fixtures (MockLLMClient, EventEmitter, TestClient, repo)
+- `tests/test_api_endpoints.py` — 11 API tests
+- `tests/test_integration.py` — full E2E pipeline test
+- `tests/test_matcher_logic.py` — 28 pure logic tests
+- `tests/test_checker_logic.py` — 21 pure logic tests
+
+### What I learned
+- **Test layers:** Unit (no DB, no LLM) → Service (mock LLM) → Agent (mock LLM + real DB) → Integration (everything). Each layer catches different bugs.
+- **conftest.py:** Shared fixtures imported automatically by pytest. Write once, use in every test file.
+- **Golden reference testing:** Same input XLSX → same match counts as MVP. If numbers change, something broke.
+
+---
+
+## Day 14 — Edge Cases (61 Tests)
+
+**Hours:** ~5
+
+### What was built
+- `tests/test_edge_cases.py` — 61 edge case tests across all layers
+
+### What I learned
+- **Financial edge cases are critical:** `safe_float("1,00,000")` must return 100000, not crash. Indian number format uses commas differently.
+- **Every None path must be handled.** Parser gets None date? Return None, not crash. LLM returns empty string? Return None, not crash. PAN has 3 characters? Return "unknown", not crash.
+- **LLM JSON is unreliable.** LLM might wrap in markdown, return array instead of object, or put confidence as string "0.85" instead of float 0.85. Handle all cases.
+
+---
+
+## Architecture Notes (Updated)
+
+### Full file structure (Day 15)
+```
+aitdsrecon/
+├── app/
+│   ├── config.py              ← Settings from .env
+│   ├── main.py                ← FastAPI app (22 endpoints)
+│   ├── dependencies.py        ← DI: get_db, get_llm, get_current_user
+│   ├── auth/
+│   │   ├── jwt.py             ← Supabase JWT verification
+│   │   └── dependencies.py    ← UserContext, get_current_user
+│   ├── db/
+│   │   ├── client.py          ← Supabase connection (anon + admin)
+│   │   ├── models.py          ← 15 Pydantic models
+│   │   └── repository.py      ← 13 sub-repositories
+│   ├── knowledge/
+│   │   ├── tds_rules.json     ← Single source of truth (16 sections)
+│   │   └── __init__.py        ← Loader + LLM context generator
+│   ├── agents/
+│   │   ├── base.py            ← AgentBase (run_id, db, events, llm)
+│   │   ├── utils.py           ← normalize_name, name_similarity, etc.
+│   │   ├── parser_agent.py    ← Dynamic parser (column mapper driven)
+│   │   ├── matcher_agent.py   ← 6-pass engine (5 deterministic + 1 LLM)
+│   │   ├── tds_checker_agent.py ← 5 checks + LLM section/remediation
+│   │   ├── reporter_agent.py  ← Reports + LLM narratives
+│   │   ├── learning_agent.py  ← Patterns + pgvector + Pass 0
+│   │   └── chat_agent.py      ← 100% LLM with 6 tools
+│   ├── pipeline/
+│   │   ├── events.py          ← EventEmitter (12 types, SSE callback)
+│   │   └── orchestrator.py    ← Wires all 7 agents
+│   ├── services/
+│   │   ├── llm_client.py      ← Unified LLM (Groq→Anthropic swap)
+│   │   ├── llm_prompts.py     ← 14 prompt templates
+│   │   └── column_mapper.py   ← Approach 1 (fuzzy + LLM for <0.8)
+│   └── api/
+│       ├── upload.py, reconciliation.py, reports.py
+│       ├── chat.py, company.py, auth.py
+│       └── (22 endpoints total)
+├── tests/                     ← 182 tests across 12 files
+├── tds-recon/                 ← MVP reference (will be removed)
+└── pyproject.toml, .env.example, PRODUCTION-PLAN.md
+```
+
+### Key concepts index (complete)
+| Concept | Day | One-line summary |
+|---------|-----|------------------|
+| pyproject.toml | 1 | Modern Python packaging |
+| Pydantic Settings | 1 | Type-safe config from .env |
+| Repository pattern | 2 | Centralize all DB queries |
+| Bulk insert | 2 | 1 API call for N rows |
+| RLS | 2 | Row-level security per firm |
+| pytest fixtures | 2 | Setup before yield, cleanup after |
+| Approach 1 (column mapping) | 2R | >=0.8 auto-map, <0.8 → LLM |
+| Dynamic parser | 2R | Column mapper drives parser |
+| MockLLMClient | 3R | Test LLM logic without API calls |
+| LLM confidence threshold | 3R | >=0.6 auto-match, <0.6 flag human |
+| Discrepancy actions | 4 | Findings stored with LLM reasoning |
+| LLM narratives | 5 | Professional summaries, not templates |
+| Knowledge base | 5.5 | Verified rules, not training data |
+| Black box risk | 5.5 | LLM reasons on controlled data only |
+| pgvector | 6 | Vector similarity for pattern matching |
+| Agentic loop | 7 | LLM → tool → result → LLM → respond |
+| Tool calling | 7 | LLM decides which function to call |
+| Error isolation | 8 | Per-agent try/catch, partial results |
+| Dependency injection | 9 | Depends() in route signatures |
+| SSE streaming | 10 | Server→browser one-way event pipe |
+| JWT verification | 11 | Token → user_id + firm_id |
+| conftest.py | 12 | Shared fixtures auto-imported |
+| Edge cases | 14 | Every None/empty/invalid path handled |
+
+---
+
 ## Day 3 (Rework) — (Upcoming)
 
 **Plan:** Matcher Agent Pass 6 — LLM-assisted matching for ambiguous cases that deterministic passes can't resolve.
