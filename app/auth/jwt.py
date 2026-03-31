@@ -1,12 +1,8 @@
 """
 Supabase JWT verification — decode and validate tokens.
 
-Supabase Auth issues JWTs signed with the project's JWT secret.
-We verify the token and extract user_id, email, and firm_id.
-
-The firm_id comes from either:
-- Custom claim in JWT metadata (set during signup)
-- Lookup in app_user table by user_id
+Supabase Auth issues JWTs signed with an EC key (ES256).
+We verify using the project's public key directly.
 
 Usage:
     from app.auth.jwt import verify_token
@@ -16,23 +12,28 @@ Usage:
 
 from jose import jwt, JWTError, ExpiredSignatureError
 
-from app.config import settings
 
+# EC public key from Supabase Dashboard → Settings → API → JWT
+SUPABASE_PUBLIC_KEY = {
+    "x": "bacDFZDYNrPoJBE-pwfIXU4nDZGZTKqUBhCVBUhd3nY",
+    "y": "khB9vF4L5DsZr9FXTqq-urCR3VBlZJw2oYsXFl-QKEY",
+    "alg": "ES256",
+    "crv": "P-256",
+    "ext": True,
+    "kid": "72a802eb-374b-4a8c-b8a2-e9a102e3122d",
+    "kty": "EC",
+    "key_ops": ["verify"],
+}
 
-# Supabase JWT secret — derived from the anon key
-# Supabase signs JWTs with the project's JWT secret, which is the same
-# secret used to generate the anon/service_role keys.
-# For verification, we use the JWT secret from Supabase settings.
-# If not available, we can verify using the anon key as HMAC secret.
 
 def verify_token(token: str) -> dict:
     """Verify a Supabase JWT and extract claims.
 
     Args:
-        token: Bearer token from Authorization header
+        token: Bearer token from Authorization header (with or without 'Bearer ' prefix)
 
     Returns:
-        {user_id, email, role, firm_id (if available)}
+        {user_id, email, role, firm_id (if available), raw_claims}
 
     Raises:
         ValueError: if token is invalid, expired, or missing
@@ -45,33 +46,18 @@ def verify_token(token: str) -> dict:
         token = token[7:]
 
     try:
-        # Supabase JWTs are signed with the project's JWT secret
-        # The anon key IS a JWT itself — its secret is what signs user tokens
-        # For now, decode without verification in dev mode, verify in production
-        if settings.environment == "local":
-            # In local dev, decode without full verification
-            # (Supabase JS client handles token refresh)
-            payload = jwt.decode(
-                token,
-                settings.supabase_anon_key,
-                algorithms=["HS256"],
-                options={"verify_aud": False},
-            )
-        else:
-            # In production, full verification with JWT secret
-            jwt_secret = settings.supabase_service_role_key or settings.supabase_anon_key
-            payload = jwt.decode(
-                token,
-                jwt_secret,
-                algorithms=["HS256"],
-                options={"verify_aud": False},
-            )
+        payload = jwt.decode(
+            token,
+            SUPABASE_PUBLIC_KEY,
+            algorithms=["ES256"],
+            options={"verify_aud": False},
+        )
 
         user_id = payload.get("sub", "")
         email = payload.get("email", "")
         role = payload.get("role", "anon")
 
-        # Extract firm_id from user metadata (set during signup)
+        # Extract firm_id from user metadata (set during firm registration)
         user_metadata = payload.get("user_metadata", {})
         firm_id = user_metadata.get("firm_id", "")
 
