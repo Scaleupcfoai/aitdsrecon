@@ -328,7 +328,8 @@ class ColumnMapper:
             # Auto-mapped (high confidence fuzzy)
             for r in auto_mapped:
                 final_mappings.append({
-                    "col_name": r["col_name"], "field": r["suggested_field"],
+                    "col_name": r["col_name"], "col_index": r["col_index"],
+                    "field": r["suggested_field"],
                     "confidence": r["confidence"], "source": "fuzzy_auto",
                     "needs_review": False,
                 })
@@ -343,7 +344,7 @@ class ColumnMapper:
 
                 needs_review = llm_field in ("unknown", None) or llm_conf < 0.6
                 final_mappings.append({
-                    "col_name": r["col_name"],
+                    "col_name": r["col_name"], "col_index": r["col_index"],
                     "field": llm_field if llm_field not in ("unknown", None) else r["suggested_field"],
                     "confidence": llm_conf if llm_conf > 0 else r["confidence"],
                     "source": "llm" if llm_field not in ("unknown", None) else "uncertain",
