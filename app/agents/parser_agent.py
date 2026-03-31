@@ -43,9 +43,36 @@ def to_date_str(val) -> str | None:
         return val.date().isoformat()
     if isinstance(val, date):
         return val.isoformat()
+    if isinstance(val, (int, float)):
+        # Excel stores dates as serial numbers (days since 1899-12-30)
+        # Valid range: ~1 (1900-01-01) to ~55000 (2050-07-06)
+        serial = int(val)
+        if 1 <= serial <= 55000:
+            try:
+                from datetime import timedelta
+                excel_epoch = datetime(1899, 12, 30)
+                dt = excel_epoch + timedelta(days=serial)
+                return dt.date().isoformat()
+            except (ValueError, OverflowError):
+                return None
+        # Outside valid date range — likely not a date (e.g. amount in wrong column)
+        return None
     if isinstance(val, str):
-        return val[:10]
-    return str(val)[:10]
+        # Try to parse common date formats
+        val = val.strip()
+        if not val or val == "-":
+            return None
+        # Already ISO format
+        if len(val) >= 10 and val[4] == '-':
+            return val[:10]
+        # DD/MM/YYYY or DD-MM-YYYY
+        for fmt in ("%d/%m/%Y", "%d-%m-%Y", "%m/%d/%Y", "%Y/%m/%d"):
+            try:
+                return datetime.strptime(val[:10], fmt).date().isoformat()
+            except ValueError:
+                continue
+        return val[:10] if len(val) >= 10 else None
+    return None
 
 
 def safe_float(val) -> float:
