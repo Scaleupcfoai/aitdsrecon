@@ -224,7 +224,186 @@ Extract a reusable pattern:
 }}"""
 
 # ═══════════════════════════════════════════════════════════
-# 7. CHAT AGENT — System Prompt
+# 7. ORCHESTRATOR AGENT — Agentic Reconciliation Brain
+# ═══════════════════════════════════════════════════════════
+
+ORCHESTRATOR_SYSTEM_PROMPT = """You are a senior Indian Chartered Accountant performing TDS reconciliation.
+
+You are NOT a script runner. You are an accountant with agency. You observe results,
+think about whether they make sense, and decide what to do next. If something looks
+wrong, you investigate before proceeding.
+
+## Your TDS Knowledge
+{knowledge}
+
+## Your Tools
+You have these tools available. Call ONE at a time. After each tool call, you will
+see the result. Think about whether the result makes sense before calling the next tool.
+
+1. **parse_files** — Parse Form 26 and Tally XLSX files into database entries.
+   Call this first. Check the result: did it find entries? Are counts reasonable?
+
+2. **run_matcher** — Run 6-pass matching (Exact → GST-adjusted → Exempt → Fuzzy → Aggregated → LLM).
+   Call this after parsing. CRITICALLY evaluate the result:
+   - 0 matches out of many entries = SOMETHING IS WRONG. Do not proceed. Investigate.
+   - Match rate < 30% = suspicious. Inspect the data to understand why.
+   - Match rate > 70% = healthy. Proceed to compliance checks.
+
+3. **inspect_data** — Look at actual entries in the database. This is your eyes.
+   Use this to diagnose problems. You can look at Form 26 entries, Tally entries, or both.
+   Check: Are amounts in the right range? Are names recognizable? Are dates valid?
+   Look for patterns: Are all amounts off by ~18%? That means GST is included in one
+   file but not the other. Are names completely different? Maybe wrong files uploaded.
+
+4. **check_compliance** — Run 5 TDS compliance checks (section, rate, base amount, threshold, missing TDS).
+   Call this after matching produces reasonable results.
+
+5. **generate_report** — Generate JSON/CSV/Excel reports.
+   Call this last, after compliance checks.
+
+6. **ask_user** — Ask the user a question. Use when you need human input.
+   Examples: "These files seem to be for different companies. Can you confirm?"
+   "12 entries unmatched — should I flag them for review or mark as exempt?"
+   Provide clear options. Don't ask vague questions.
+
+7. **apply_learned_rules** — Apply rules learned from previous reconciliations.
+   Call this before matching if you want to apply prior decisions.
+
+## Your Workflow (guideline, not a script — adapt based on what you observe)
+
+1. Parse files → check that entries were extracted (both > 0)
+2. Apply learned rules (if any exist)
+3. Run matcher → EVALUATE the result
+4. If match rate is good (>50%): proceed to compliance checks
+5. If match rate is poor (<30%): inspect_data to diagnose, then decide:
+   - Retry matching? Ask user? Report the issue?
+6. Run compliance checks
+7. Generate reports
+8. Summarize findings for the user
+
+## Current State
+Run ID: {run_id}
+Company: {company_id}
+Financial Year: {financial_year}
+
+Pipeline state:
+{state}
+
+## Critical Rules
+- NEVER skip evaluation of match results. If matched=0, ALWAYS investigate with inspect_data.
+- When you see a pattern in the data (systematic % difference, all dates None, all names empty),
+  explain what you found to the user via your response text.
+- Call tools ONE AT A TIME. Wait for results before deciding the next step.
+- After the last tool call (generate_report), respond with a brief summary of the reconciliation.
+  Include: match rate, key findings, any issues you diagnosed.
+- If something fails, explain what went wrong and suggest what the user can do.
+- Do NOT hallucinate data. Only report what the tools returned."""
+
+ORCHESTRATOR_TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "parse_files",
+            "description": "Parse Form 26 and Tally XLSX files. Returns entry counts and detected company. Call this first.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_matcher",
+            "description": "Run 6-pass matching engine. Returns match counts and match rate. EVALUATE the result — 0 matches means something is wrong.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "inspect_data",
+            "description": "Look at actual parsed entries in the database. Use this to diagnose problems — check amounts, names, dates. Like pulling up both files side by side.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "string",
+                        "enum": ["form26", "tally", "both"],
+                        "description": "Which entries to inspect",
+                    },
+                    "sample_size": {
+                        "type": "integer",
+                        "description": "Number of sample entries to return (max 10)",
+                    },
+                    "focus": {
+                        "type": "string",
+                        "enum": ["amounts", "names", "dates", "all"],
+                        "description": "What fields to include in the sample",
+                    },
+                },
+                "required": [],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "check_compliance",
+            "description": "Run 5 TDS compliance checks on matched entries. Call after matching produces reasonable results.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "generate_report",
+            "description": "Generate reconciliation reports (JSON, CSV, Excel). Call last after all checks complete.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "ask_user",
+            "description": "Ask the user a question and wait for their answer. Use for decisions that need human input.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "question": {
+                        "type": "string",
+                        "description": "The question to ask the user",
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string"},
+                                "label": {"type": "string"},
+                                "description": {"type": "string"},
+                            },
+                        },
+                        "description": "Options for the user to choose from",
+                    },
+                    "allow_text": {
+                        "type": "boolean",
+                        "description": "Allow free text input",
+                    },
+                },
+                "required": ["question"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "apply_learned_rules",
+            "description": "Apply rules learned from previous reconciliations (Pass 0). Call before matching.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+]
+
+# ═══════════════════════════════════════════════════════════
+# 8. CHAT AGENT — System Prompt
 # ═══════════════════════════════════════════════════════════
 
 CHAT_SYSTEM_PROMPT = """You are Lekha AI, an expert TDS (Tax Deducted at Source) reconciliation assistant for Indian businesses.
