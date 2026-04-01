@@ -119,7 +119,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None,
     if learned.get("rules_loaded", 0) > 0:
         logger.detail("Matcher Agent", f"Pass 0: {learned['rules_loaded']} learned rules loaded")
         if learned.get("below_threshold_entries", 0):
-            logger.detail("Matcher Agent", f"  → {learned['below_threshold_entries']} below-threshold entries marked")
+            logger.detail("Matcher Agent", f"  \u2192 {learned['below_threshold_entries']} below-threshold entries marked")
     if by_pass.get("pass1_exact", 0):
         logger.detail("Matcher Agent", f"Pass 1: {by_pass['pass1_exact']} exact matches (name + amount + date)")
     if by_pass.get("pass2_gst_adjusted", 0):
@@ -189,23 +189,23 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None,
             logger.detail("TDS Checker", f"{vendor}: {short_msg}")
 
     exposure = sum(f.get("aggregate_amount", 0) for f in errors)
-    logger.success("TDS Checker", f"Complete: {len(errors)} errors, {len(warnings)} warnings, ₹{exposure:,.0f} exposure")
+    logger.success("TDS Checker", f"Complete: {len(errors)} errors, {len(warnings)} warnings, \u20b9{exposure:,.0f} exposure")
     logger.agent_done("TDS Checker", "Compliance checks complete")
 
     # ---- Step 4: Reporter ----
     logger.agent_start("Reporter Agent", "Generating reports...")
     from agents.reporter_agent import run as reporter_run
     report = reporter_run(str(parsed_dir), str(results_dir))
-    logger.detail("Reporter Agent", "reconciliation_summary.json — Executive summary")
-    logger.detail("Reporter Agent", "reconciliation_report.csv — Full match report")
-    logger.detail("Reporter Agent", "findings_report.csv — Findings + remediation")
+    logger.detail("Reporter Agent", "reconciliation_summary.json \u2014 Executive summary")
+    logger.detail("Reporter Agent", "reconciliation_report.csv \u2014 Full match report")
+    logger.detail("Reporter Agent", "findings_report.csv \u2014 Findings + remediation")
     logger.agent_done("Reporter Agent", "Reports generated")
 
     elapsed = time.time() - start
     logger.emit("Pipeline", f"Complete in {elapsed:.1f}s", "success")
 
     print(f"\n{'=' * 60}")
-    print(f"PIPELINE COMPLETE — {elapsed:.1f}s")
+    print(f"PIPELINE COMPLETE \u2014 {elapsed:.1f}s")
     print(f"{'=' * 60}")
 
     report_summary = report.get("summary", {})
