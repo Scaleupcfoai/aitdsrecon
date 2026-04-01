@@ -1,0 +1,60 @@
+"""
+Application configuration — all settings from environment variables.
+
+Usage:
+    from app.config import settings
+    print(settings.supabase_url)
+
+Settings are loaded from .env file (local dev) or environment variables (production).
+Never hardcode secrets or URLs in code — always use this module.
+"""
+
+from typing import Literal
+
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    """All application configuration.
+
+    Values come from environment variables or .env file.
+    Required fields (no default) will raise an error if missing.
+    """
+
+    # ── Supabase ──
+    supabase_url: str
+    supabase_anon_key: str
+    supabase_service_role_key: str = ""
+
+    # ── Database (direct PostgreSQL connection for performance-critical queries) ──
+    database_url: str = ""
+
+    # ── Anthropic (added later — empty string means disabled) ──
+    anthropic_api_key: str = ""
+
+    # ── LLM for column mapping (Groq free tier, swap to Anthropic later) ──
+    groq_api_key: str = ""
+    llm_model: str = "llama-3.3-70b-versatile"  # Groq model
+    llm_provider: Literal["groq", "anthropic"] = "groq"
+    llm_temperature: float = 0.1  # low = more deterministic
+    llm_max_tokens: int = 2000
+
+    # ── File Storage ──
+    storage_backend: Literal["local", "supabase"] = "local"
+    local_storage_path: str = "data/uploads"
+
+    # ── Security ──
+    cors_origins: list[str] = ["http://localhost:5173"]
+
+    # ── Environment ──
+    environment: Literal["local", "staging", "production"] = "local"
+
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "case_sensitive": False,
+    }
+
+
+# Global settings instance — import this everywhere
+settings = Settings()

@@ -22,3 +22,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables (secrets — never commit)
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+.venv/
+.pytest_cache/
+.coverage
+
+# Runtime data
+tds-recon/data/uploads/
+tds-recon/data/chat/

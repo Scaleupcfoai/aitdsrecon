@@ -4,15 +4,43 @@
 
 ## Current State
 
-- **Version:** 2.1.0
-- **Status:** TDS Recon MVP complete + chat bridge experiment. Unified repo (ui/ + tds-recon/ in one repo). Ready for new client data.
-- **Last session:** 2026-03-26
-- **Next priority:** Test with new client data, validate generic parser, test Claude chat bridge with API key, evolve chat bridge from Q&A to orchestrator
+- **Version:** 3.0.0
+- **Status:** Production-grade 7-agent LLM architecture. Supabase DB, auth, knowledge base, 182 tests. Deployment + frontend auth UI pending (Phase 2).
+- **Last session:** 2026-03-29
+- **Next priority:** Phase 2 — AWS deployment, frontend auth UI, real embeddings, security hardening
 
-## Unreleased
+## Version History
 
-### Added
-- (nothing yet)
+### 3.0.0 — Production Architecture (7-Agent LLM System) (2026-03-29)
+
+**Architecture:**
+- 7 LLM-powered agents: Parser, Matcher (6 passes), TDS Checker, Reporter, Learning (pgvector), Chat (6 tools), Orchestrator
+- Knowledge Base: tds_rules.json — 16 TDS sections, verified source of truth
+- Every LLM call uses controlled data, not training data (eliminates black box risk)
+- Supabase PostgreSQL with 15 tables, RLS, pgvector
+
+**Agents:**
+- Parser: dynamic column mapper (Approach 1: fuzzy + LLM for uncertain)
+- Matcher: 5 deterministic passes + Pass 6 LLM-assisted for ambiguous
+- Checker: LLM section classification + CA-level remediation writing
+- Reporter: LLM narrative summaries + 4-sheet Excel report
+- Learning: human decisions → LLM pattern extraction → pgvector similarity
+- Chat: 100% LLM with agentic loop, 6 tools, SSE streaming
+- Orchestrator: error isolation, run tracking, Learning Pass 0
+
+**Infrastructure:**
+- FastAPI with 22 endpoints, 6 routers
+- SSE streaming with 12 event types (LLM insights visible in real-time)
+- Supabase Auth JWT verification
+- 182 tests across 12 files (unit, service, agent, integration, edge cases)
+
+**Phase 2 backlog:**
+- AWS deployment (ECS Fargate)
+- Frontend auth UI (LoginPage, SignupPage in aibookclose)
+- Real embeddings (replace pseudo-embeddings with Anthropic/OpenAI)
+- Knowledge base in DB (for multi-FY support)
+- Security hardening (rate limiting, audit logging)
+- CI/CD pipeline
 
 ### Changed
 - (nothing yet)

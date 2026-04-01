@@ -268,6 +268,47 @@ def run_reporter():
 
 
 # ---------------------------------------------------------------------------
+# Chat Bridge (file-based)
+# ---------------------------------------------------------------------------
+
+CHAT_DIR = BASE / "data" / "chat"
+
+class ChatMessage(BaseModel):
+    message: str
+
+@app.post("/api/chat")
+def send_chat(msg: ChatMessage):
+    """Send a message to Claude via the chat bridge.
+    Writes to inbox, returns immediately with message ID.
+    """
+    import uuid
+    CHAT_DIR.mkdir(parents=True, exist_ok=True)
+    msg_id = str(uuid.uuid4())[:8]
+
+    # Write inbox
+    with open(CHAT_DIR / "inbox.json", "w") as f:
+        json.dump({"id": msg_id, "message": msg.message, "timestamp": time.time()}, f)
+
+    return {"id": msg_id, "status": "sent"}
+
+
+@app.get("/api/chat/{msg_id}")
+def get_chat_response(msg_id: str):
+    """Poll for Claude's response to a chat message."""
+    outbox = CHAT_DIR / "outbox.json"
+    if not outbox.exists():
+        return {"id": msg_id, "status": "waiting", "response": ""}
+
+    with open(outbox) as f:
+        data = json.load(f)
+
+    if data.get("id") != msg_id:
+        return {"id": msg_id, "status": "waiting", "response": ""}
+
+    return data
+
+
+# ---------------------------------------------------------------------------
 # Download Reports
 # ---------------------------------------------------------------------------
 

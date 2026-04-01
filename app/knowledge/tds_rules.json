@@ -1,0 +1,403 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "last_updated": "2026-03-29",
+    "source": "Income Tax Act 1961, Finance Act 2025, CBDT Circulars",
+    "maintained_by": "Lekha AI — ScaleUp CFO",
+    "notes": "This is the SINGLE SOURCE OF TRUTH for all TDS rules. All agents and LLM prompts read from this file. Update this file when Budget amendments happen."
+  },
+
+  "sections": {
+    "192": {
+      "name": "Salary",
+      "description": "TDS on salary paid by employer",
+      "rate": {"slab": true, "note": "As per income tax slab rates applicable to the employee"},
+      "threshold": {"basic_exemption": true, "note": "Basic exemption limit as per slab"},
+      "payer": "Employer",
+      "payee": "Employee",
+      "frequency": "Monthly",
+      "form": "24Q",
+      "certificate": "Form 16",
+      "expense_keywords": ["salary", "bonus", "director's salary", "wages", "stipend"],
+      "notes": "Employer must consider declarations under 80C, 80D, HRA etc."
+    },
+    "194A": {
+      "name": "Interest other than interest on securities",
+      "description": "TDS on interest paid on deposits, loans, advances (not being interest on securities)",
+      "rate": {
+        "individual_huf": 10.0,
+        "company": 10.0,
+        "firm": 10.0,
+        "default": 10.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 5000,
+        "description": "No TDS if aggregate interest during FY does not exceed Rs 5,000"
+      },
+      "payer": "Bank, co-operative society, or any person paying interest",
+      "payee": "Any resident",
+      "frequency": "At the time of credit or payment, whichever is earlier",
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["interest paid", "interest on loan", "interest on deposit", "loan interest"],
+      "exemptions": [
+        "Interest on savings bank account up to Rs 10,000 (Sec 80TTA)",
+        "Interest to senior citizens up to Rs 50,000 (Sec 80TTB)",
+        "Form 15G/15H submitted by payee"
+      ]
+    },
+    "194C": {
+      "name": "Payment to contractor/sub-contractor",
+      "description": "TDS on payments to resident contractors and sub-contractors for carrying out any work (including supply of labour)",
+      "rate": {
+        "individual_huf": 1.0,
+        "company": 2.0,
+        "firm": 2.0,
+        "default": 2.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "single_payment": 30000,
+        "aggregate_annual": 100000,
+        "description": "No TDS if single payment <= Rs 30,000 AND aggregate during FY <= Rs 1,00,000"
+      },
+      "payer": "Any person (other than individual/HUF not subject to audit)",
+      "payee": "Resident contractor/sub-contractor",
+      "frequency": "At the time of credit or payment, whichever is earlier",
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["freight", "carriage", "transport", "logistics", "packing", "printing", "stationary", "shop repair", "maintenance", "computer repair", "contractor", "works contract", "labour supply"],
+      "exemptions": [
+        "Payments to transporters with PAN owning 10+ goods carriages — no TDS",
+        "Payments for personal purposes by individual/HUF"
+      ],
+      "notes": "GST component should be excluded from TDS base if separately shown in invoice (CBDT Circular 23/2017)"
+    },
+    "194D": {
+      "name": "Insurance commission",
+      "description": "TDS on insurance commission paid to resident insurance agents",
+      "rate": {
+        "individual_huf": 5.0,
+        "company": 5.0,
+        "default": 5.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 15000,
+        "description": "No TDS if aggregate commission during FY does not exceed Rs 15,000"
+      },
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["insurance commission", "insurance agent"]
+    },
+    "194DA": {
+      "name": "Payment in respect of life insurance policy",
+      "description": "TDS on maturity proceeds of life insurance policy (including bonus)",
+      "rate": {
+        "default": 5.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 100000,
+        "description": "No TDS if aggregate payment does not exceed Rs 1,00,000"
+      },
+      "form": "26Q",
+      "expense_keywords": ["life insurance maturity", "insurance proceeds"]
+    },
+    "194H": {
+      "name": "Commission or brokerage",
+      "description": "TDS on commission or brokerage (not being insurance commission under 194D)",
+      "rate": {
+        "individual_huf": 2.0,
+        "company": 2.0,
+        "firm": 2.0,
+        "default": 2.0,
+        "no_pan": 20.0,
+        "amendment": "Reduced from 5% to 2% by Finance Act 2025"
+      },
+      "threshold": {
+        "aggregate_annual": 15000,
+        "description": "No TDS if aggregate commission/brokerage during FY does not exceed Rs 15,000"
+      },
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["brokerage", "commission", "commission paid", "brokerage and commission"],
+      "notes": "Rate was 5% until Finance Act 2025 changed it to 2%"
+    },
+    "194I_a": {
+      "name": "Rent on plant and machinery",
+      "description": "TDS on rent paid for plant, machinery, or equipment",
+      "rate": {
+        "individual_huf": 2.0,
+        "company": 2.0,
+        "default": 2.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 240000,
+        "description": "No TDS if aggregate rent during FY does not exceed Rs 2,40,000"
+      },
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["rent plant", "rent machinery", "equipment rental", "machine hire"]
+    },
+    "194I_b": {
+      "name": "Rent on land, building, or furniture",
+      "description": "TDS on rent paid for land, building (including factory building), furniture or fittings",
+      "rate": {
+        "individual_huf": 10.0,
+        "company": 10.0,
+        "default": 10.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 240000,
+        "description": "No TDS if aggregate rent during FY does not exceed Rs 2,40,000"
+      },
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["rent", "shop rent", "office rent", "building rent", "godown rent", "warehouse rent"]
+    },
+    "194J_a": {
+      "name": "Fee for technical services (to call centre)",
+      "description": "TDS on fees for technical services paid to call centres or similar operations",
+      "rate": {
+        "individual_huf": 2.0,
+        "company": 2.0,
+        "default": 2.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 30000,
+        "description": "No TDS if aggregate fees during FY does not exceed Rs 30,000"
+      },
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["call centre", "technical services", "technical fees"]
+    },
+    "194J_b": {
+      "name": "Fee for professional or technical services",
+      "description": "TDS on fees for professional services, royalty, non-compete fees, or technical services (other than 194J(a))",
+      "rate": {
+        "individual_huf": 10.0,
+        "company": 10.0,
+        "default": 10.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 30000,
+        "description": "No TDS if aggregate fees during FY does not exceed Rs 30,000"
+      },
+      "form": "26Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["professional", "consultancy", "audit", "legal", "software", "gst annual return", "domain", "architect", "engineer", "doctor", "accountant", "royalty"],
+      "notes": "Includes fees for any professional services as defined in Explanation to section 194J"
+    },
+    "194K": {
+      "name": "Payment of dividend or income from units of mutual fund",
+      "description": "TDS on income from units of mutual fund, UTI, or specified company",
+      "rate": {
+        "default": 10.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 5000,
+        "description": "No TDS if aggregate income does not exceed Rs 5,000"
+      },
+      "form": "26Q",
+      "expense_keywords": ["mutual fund", "dividend", "units"]
+    },
+    "194LA": {
+      "name": "Payment of compensation on acquisition of certain immovable property",
+      "description": "TDS on compensation or enhanced compensation on compulsory acquisition of immovable property",
+      "rate": {
+        "default": 10.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 250000,
+        "description": "No TDS if aggregate compensation does not exceed Rs 2,50,000"
+      },
+      "form": "26Q",
+      "expense_keywords": ["compensation", "immovable property", "acquisition", "land acquisition"]
+    },
+    "194M": {
+      "name": "Payment by individual/HUF to contractors and professionals",
+      "description": "TDS on payment of commission, brokerage, contractual payment, or professional fees by individual/HUF not liable to audit",
+      "rate": {
+        "default": 5.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "aggregate_annual": 5000000,
+        "description": "No TDS if aggregate payment does not exceed Rs 50,00,000 during FY"
+      },
+      "form": "26QD",
+      "expense_keywords": ["commission by individual", "contract by individual"],
+      "notes": "Applicable only when payer is individual/HUF NOT subject to tax audit"
+    },
+    "194N": {
+      "name": "Cash withdrawal",
+      "description": "TDS on cash withdrawal exceeding threshold from bank/post office/co-operative society",
+      "rate": {
+        "filed_return": 2.0,
+        "not_filed_return": 5.0,
+        "default": 2.0
+      },
+      "threshold": {
+        "filed_return": 10000000,
+        "not_filed_return": 2000000,
+        "description": "Rs 1 Cr if return filed, Rs 20L if return not filed for last 3 years"
+      },
+      "form": "26Q",
+      "expense_keywords": ["cash withdrawal"]
+    },
+    "194O": {
+      "name": "Payment by e-commerce operator to participant",
+      "description": "TDS on payment of amount to e-commerce participant for sale of goods or provision of services facilitated by e-commerce operator",
+      "rate": {
+        "default": 1.0,
+        "no_pan": 5.0
+      },
+      "threshold": {
+        "aggregate_annual": 500000,
+        "description": "No TDS if aggregate payment does not exceed Rs 5,00,000 during FY"
+      },
+      "form": "26Q",
+      "expense_keywords": ["e-commerce", "marketplace", "online platform", "digital platform"]
+    },
+    "194Q": {
+      "name": "Payment for purchase of goods",
+      "description": "TDS on payment for purchase of goods by buyer whose total sales/gross receipts exceed Rs 10 Cr in preceding FY",
+      "rate": {
+        "default": 0.1,
+        "no_pan": 5.0
+      },
+      "threshold": {
+        "aggregate_annual": 5000000,
+        "description": "No TDS if aggregate purchase from a seller does not exceed Rs 50,00,000 during FY. TDS on amount exceeding Rs 50L only."
+      },
+      "form": "26Q",
+      "expense_keywords": ["purchase", "purchase of goods", "material purchase", "raw material"],
+      "notes": "Applicable only if buyer's turnover exceeds Rs 10 Cr in preceding FY. Not applicable if seller is liable to collect TCS under 206C(1H)."
+    },
+    "195": {
+      "name": "Payment to non-resident",
+      "description": "TDS on payment of any sum (other than salary) to a non-resident or foreign company",
+      "rate": {
+        "note": "Rates vary by nature of payment and DTAA provisions",
+        "interest": 20.0,
+        "royalty": 10.0,
+        "technical_fees": 10.0,
+        "other": 30.0,
+        "no_pan": 20.0
+      },
+      "threshold": {
+        "description": "No threshold — TDS on entire amount"
+      },
+      "form": "27Q",
+      "certificate": "Form 16A",
+      "expense_keywords": ["non-resident", "foreign", "nri", "overseas", "international"],
+      "notes": "DTAA provisions may override domestic rates. Lower rate certificate under 197 may apply."
+    }
+  },
+
+  "penalties": {
+    "201_1A": {
+      "section": "201(1A)",
+      "name": "Interest on late/non-deduction of TDS",
+      "conditions": [
+        {"scenario": "TDS not deducted", "rate_per_month": 1.0, "from": "date when TDS should have been deducted", "to": "date of actual deduction"},
+        {"scenario": "TDS deducted but not deposited", "rate_per_month": 1.5, "from": "date of deduction", "to": "date of actual deposit"}
+      ],
+      "notes": "Part of a month is considered full month. Interest is simple interest."
+    },
+    "234E": {
+      "section": "234E",
+      "name": "Late filing fee for TDS return",
+      "rate": "Rs 200 per day until return is filed",
+      "maximum": "Amount of TDS deductible/collectible",
+      "notes": "Fee cannot exceed total TDS amount. Applicable from due date of filing."
+    },
+    "271C": {
+      "section": "271C",
+      "name": "Penalty for failure to deduct TDS",
+      "rate": "Equal to the amount of TDS not deducted",
+      "notes": "Penalty equal to TDS amount. Can be waived if reasonable cause shown. AO must give opportunity of being heard."
+    },
+    "271H": {
+      "section": "271H",
+      "name": "Penalty for late filing of TDS return",
+      "range": {"minimum": 10000, "maximum": 100000},
+      "notes": "Applicable if return filed after 1 year from due date. Not applicable if fees u/s 234E already levied."
+    },
+    "276B": {
+      "section": "276B",
+      "name": "Prosecution for failure to deposit TDS",
+      "punishment": "Rigorous imprisonment from 3 months to 7 years with fine",
+      "notes": "Criminal prosecution. Applicable if TDS deducted but not deposited to government within prescribed time."
+    }
+  },
+
+  "due_dates": {
+    "deposit": {
+      "general": "7th of the following month",
+      "march": "30th April (for deductions in March)",
+      "government": "Same day as deduction (for government deductors)"
+    },
+    "return_filing": {
+      "Q1": {"period": "April-June", "due_date": "31st July"},
+      "Q2": {"period": "July-September", "due_date": "31st October"},
+      "Q3": {"period": "October-December", "due_date": "31st January"},
+      "Q4": {"period": "January-March", "due_date": "31st May"}
+    },
+    "certificate_issue": {
+      "form_16": "By 15th June following the FY",
+      "form_16A": "Within 15 days from due date of filing TDS return"
+    }
+  },
+
+  "forms": {
+    "24Q": {"purpose": "TDS on salary (Section 192)", "frequency": "Quarterly"},
+    "26Q": {"purpose": "TDS on all payments other than salary to residents", "frequency": "Quarterly"},
+    "27Q": {"purpose": "TDS on payments to non-residents (Section 195)", "frequency": "Quarterly"},
+    "26QD": {"purpose": "TDS by individual/HUF under Section 194M", "frequency": "Quarterly"},
+    "Form_16": {"purpose": "TDS certificate for salary", "issued_by": "Employer"},
+    "Form_16A": {"purpose": "TDS certificate for non-salary payments", "issued_by": "Deductor"},
+    "Form_26AS": {"purpose": "Annual Tax Statement — shows all TDS credits for a PAN", "issued_by": "TRACES portal"},
+    "Form_15G": {"purpose": "Declaration by individual (below 60) that income is below taxable limit", "effect": "No TDS deduction"},
+    "Form_15H": {"purpose": "Declaration by senior citizen (60+) that tax on total income is nil", "effect": "No TDS deduction"}
+  },
+
+  "entity_types": {
+    "C": {"type": "company", "pan_4th_char": "C", "description": "Company (Indian or foreign)"},
+    "P": {"type": "individual_huf", "pan_4th_char": "P", "description": "Individual / Person"},
+    "H": {"type": "individual_huf", "pan_4th_char": "H", "description": "Hindu Undivided Family"},
+    "F": {"type": "firm", "pan_4th_char": "F", "description": "Partnership Firm / LLP"},
+    "A": {"type": "aop", "pan_4th_char": "A", "description": "Association of Persons"},
+    "T": {"type": "trust", "pan_4th_char": "T", "description": "Trust / AOP (Trust)"},
+    "G": {"type": "government", "pan_4th_char": "G", "description": "Government body"}
+  },
+
+  "ambiguous_expenses": {
+    "advertisement": {
+      "possible_sections": ["194C", "194J_b"],
+      "classification_guide": "194C if works contract (printing, production, hoarding installation). 194J(b) if creative/professional services (ad agency fees, digital marketing, content creation). Check invoice description.",
+      "keywords_194C": ["printing", "hoarding", "banner", "production", "fabrication"],
+      "keywords_194J": ["creative", "agency", "digital marketing", "content", "design", "campaign"]
+    },
+    "annual_maintenance": {
+      "possible_sections": ["194C", "194J_b"],
+      "classification_guide": "194C if facility/physical maintenance (building, equipment). 194J(b) if technical/software maintenance (AMC for software, IT support). Check contract terms.",
+      "keywords_194C": ["facility", "building", "equipment", "housekeeping", "cleaning"],
+      "keywords_194J": ["software", "IT", "technical", "application", "server", "network"]
+    },
+    "software": {
+      "possible_sections": ["194J_b", "194C"],
+      "classification_guide": "194J(b) for software license, royalty, SaaS subscription. 194C for custom software development contract (works contract). Check if it's a license or development.",
+      "keywords_194J": ["license", "subscription", "saas", "royalty", "renewal"],
+      "keywords_194C": ["development", "custom", "project", "implementation", "migration"]
+    }
+  }
+}
