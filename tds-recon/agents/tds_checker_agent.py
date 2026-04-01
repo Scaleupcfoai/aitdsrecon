@@ -778,13 +778,20 @@ def build_matched_tally_keys(matches: list[dict]) -> set[str]:
 # Main Runner
 # ---------------------------------------------------------------------------
 
-def run(parsed_dir: str, results_dir: str) -> dict:
+def run(parsed_dir: str, results_dir: str, event_callback=None) -> dict:
     """Run all TDS compliance checks.
 
     Args:
         parsed_dir: Path to parsed data (parsed_form26.json, parsed_tally.json)
         results_dir: Path to results (match_results.json, output checker_results.json)
+        event_callback: Optional callable(agent, message, type) for real-time progress.
     """
+
+    def emit(message, type="detail"):
+        if event_callback:
+            event_callback("TDS Checker", message, type)
+        print(f"  [{type}] {message}")
+
     parsed_path = Path(parsed_dir)
     results_path = Path(results_dir)
 
@@ -799,54 +806,88 @@ def run(parsed_dir: str, results_dir: str) -> dict:
     form26_entries = form26_data["entries"]
     matches = match_data["matches"]
 
-    print("[TDS Checker] Starting compliance checks...")
-    print(f"  Matches to validate: {len(matches)}")
-    print(f"  Form 26 entries: {len(form26_entries)}")
-
     all_findings = []
 
-    # ---- Check 1: Section Validation ----
-    print("\n[Check 1] Section validation...")
+    # ---- Section Validation ----
+    emit(f"Validating TDS sections for {len(matches)} matched entries...")
     section_findings = []
     for m in matches:
         finding = check_section(m)
         if finding:
             section_findings.append(finding)
     all_findings.extend(section_findings)
-    print(f"  → {len(section_findings)} finding(s)")
+    if section_findings:
+        emit(f"{len(section_findings)} section classification issues found", "warning")
+    else:
+        emit("All sections correctly classified", "success")
 
-    # ---- Check 2: Rate Validation ----
-    print("\n[Check 2] Rate validation...")
+    # ---- Rate Validation ----
+    emit("Validating TDS rates against Income Tax rules...")
     rate_findings = []
     for m in matches:
         finding = check_rate(m)
         if finding:
             rate_findings.append(finding)
     all_findings.extend(rate_findings)
-    print(f"  → {len(rate_findings)} finding(s)")
+    if rate_findings:
+        emit(f"{len(rate_findings)} rate mismatches found", "warning")
+    else:
+        emit("All TDS rates correct", "success")
 
-    # ---- Check 3: Base Amount Validation ----
-    print("\n[Check 3] Base amount validation (TDS on pre-GST amount)...")
+    # ---- Base Amount Validation ----
+    emit("Checking if TDS computed on correct base amount (pre-GST)...")
     base_findings = []
     for m in matches:
         finding = check_base_amount(m)
         if finding:
             base_findings.append(finding)
     all_findings.extend(base_findings)
-    print(f"  → {len(base_findings)} finding(s)")
+    if base_findings:
+        emit(f"{len(base_findings)} base amount issues — TDS may be on GST-inclusive amount", "warning")
+    else:
+        emit("All base amounts correct", "success")
 
-    # ---- Check 4: Threshold Validation ----
-    print("\n[Check 4] Threshold validation...")
+    # ---- Threshold Validation ----
+    emit("Checking threshold compliance across vendors...")
     threshold_findings = check_thresholds(matches)
     all_findings.extend(threshold_findings)
-    print(f"  → {len(threshold_findings)} finding(s)")
+    below_count = sum(1 for f in threshold_findings if "below" in f.get("status", ""))
+    if below_count:
+        emit(f"{below_count} vendors below annual threshold (TDS not mandatory)")
 
-    # ---- Check 5: Missing TDS Detection ----
-    print("\n[Check 5] Missing TDS detection (unmatched Tally expenses)...")
+    # ---- Missing TDS Detection ----
+    # Count TDS-applicable entries by expense type for natural progress
+    jr_entries = tally_data.get("journal_register", {}).get("entries", [])
+    gst_entries = tally_data.get("purchase_gst_exp_register", {}).get("entries", [])
+    interest_count = sum(1 for e in jr_entries if e.get("entry_type") == "interest_payment")
+    freight_count = sum(1 for e in jr_entries if e.get("entry_type") == "freight_expense")
+    brokerage_count = sum(1 for e in jr_entries if e.get("entry_type") == "brokerage")
+    professional_count = sum(1 for e in jr_entries if e.get("entry_type") in ("professional_fees", "consultancy", "audit_fees"))
+    emit("Scanning books for entries where TDS may be missing...")
+    if interest_count:
+        emit(f"Scanning interest expenses... {interest_count} entries")
+    if freight_count:
+        emit(f"Scanning contractor/freight expenses... {freight_count} entries")
+    if brokerage_count:
+        emit(f"Scanning brokerage/commission expenses... {brokerage_count} entries")
+    if professional_count:
+        emit(f"Scanning professional/consultancy fees... {professional_count} entries")
+    if gst_entries:
+        emit(f"Scanning GST expense register... {len(gst_entries)} entries")
     matched_keys = build_matched_tally_keys(matches)
     missing_findings = detect_missing_tds(tally_data, form26_entries, matched_keys)
     all_findings.extend(missing_findings)
-    print(f"  → {len(missing_findings)} finding(s)")
+    review_count = sum(1 for f in missing_findings if f.get("needs_review"))
+    error_count = sum(1 for f in missing_findings if f["severity"] == "error")
+    if missing_findings:
+        parts = []
+        if error_count:
+            parts.append(f"{error_count} missing TDS")
+        if review_count:
+            parts.append(f"{review_count} flagged for review")
+        emit(f"Found {', '.join(parts)}", "warning")
+    else:
+        emit("No missing TDS detected", "success")
 
     # ---- Summarize ----
     summary = {

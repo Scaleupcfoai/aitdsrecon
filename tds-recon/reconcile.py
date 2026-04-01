@@ -109,27 +109,19 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None,
     # ---- Step 2: Matcher ----
     logger.agent_start("Matcher Agent", "Starting Matcher Agent...")
     from agents.matcher_agent import run as matcher_run
-    match_results = matcher_run(str(parsed_dir), str(results_dir), rules_dir=str(rules_dir))
 
-    # Emit matcher details from results
+    def matcher_event(agent, message, type="detail"):
+        logger.emit(agent, message, type)
+
+    match_results = matcher_run(str(parsed_dir), str(results_dir),
+                                rules_dir=str(rules_dir), event_callback=matcher_event)
+
     summary = match_results.get("summary", {})
-    by_pass = summary.get("matches_by_pass", {})
     learned = match_results.get("learned_rules", {})
-
     if learned.get("rules_loaded", 0) > 0:
-        logger.detail("Matcher Agent", f"Pass 0: {learned['rules_loaded']} learned rules loaded")
+        logger.detail("Matcher Agent", f"Loaded {learned['rules_loaded']} learned rules from previous runs")
         if learned.get("below_threshold_entries", 0):
-            logger.detail("Matcher Agent", f"  \u2192 {learned['below_threshold_entries']} below-threshold entries marked")
-    if by_pass.get("pass1_exact", 0):
-        logger.detail("Matcher Agent", f"Pass 1: {by_pass['pass1_exact']} exact matches (name + amount + date)")
-    if by_pass.get("pass2_gst_adjusted", 0):
-        logger.detail("Matcher Agent", f"Pass 2: {by_pass['pass2_gst_adjusted']} GST-adjusted matches")
-    if by_pass.get("pass3_exempt", 0):
-        logger.detail("Matcher Agent", f"Pass 3: {by_pass['pass3_exempt']} exempt entries filtered")
-    if by_pass.get("pass4_fuzzy", 0):
-        logger.detail("Matcher Agent", f"Pass 4: {by_pass['pass4_fuzzy']} fuzzy matches (name similarity > 40%)")
-    if by_pass.get("pass5_aggregated", 0):
-        logger.detail("Matcher Agent", f"Pass 5: {by_pass['pass5_aggregated']} aggregated matches")
+            logger.detail("Matcher Agent", f"{learned['below_threshold_entries']} below-threshold entries resolved")
 
     matched = summary.get("form26_matched", 0)
     below_threshold = summary.get("below_threshold_resolved", 0)
@@ -138,8 +130,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None,
     pct = (matched / total * 100) if total > 0 else 0
     logger.success("Matcher Agent", f"Result: {matched}/{total} matched with TDS ({pct:.0f}%)")
     if below_threshold:
-        logger.detail("Matcher Agent", f"Below-threshold (TDS=0, exempt): {below_threshold} entries resolved")
-        logger.success("Matcher Agent", f"Total resolved: {total_resolved} entries")
+        logger.success("Matcher Agent", f"Total resolved: {total_resolved} entries ({matched} TDS + {below_threshold} exempt)")
     logger.agent_done("Matcher Agent", "Matching complete")
 
     # Ask user about unmatched entries if any exist
@@ -169,25 +160,15 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None,
     # ---- Step 3: TDS Checker ----
     logger.agent_start("TDS Checker", "Starting TDS Checker Agent...")
     from agents.tds_checker_agent import run as checker_run
-    checker_results = checker_run(str(parsed_dir), str(results_dir))
+
+    def checker_event(agent, message, type="detail"):
+        logger.emit(agent, message, type)
+
+    checker_results = checker_run(str(parsed_dir), str(results_dir), event_callback=checker_event)
 
     findings = checker_results.get("findings", [])
     errors = [f for f in findings if f.get("severity") == "error"]
     warnings = [f for f in findings if f.get("severity") == "warning"]
-
-    for f in findings:
-        sev = f.get("severity", "info")
-        vendor = f.get("vendor", "Unknown")
-        msg = f.get("message", "")
-        # Truncate long messages
-        short_msg = msg[:120] + "..." if len(msg) > 120 else msg
-        if sev == "error":
-            logger.error("TDS Checker", f"{vendor}: {short_msg}")
-        elif sev == "warning":
-            logger.warning("TDS Checker", f"{vendor}: {short_msg}")
-        else:
-            logger.detail("TDS Checker", f"{vendor}: {short_msg}")
-
     exposure = sum(f.get("aggregate_amount", 0) for f in errors)
     logger.success("TDS Checker", f"Complete: {len(errors)} errors, {len(warnings)} warnings, \u20b9{exposure:,.0f} exposure")
     logger.agent_done("TDS Checker", "Compliance checks complete")

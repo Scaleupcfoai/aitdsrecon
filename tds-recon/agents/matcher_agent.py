@@ -42,6 +42,15 @@ except ImportError:
 # Sections we're reconciling
 TARGET_SECTIONS = {"192", "194A", "194C", "194H", "194J(b)", "194Q"}
 
+SECTION_LABELS = {
+    "192": "Salary",
+    "194A": "Interest",
+    "194C": "Contractor / Freight",
+    "194H": "Commission / Brokerage",
+    "194J(b)": "Professional Fees",
+    "194Q": "Purchase of Goods",
+}
+
 # Amount tolerance for fuzzy matching (as fraction)
 FUZZY_AMOUNT_TOLERANCE = 0.005  # 0.5%
 
@@ -1003,8 +1012,17 @@ def _clean_entry(entry: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def run(parsed_dir: str, output_dir: str, sections: set | None = None,
-        rules_dir: str | None = None):
-    """Run the matching engine across all TDS sections."""
+        rules_dir: str | None = None, event_callback=None):
+    """Run the matching engine across all TDS sections.
+
+    Args:
+        event_callback: Optional callable(agent, message, type) for real-time progress.
+    """
+
+    def emit(message, type="detail"):
+        if event_callback:
+            event_callback("Matcher Agent", message, type)
+        print(f"  [{type}] {message}")
 
     parsed_dir = Path(parsed_dir)
     output_dir = Path(output_dir)
@@ -1132,62 +1150,54 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
         tally_pools["194Q"] = _pre_aggregate_194q(
             tally_pools["194Q"], f26_by_section.get("194Q", []))
 
-    # ---- Pass 1: Exact Match ----
-    print("\n--- Pass 1: Exact Match ---")
-    m1_all = []
+    # ---- Match section-by-section with progress events ----
     for sec in active_sections:
-        # For Section 192 (salary), use amount+date matching since Form 24
-        # has abbreviated names (AD, HCD) that don't match Tally full names
+        f26_sec = f26_by_section.get(sec, [])
+        tally_sec = tally_pools[sec]
+        sec_label = SECTION_LABELS.get(sec, sec)
+        sec_total = len(f26_sec)
+
+        emit(f"Matching Section {sec} — {sec_label} ({sec_total} entries)...")
+
         name_opt = (sec == "192")
-        m1 = pass1_exact_match(f26_by_section.get(sec, []), tally_pools[sec],
-                               name_optional=name_opt)
-        m1_all.extend(m1)
-        if m1:
-            print(f"  {sec}: {len(m1)} matches")
-    all_matches.extend(m1_all)
-    pass_counts["pass1_exact"] = len(m1_all)
+        sec_matches = []
+        sec_exemptions = []
 
-    # ---- Pass 2: GST-Adjusted ----
-    print("\n--- Pass 2: GST-Adjusted Match ---")
-    m2_all = []
-    for sec in active_sections:
-        m2 = pass2_gst_adjusted(f26_by_section.get(sec, []), tally_pools[sec])
-        m2_all.extend(m2)
-        if m2:
-            print(f"  {sec}: {len(m2)} matches")
-    all_matches.extend(m2_all)
-    pass_counts["pass2_gst_adjusted"] = len(m2_all)
+        # Pass 1: Exact
+        m1 = pass1_exact_match(f26_sec, tally_sec, name_optional=name_opt)
+        sec_matches.extend(m1)
+        pass_counts["pass1_exact"] += len(m1)
 
-    # ---- Pass 3: Exempt Filter ----
-    print("\n--- Pass 3: Exempt Filter ---")
-    for sec in active_sections:
-        ex = pass3_exempt_filter(f26_by_section.get(sec, []), tally_pools[sec])
-        all_exemptions.extend(ex)
-        if ex:
-            print(f"  {sec}: {len(ex)} entries marked exempt")
-    pass_counts["pass3_exempt"] = len(all_exemptions)
+        # Pass 2: GST-Adjusted
+        m2 = pass2_gst_adjusted(f26_sec, tally_sec)
+        sec_matches.extend(m2)
+        pass_counts["pass2_gst_adjusted"] += len(m2)
 
-    # ---- Pass 4: Fuzzy Match ----
-    print("\n--- Pass 4: Fuzzy Match ---")
-    m4_all = []
-    for sec in active_sections:
-        m4 = pass4_fuzzy_match(f26_by_section.get(sec, []), tally_pools[sec])
-        m4_all.extend(m4)
-        if m4:
-            print(f"  {sec}: {len(m4)} matches")
-    all_matches.extend(m4_all)
-    pass_counts["pass4_fuzzy"] = len(m4_all)
+        # Pass 3: Exempt Filter
+        ex = pass3_exempt_filter(f26_sec, tally_sec)
+        sec_exemptions.extend(ex)
+        pass_counts["pass3_exempt"] += len(ex)
 
-    # ---- Pass 5: Aggregated Match ----
-    print("\n--- Pass 5: Aggregated Match ---")
-    m5_all = []
-    for sec in active_sections:
-        m5 = pass5_aggregated_match(f26_by_section.get(sec, []), tally_pools[sec])
-        m5_all.extend(m5)
-        if m5:
-            print(f"  {sec}: {len(m5)} matches")
-    all_matches.extend(m5_all)
-    pass_counts["pass5_aggregated"] = len(m5_all)
+        # Pass 4: Fuzzy
+        m4 = pass4_fuzzy_match(f26_sec, tally_sec)
+        sec_matches.extend(m4)
+        pass_counts["pass4_fuzzy"] += len(m4)
+
+        # Pass 5: Aggregated
+        m5 = pass5_aggregated_match(f26_sec, tally_sec)
+        sec_matches.extend(m5)
+        pass_counts["pass5_aggregated"] += len(m5)
+
+        all_matches.extend(sec_matches)
+        all_exemptions.extend(sec_exemptions)
+
+        # Emit section result
+        matched_count = len(sec_matches)
+        unmatched_count = sec_total - matched_count
+        if unmatched_count == 0:
+            emit(f"Section {sec}: {matched_count}/{sec_total} matched", "success")
+        else:
+            emit(f"Section {sec}: {matched_count}/{sec_total} matched, {unmatched_count} flagged for review", "warning")
 
     # ---- Collect unmatched ----
     unmatched_form26 = [_clean_entry(e) for e in form26_entries if not e.get("_matched")]
