@@ -94,6 +94,11 @@ AMBIGUOUS_EXPENSE_HEADS = {
 # TDS rate table: section → entity_type → rate (%)
 # entity_type: "individual_huf" or "company" (derived from PAN 4th char)
 TDS_RATES = {
+    "192": {
+        "individual_huf": 30.0,  # Highest slab assumed for directors
+        "company": 30.0,
+        "default": 30.0,
+    },
     "194A": {
         "individual_huf": 10.0,
         "company": 10.0,
@@ -129,6 +134,11 @@ TDS_RATES = {
 # Threshold limits: section → {single_txn, aggregate_annual}
 # Below these limits, TDS need not be deducted
 TDS_THRESHOLDS = {
+    "192": {
+        "aggregate_annual": 250000,  # Basic exemption limit
+        "single_txn": None,
+        "description": "Salary below ₹2,50,000 basic exemption limit",
+    },
     "194A": {
         "aggregate_annual": 5000,
         "single_txn": None,

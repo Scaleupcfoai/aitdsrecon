@@ -39,8 +39,8 @@ except ImportError:
 # Config
 # ---------------------------------------------------------------------------
 
-# Sections we're reconciling in this MVP
-TARGET_SECTIONS = {"194A", "194C"}
+# Sections we're reconciling
+TARGET_SECTIONS = {"192", "194A", "194C", "194H", "194J(b)", "194Q"}
 
 # Amount tolerance for fuzzy matching (as fraction)
 FUZZY_AMOUNT_TOLERANCE = 0.005  # 0.5%
@@ -69,16 +69,16 @@ def parse_date(d) -> datetime | None:
 
 
 def normalize_name(name: str) -> str:
-    """Normalize vendor name for comparison: lowercase, strip suffixes."""
+    """Normalize vendor name for comparison: lowercase, strip suffixes and parentheticals."""
     if not name:
         return ""
     n = name.lower().strip()
     # Remove common suffixes
-    for suffix in ["pvt. ltd.", "pvt ltd", "private limited", "ltd.", "ltd",
+    for suffix in ["pvt. ltd.", "pvt ltd", "private limited", "limited", "ltd.", "ltd",
                    "llp", "lp", "inc.", "inc", "co.", "company"]:
         n = n.replace(suffix, "")
-    # Remove parenthetical IDs like "(34)"
-    n = re.sub(r"\(\d+\)", "", n)
+    # Remove ALL parentheticals: "(34)", "(Shirting Div.)", "(Loan)", "(Chhindwara)" etc.
+    n = re.sub(r"\([^)]*\)", "", n)
     # Remove extra whitespace
     n = re.sub(r"\s+", " ", n).strip()
     return n
@@ -140,21 +140,45 @@ def to_serializable(obj):
 def build_tally_194a_entries(tally: dict) -> list[dict]:
     """
     Extract 194A-relevant entries from Tally Journal Register.
-    These are interest_payment entries with loan_party identified.
+    These are interest_payment entries. The party name comes from:
+    1. loan_party field (if column has "(Loan)" suffix)
+    2. Person-name columns in account postings (for entries without "(Loan)")
     """
+    # Meta columns that are NOT person names
+    INTEREST_META = {"interest paid", "tds payable", "gross total", "value"}
+
     entries = []
     for e in tally["journal_register"]["entries"]:
-        if e["entry_type"] == "interest_payment" and e.get("loan_party"):
-            amount = e["account_postings"].get("Interest Paid", 0)
-            entries.append({
-                "tally_source": "journal_interest",
-                "date": e["date"],
-                "party_name": e["loan_party"],
-                "amount": amount,
-                "voucher_no": e["voucher_no"],
-                "raw": e,
-                "_matched": False,
-            })
+        if e["entry_type"] != "interest_payment":
+            continue
+
+        amount = e["account_postings"].get("Interest Paid", 0)
+        if amount == 0:
+            continue
+
+        # Prefer loan_party if available
+        if e.get("loan_party"):
+            party = e["loan_party"]
+        else:
+            # Find person-name column(s) in postings
+            party = None
+            for col_name in e.get("account_postings", {}):
+                if col_name.lower().strip() not in INTEREST_META:
+                    party = col_name
+                    break
+
+        if not party:
+            continue
+
+        entries.append({
+            "tally_source": "journal_interest",
+            "date": e["date"],
+            "party_name": party,
+            "amount": amount,
+            "voucher_no": e["voucher_no"],
+            "raw": e,
+            "_matched": False,
+        })
     return entries
 
 
@@ -204,13 +228,183 @@ def build_tally_194c_entries(tally: dict) -> list[dict]:
     return entries
 
 
+def build_tally_194h_entries(tally: dict) -> list[dict]:
+    """
+    Extract 194H-relevant entries from Tally Journal Register.
+    These are brokerage/commission entries with 'Brokerage and Commission' posting.
+    """
+    entries = []
+    for e in tally["journal_register"]["entries"]:
+        if e["entry_type"] == "brokerage" and e.get("particulars"):
+            amount = e["account_postings"].get("Brokerage and Commission", 0)
+            if amount == 0:
+                continue
+            entries.append({
+                "tally_source": "journal_brokerage",
+                "date": e["date"],
+                "party_name": e["particulars"],
+                "amount": amount,
+                "voucher_no": e["voucher_no"],
+                "account_postings": e.get("account_postings", {}),
+                "raw": e,
+                "_matched": False,
+            })
+    return entries
+
+
+def build_tally_194j_entries(tally: dict) -> list[dict]:
+    """
+    Extract 194J(b)-relevant entries from Tally.
+
+    Sources:
+    1. Journal Register — professional_fees, consultancy, audit_fees entries
+    2. Purchase GST Exp Register — entries with professional/consultancy/audit expense heads
+       Uses BASE amount (pre-GST) since TDS is on base amount.
+    """
+    entries = []
+
+    # Professional expense heads to look for in GST register
+    PROFESSIONAL_HEADS = {
+        "professonal charges", "professional charges", "consultancy charges",
+        "audit fees", "outstanding audit fees", "legal charges",
+        "gst annual return charges", "domain charges",
+    }
+
+    # From Journal Register
+    for e in tally["journal_register"]["entries"]:
+        if e["entry_type"] in ("professional_fees", "consultancy", "audit_fees"):
+            # Sum all non-meta postings as the amount
+            postings = e.get("account_postings", {})
+            amount = 0
+            for k, v in postings.items():
+                if k.lower().strip() in PROFESSIONAL_HEADS:
+                    amount += v
+            if amount == 0:
+                amount = e.get("gross_total", 0) or 0
+            if amount == 0:
+                continue
+            entries.append({
+                "tally_source": "journal_professional",
+                "date": e["date"],
+                "party_name": e.get("particulars", ""),
+                "amount": amount,
+                "voucher_no": e["voucher_no"],
+                "account_postings": postings,
+                "raw": e,
+                "_matched": False,
+            })
+
+    # From Purchase GST Exp Register — entries with professional expense heads
+    for e in tally["purchase_gst_exp_register"]["entries"]:
+        if not e.get("particulars"):
+            continue
+        heads = e.get("expense_heads", {})
+        has_professional = any(
+            h.lower().strip() in PROFESSIONAL_HEADS for h in heads
+        )
+        if has_professional:
+            entries.append({
+                "tally_source": "gst_exp_professional",
+                "date": e["date"],
+                "party_name": e["particulars"],
+                "amount": e["base_amount"],
+                "gross_amount": e["gross_total"],
+                "total_gst": e["total_gst"],
+                "amount_is_base": True,
+                "voucher_no": e["voucher_no"],
+                "expense_heads": heads,
+                "raw": e,
+                "_matched": False,
+            })
+
+    return entries
+
+
+def build_tally_194q_entries(tally: dict) -> list[dict]:
+    """
+    Extract 194Q-relevant entries from Tally Purchase Register.
+
+    194Q applies to purchase of goods exceeding ₹50 lakh aggregate.
+    These are goods purchases (not services/expenses).
+
+    Uses gross_total as the base amount since 194Q is on total purchase value.
+    """
+    entries = []
+    for e in tally["purchase_register"]["entries"]:
+        if not e.get("particulars"):
+            continue
+        # Use gross_total as the amount — 194Q TDS is on the purchase value
+        amount = e.get("gross_total", 0) or 0
+        if amount == 0:
+            continue
+        entries.append({
+            "tally_source": "purchase_register",
+            "date": e["date"],
+            "party_name": e["particulars"],
+            "amount": amount,
+            "purchase_value": e.get("purchase_value", 0),
+            "total_gst": e.get("total_gst", 0),
+            "voucher_no": e["voucher_no"],
+            "raw": e,
+            "_matched": False,
+        })
+    return entries
+
+
+def build_tally_192_entries(tally: dict) -> list[dict]:
+    """
+    Extract Section 192-relevant entries from Tally Journal Register.
+    These are salary entries — both regular staff salary and director's salary.
+
+    For director salary: the journal entry has Director's Salary posting
+    with individual person columns (e.g., "Adi Debnath": 675000).
+
+    Form 24 uses abbreviated names (e.g., "AD (D1)"), so matching will
+    rely on amount + date rather than name.
+    """
+    entries = []
+    for e in tally["journal_register"]["entries"]:
+        if e["entry_type"] != "salary":
+            continue
+
+        postings = e.get("account_postings", {})
+        is_director = "Director's Salary" in postings
+
+        # Extract individual person amounts from account postings
+        # Person columns are those that aren't expense heads
+        SALARY_HEADS = {"salary & bonus", "director's salary", "tds payable",
+                        "employees professonal tax"}
+        for col_name, amount in postings.items():
+            if col_name.lower().strip() in SALARY_HEADS:
+                continue
+            if amount == 0:
+                continue
+            # This is a person column with their salary amount
+            entries.append({
+                "tally_source": "journal_salary",
+                "date": e["date"],
+                "party_name": col_name,  # Full name e.g. "Adi Debnath"
+                "amount": amount,
+                "is_director": is_director,
+                "salary_type": "Director's Salary" if is_director else "Salary & Bonus",
+                "voucher_no": e["voucher_no"],
+                "raw": e,
+                "_matched": False,
+            })
+    return entries
+
+
 # ---------------------------------------------------------------------------
 # Pass 1: Exact Match
 # ---------------------------------------------------------------------------
 
-def pass1_exact_match(form26_entries: list[dict], tally_entries: list[dict]) -> list[dict]:
+def pass1_exact_match(form26_entries: list[dict], tally_entries: list[dict],
+                      name_optional: bool = False) -> list[dict]:
     """
     Exact match: same party name (normalized) + same amount + same date.
+
+    If name_optional=True (for Section 192 salary), match on amount + date only
+    since Form 24 uses abbreviated names (AD, HCD) vs Tally full names.
     """
     matches = []
 
@@ -229,29 +423,33 @@ def pass1_exact_match(form26_entries: list[dict], tally_entries: list[dict]) -> 
             tally_name = normalize_name(tally["party_name"])
             tally_date = parse_date(tally["date"])
 
-            # Name must match
-            if f26_name != tally_name:
+            # Name must match (unless salary section with abbreviated names)
+            if not name_optional and f26_name != tally_name:
                 continue
 
             # Amount must be exact
             if f26_amount != tally["amount"]:
                 continue
 
-            # Date within 3 days
-            if f26_date and tally_date and abs((f26_date - tally_date).days) > 3:
+            # Date within tolerance (3 days for named matches, 31 days for salary)
+            date_tolerance = 31 if name_optional else 3
+            if f26_date and tally_date and abs((f26_date - tally_date).days) > date_tolerance:
                 continue
 
             # Match found
+            confidence = 1.0 if not name_optional else 0.95
             matches.append({
                 "pass": 1,
-                "pass_name": "exact_match",
-                "confidence": 1.0,
+                "pass_name": "exact_match" if not name_optional else "exact_amount_date",
+                "confidence": confidence,
                 "form26_entry": _clean_entry(f26),
                 "tally_entries": [_clean_entry(tally)],
                 "match_details": {
-                    "name_match": f"'{f26['vendor_name']}' = '{tally['party_name']}'",
+                    "name_match": f"'{f26['vendor_name']}' → '{tally['party_name']}'" if name_optional
+                                  else f"'{f26['vendor_name']}' = '{tally['party_name']}'",
                     "amount_match": f"{f26_amount} = {tally['amount']}",
                     "date_diff_days": abs((f26_date - tally_date).days) if f26_date and tally_date else None,
+                    "match_mode": "amount+date (salary abbreviated names)" if name_optional else "name+amount+date",
                 },
             })
             f26["_matched"] = True
@@ -648,6 +846,113 @@ def pass5_aggregated_match(form26_entries: list[dict], tally_entries: list[dict]
 # Clean entry for output (remove internal fields and large raw data)
 # ---------------------------------------------------------------------------
 
+def _normalize_name_keep_division(name: str) -> str:
+    """Normalize vendor name but keep division/branch identifiers distinct.
+    Used for 194Q where 'Raymond Limited (Shirting)' != 'Raymond Limited (Chhindwara)'."""
+    if not name:
+        return ""
+    n = name.lower().strip()
+    # Extract division/branch from parenthetical before removing suffixes
+    division = ""
+    div_match = re.search(r"\(([^)]+)\)", n)
+    if div_match:
+        div_text = div_match.group(1).strip()
+        # Only keep it if it's a meaningful division (not just a number)
+        if not div_text.isdigit() and "loan" not in div_text:
+            # Take first word of division as identifier
+            division = div_text.split()[0] if div_text else ""
+    # Standard normalization
+    for suffix in ["pvt. ltd.", "pvt ltd", "private limited", "limited", "ltd.", "ltd",
+                   "llp", "lp", "inc.", "inc", "co.", "company"]:
+        n = n.replace(suffix, "")
+    n = re.sub(r"\([^)]*\)", "", n)
+    n = re.sub(r"\s+", " ", n).strip()
+    if division:
+        n = f"{n} [{division}]"
+    return n
+
+
+def _pre_aggregate_194q(tally_entries: list[dict], f26_entries: list[dict]) -> list[dict]:
+    """
+    Pre-aggregate 194Q purchase register entries into monthly synthetic entries.
+
+    194Q pattern: Form 26 amount = monthly sum of gross_totals / (1 + GST rate)
+    i.e., TDS is on purchase value excluding GST.
+
+    We group by vendor name (keeping divisions distinct) + month, compute the
+    GST-exclusive base, and create synthetic entries the matching passes can use.
+    """
+    # Group by (vendor_with_division, month)
+    groups = defaultdict(lambda: {
+        "entries": [], "gross_sum": 0, "party_names": set(),
+    })
+    for e in tally_entries:
+        vn = _normalize_name_keep_division(e["party_name"])
+        month = get_month_key(e["date"])
+        key = (vn, month)
+        groups[key]["entries"].append(e)
+        groups[key]["gross_sum"] += e.get("amount", 0) or 0
+        groups[key]["party_names"].add(e["party_name"])
+
+    # Also build vendor groups ignoring division (for F26 entries that aggregate divisions)
+    vendor_month_nodiv = defaultdict(lambda: {
+        "entries": [], "gross_sum": 0, "party_names": set(),
+    })
+    for e in tally_entries:
+        vn = normalize_name(e["party_name"])
+        month = get_month_key(e["date"])
+        key = (vn, month)
+        vendor_month_nodiv[key]["entries"].append(e)
+        vendor_month_nodiv[key]["gross_sum"] += e.get("amount", 0) or 0
+        vendor_month_nodiv[key]["party_names"].add(e["party_name"])
+
+    # Build synthetic monthly entries with GST-adjusted base amounts
+    synthetic = []
+
+    # Per-division monthly aggregates
+    for (vn, month), g in groups.items():
+        gross = g["gross_sum"]
+        for gst_rate in [0.05, 0.12, 0.18, 0.28]:
+            base = round(gross / (1 + gst_rate), 0)
+            synthetic.append({
+                "tally_source": "purchase_register_agg",
+                "date": f"{month}-28" if month else "",
+                "party_name": sorted(g["party_names"])[0],
+                "amount": base,
+                "gross_amount": gross,
+                "gst_rate_applied": gst_rate,
+                "num_invoices": len(g["entries"]),
+                "month": month,
+                "voucher_no": f"AGG-{month}-{len(g['entries'])}inv",
+                "_matched": False,
+            })
+
+    # Cross-division monthly aggregates (all divisions of same vendor combined)
+    for (vn, month), g in vendor_month_nodiv.items():
+        gross = g["gross_sum"]
+        for gst_rate in [0.05, 0.12, 0.18, 0.28]:
+            base = round(gross / (1 + gst_rate), 0)
+            synthetic.append({
+                "tally_source": "purchase_register_agg_combined",
+                "date": f"{month}-28" if month else "",
+                "party_name": sorted(g["party_names"])[0],
+                "amount": base,
+                "gross_amount": gross,
+                "gst_rate_applied": gst_rate,
+                "num_invoices": len(g["entries"]),
+                "month": month,
+                "voucher_no": f"AGG-COMBINED-{month}-{len(g['entries'])}inv",
+                "_matched": False,
+            })
+
+    # Keep individual entries for exact matching
+    for e in tally_entries:
+        e["_matched"] = False
+        synthetic.append(e)
+
+    return synthetic
+
+
 def _find_subset_sum(entries: list[dict], target: float, tolerance: float) -> list[dict] | None:
     """
     Find a subset of entries whose amounts sum to target (within tolerance).
@@ -699,7 +1004,7 @@ def _clean_entry(entry: dict) -> dict:
 
 def run(parsed_dir: str, output_dir: str, sections: set | None = None,
         rules_dir: str | None = None):
-    """Run the matching engine with optional learned rules (Pass 0)."""
+    """Run the matching engine across all TDS sections."""
 
     parsed_dir = Path(parsed_dir)
     output_dir = Path(output_dir)
@@ -722,11 +1027,26 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
 
     print(f"[Matcher] {len(form26_entries)} Form 26 entries for sections {sections}")
 
-    # Build Tally entry pools
-    tally_194a = build_tally_194a_entries(tally_data)
-    tally_194c = build_tally_194c_entries(tally_data)
-    print(f"[Matcher] {len(tally_194a)} Tally 194A entries (interest payments)")
-    print(f"[Matcher] {len(tally_194c)} Tally 194C entries (freight + GST expenses)")
+    # Build Tally entry pools per section
+    tally_pools = {}
+    if "192" in sections:
+        tally_pools["192"] = build_tally_192_entries(tally_data)
+        print(f"[Matcher] {len(tally_pools['192'])} Tally 192 entries (salary payments)")
+    if "194A" in sections:
+        tally_pools["194A"] = build_tally_194a_entries(tally_data)
+        print(f"[Matcher] {len(tally_pools['194A'])} Tally 194A entries (interest payments)")
+    if "194C" in sections:
+        tally_pools["194C"] = build_tally_194c_entries(tally_data)
+        print(f"[Matcher] {len(tally_pools['194C'])} Tally 194C entries (freight + GST expenses)")
+    if "194H" in sections:
+        tally_pools["194H"] = build_tally_194h_entries(tally_data)
+        print(f"[Matcher] {len(tally_pools['194H'])} Tally 194H entries (brokerage/commission)")
+    if "194J(b)" in sections:
+        tally_pools["194J(b)"] = build_tally_194j_entries(tally_data)
+        print(f"[Matcher] {len(tally_pools['194J(b)'])} Tally 194J(b) entries (professional/consultancy)")
+    if "194Q" in sections:
+        tally_pools["194Q"] = build_tally_194q_entries(tally_data)
+        print(f"[Matcher] {len(tally_pools['194Q'])} Tally 194Q entries (purchase of goods)")
 
     # ---- Pass 0: Apply Learned Rules ----
     rules_applied = []
@@ -736,7 +1056,6 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
     below_threshold_vendors = set()
 
     if rules_dir is None:
-        # Default rules path
         rules_dir = str(parsed_dir.parent / "data" / "rules")
 
     if HAS_LEARNING_AGENT:
@@ -744,17 +1063,17 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
         if learned_rules:
             print(f"\n--- Pass 0: Learned Rules ({len(learned_rules)} active) ---")
 
-            # Apply vendor aliases to tally entries
+            # Apply vendor aliases to all tally pools
             alias_rules = [r for r in learned_rules if r["rule_type"] == "vendor_alias"]
             if alias_rules:
-                tally_194c, alias_ids = learning_agent.apply_vendor_aliases(
-                    learned_rules, tally_194c)
-                tally_194a, alias_ids_a = learning_agent.apply_vendor_aliases(
-                    learned_rules, tally_194a)
-                alias_count = len(alias_ids) + len(alias_ids_a)
-                if alias_count:
-                    print(f"  Vendor aliases applied: {alias_count}")
-                    rules_applied.extend(alias_ids | alias_ids_a)
+                total_aliases = 0
+                for sec_key, pool in tally_pools.items():
+                    pool, alias_ids = learning_agent.apply_vendor_aliases(learned_rules, pool)
+                    tally_pools[sec_key] = pool
+                    total_aliases += len(alias_ids)
+                    rules_applied.extend(alias_ids)
+                if total_aliases:
+                    print(f"  Vendor aliases applied: {total_aliases}")
 
             # Get ignore/exempt/below-threshold sets
             ignored_vendors = learning_agent.get_ignored_vendors(learned_rules)
@@ -762,28 +1081,28 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
             below_threshold_vendors = learning_agent.get_below_threshold_vendors(
                 learned_rules, "194C")
 
-            # Filter out ignored vendors from tally entries
+            # Filter out ignored vendors from all pools
             if ignored_vendors:
-                before = len(tally_194c)
-                tally_194c = [
-                    e for e in tally_194c
-                    if e.get("party_name", "").lower().strip() not in ignored_vendors
-                ]
-                ignored_count = before - len(tally_194c)
-                if ignored_count:
-                    print(f"  Ignored vendors removed: {ignored_count} entries")
+                for sec_key in tally_pools:
+                    before = len(tally_pools[sec_key])
+                    tally_pools[sec_key] = [
+                        e for e in tally_pools[sec_key]
+                        if e.get("party_name", "").lower().strip() not in ignored_vendors
+                    ]
+                    removed = before - len(tally_pools[sec_key])
+                    if removed:
+                        print(f"  Ignored vendors removed from {sec_key}: {removed} entries")
 
-            # Mark below-threshold vendors
-            if below_threshold_vendors:
+            # Mark below-threshold vendors (194C specific from learned rules)
+            if below_threshold_vendors and "194C" in tally_pools:
                 bt_count = 0
-                for e in tally_194c:
+                for e in tally_pools["194C"]:
                     if e.get("party_name", "").lower().strip() in below_threshold_vendors:
                         e["_below_threshold"] = True
                         bt_count += 1
                 if bt_count:
                     print(f"  Below-threshold entries marked: {bt_count}")
 
-            # Track rule application counts
             for rule_id in rules_applied:
                 learning_agent.increment_applied(rules_dir, rule_id)
         else:
@@ -792,69 +1111,104 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
         print("\n--- Pass 0: Learned Rules (learning agent not available) ---")
 
     # Split Form 26 by section
-    f26_194a = [e for e in form26_entries if e["section"] == "194A"]
-    f26_194c = [e for e in form26_entries if e["section"] == "194C"]
+    f26_by_section = {}
+    for sec in sections:
+        f26_by_section[sec] = [e for e in form26_entries if e["section"] == sec]
 
     all_matches = []
     all_exemptions = []
+    pass_counts = {"pass1_exact": 0, "pass2_gst_adjusted": 0, "pass3_exempt": 0,
+                   "pass4_fuzzy": 0, "pass5_aggregated": 0}
+
+    # Run all 5 passes across all sections
+    section_order = ["192", "194A", "194C", "194H", "194J(b)", "194Q"]
+    active_sections = [s for s in section_order if s in sections and s in tally_pools]
+
+    # ---- Pass 0b: 194Q pre-processing ----
+    # 194Q entries are monthly aggregates of hundreds of purchase invoices.
+    # Form 26 amount = sum(gross_total) / (1 + GST_rate) for the month.
+    # Pre-aggregate into monthly synthetic entries for matching.
+    if "194Q" in tally_pools:
+        tally_pools["194Q"] = _pre_aggregate_194q(
+            tally_pools["194Q"], f26_by_section.get("194Q", []))
 
     # ---- Pass 1: Exact Match ----
     print("\n--- Pass 1: Exact Match ---")
-    m1a = pass1_exact_match(f26_194a, tally_194a)
-    m1c = pass1_exact_match(f26_194c, tally_194c)
-    m1 = m1a + m1c
-    all_matches.extend(m1)
-    print(f"  194A: {len(m1a)} matches")
-    print(f"  194C: {len(m1c)} matches")
+    m1_all = []
+    for sec in active_sections:
+        # For Section 192 (salary), use amount+date matching since Form 24
+        # has abbreviated names (AD, HCD) that don't match Tally full names
+        name_opt = (sec == "192")
+        m1 = pass1_exact_match(f26_by_section.get(sec, []), tally_pools[sec],
+                               name_optional=name_opt)
+        m1_all.extend(m1)
+        if m1:
+            print(f"  {sec}: {len(m1)} matches")
+    all_matches.extend(m1_all)
+    pass_counts["pass1_exact"] = len(m1_all)
 
     # ---- Pass 2: GST-Adjusted ----
     print("\n--- Pass 2: GST-Adjusted Match ---")
-    m2a = pass2_gst_adjusted(f26_194a, tally_194a)
-    m2c = pass2_gst_adjusted(f26_194c, tally_194c)
-    m2 = m2a + m2c
-    all_matches.extend(m2)
-    print(f"  194A: {len(m2a)} matches")
-    print(f"  194C: {len(m2c)} matches")
+    m2_all = []
+    for sec in active_sections:
+        m2 = pass2_gst_adjusted(f26_by_section.get(sec, []), tally_pools[sec])
+        m2_all.extend(m2)
+        if m2:
+            print(f"  {sec}: {len(m2)} matches")
+    all_matches.extend(m2_all)
+    pass_counts["pass2_gst_adjusted"] = len(m2_all)
 
     # ---- Pass 3: Exempt Filter ----
     print("\n--- Pass 3: Exempt Filter ---")
-    ex_a = pass3_exempt_filter(f26_194a, tally_194a)
-    ex_c = pass3_exempt_filter(f26_194c, tally_194c)
-    all_exemptions = ex_a + ex_c
-    print(f"  {len(all_exemptions)} entries marked exempt")
+    for sec in active_sections:
+        ex = pass3_exempt_filter(f26_by_section.get(sec, []), tally_pools[sec])
+        all_exemptions.extend(ex)
+        if ex:
+            print(f"  {sec}: {len(ex)} entries marked exempt")
+    pass_counts["pass3_exempt"] = len(all_exemptions)
 
     # ---- Pass 4: Fuzzy Match ----
     print("\n--- Pass 4: Fuzzy Match ---")
-    m4a = pass4_fuzzy_match(f26_194a, tally_194a)
-    m4c = pass4_fuzzy_match(f26_194c, tally_194c)
-    m4 = m4a + m4c
-    all_matches.extend(m4)
-    print(f"  194A: {len(m4a)} matches")
-    print(f"  194C: {len(m4c)} matches")
+    m4_all = []
+    for sec in active_sections:
+        m4 = pass4_fuzzy_match(f26_by_section.get(sec, []), tally_pools[sec])
+        m4_all.extend(m4)
+        if m4:
+            print(f"  {sec}: {len(m4)} matches")
+    all_matches.extend(m4_all)
+    pass_counts["pass4_fuzzy"] = len(m4_all)
 
     # ---- Pass 5: Aggregated Match ----
     print("\n--- Pass 5: Aggregated Match ---")
-    m5a = pass5_aggregated_match(f26_194a, tally_194a)
-    m5c = pass5_aggregated_match(f26_194c, tally_194c)
-    m5 = m5a + m5c
-    all_matches.extend(m5)
-    print(f"  194A: {len(m5a)} matches")
-    print(f"  194C: {len(m5c)} matches")
+    m5_all = []
+    for sec in active_sections:
+        m5 = pass5_aggregated_match(f26_by_section.get(sec, []), tally_pools[sec])
+        m5_all.extend(m5)
+        if m5:
+            print(f"  {sec}: {len(m5)} matches")
+    all_matches.extend(m5_all)
+    pass_counts["pass5_aggregated"] = len(m5_all)
 
     # ---- Collect unmatched ----
     unmatched_form26 = [_clean_entry(e) for e in form26_entries if not e.get("_matched")]
-    unmatched_tally_194a = [_clean_entry(e) for e in tally_194a if not e.get("_matched")]
-    unmatched_tally_194c = [_clean_entry(e) for e in tally_194c if not e.get("_matched")]
+
+    unmatched_tally = {}
+    for sec in active_sections:
+        unmatched = [_clean_entry(e) for e in tally_pools[sec] if not e.get("_matched")]
+        if unmatched:
+            unmatched_tally[sec] = unmatched
 
     # ---- Collect below-threshold entries for reporting ----
-    below_threshold_entries = [
-        _clean_entry(e) for e in tally_194c if e.get("_below_threshold")
-    ]
+    below_threshold_entries = []
+    for sec in active_sections:
+        below_threshold_entries.extend(
+            _clean_entry(e) for e in tally_pools[sec] if e.get("_below_threshold")
+        )
 
     # ---- Build output ----
     results = {
         "run_timestamp": datetime.now().isoformat(),
-        "sections_processed": list(sections),
+        "sections_processed": sorted(active_sections),
         "learned_rules": {
             "rules_loaded": len(learned_rules),
             "rules_applied": len(rules_applied),
@@ -871,19 +1225,17 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
             "total_resolved": sum(1 for e in form26_entries if e.get("_matched")) + len(below_threshold_entries),
             "matches_by_pass": {
                 "pass0_learned_rules": len(rules_applied),
-                "pass1_exact": len(m1),
-                "pass2_gst_adjusted": len(m2),
-                "pass3_exempt": len(all_exemptions),
-                "pass4_fuzzy": len(m4),
-                "pass5_aggregated": len(m5),
+                **pass_counts,
             },
             "total_matches": len(all_matches),
         },
         "matches": all_matches,
         "exemptions": all_exemptions,
         "unmatched_form26": unmatched_form26,
-        "unmatched_tally_194a": unmatched_tally_194a,
-        "unmatched_tally_194c": unmatched_tally_194c,
+        # Keep backward-compatible keys + new generic key
+        "unmatched_tally_194a": unmatched_tally.get("194A", []),
+        "unmatched_tally_194c": unmatched_tally.get("194C", []),
+        "unmatched_tally": unmatched_tally,
     }
 
     # ---- Write output ----
@@ -904,6 +1256,18 @@ def run(parsed_dir: str, output_dir: str, sections: set | None = None,
     for pass_name, count in s["matches_by_pass"].items():
         print(f"  {pass_name}: {count}")
     print(f"\nTotal matches: {s['total_matches']}")
+
+    # Section-wise breakdown
+    matched_by_section = defaultdict(int)
+    for m in all_matches:
+        sec = m["form26_entry"].get("section", "?")
+        matched_by_section[sec] += 1
+    print(f"\nMatches by section:")
+    for sec in section_order:
+        total_in_sec = len(f26_by_section.get(sec, []))
+        matched_in_sec = matched_by_section.get(sec, 0)
+        if total_in_sec > 0:
+            print(f"  {sec}: {matched_in_sec}/{total_in_sec}")
 
     if unmatched_form26:
         print(f"\n⚠ Unmatched Form 26 entries ({len(unmatched_form26)}):")

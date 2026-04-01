@@ -1,23 +1,27 @@
 {
-  "run_timestamp": "2026-03-26T04:11:15.301047",
+  "run_timestamp": "2026-04-01T17:55:03.441213",
   "summary": {
-    "total_findings": 8,
+    "total_findings": 12,
     "by_check": {
-      "section_validation": 5,
+      "section_validation": 6,
       "rate_validation": 0,
       "base_amount_validation": 0,
-      "threshold_validation": 0,
+      "threshold_validation": 3,
       "missing_tds": 3
     },
     "by_severity": {
       "error": 3,
       "warning": 5,
-      "info": 0
+      "info": 4
     },
-    "matches_checked": 56,
+    "matches_checked": 103,
     "sections_in_scope": [
+      "192",
       "194A",
-      "194C"
+      "194C",
+      "194H",
+      "194J(b)",
+      "194Q"
     ]
   },
   "findings": [
@@ -100,6 +104,55 @@
       ],
       "status": "review",
       "message": "Ambiguous expense(s): Advertisement. Section 194C is possible but verify against invoice/contract nature."
+    },
+    {
+      "check": "section_validation",
+      "severity": "info",
+      "vendor": "GST PROFESSIONALS LLP",
+      "pan": "AAPFG3370E",
+      "form26_section": "194J(b)",
+      "expense_heads": [
+        "Professonal Charges"
+      ],
+      "expected_sections": [],
+      "status": "unclassified",
+      "message": "Cannot classify expense(s): Professonal Charges. Manual review needed."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Raymond Limited",
+      "pan": "AAACR4896A",
+      "form26_section": "194Q",
+      "aggregate_amount": 1480982,
+      "threshold_annual": 5000000,
+      "num_entries": 1,
+      "status": "below_threshold_but_deducted",
+      "message": "194Q for Raymond Limited: aggregate \u20b91,480,982 is below annual threshold \u20b95,000,000. TDS deduction is not mandatory (but not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Sai Boutique",
+      "pan": "AEPFS3230M",
+      "form26_section": "194Q",
+      "aggregate_amount": 381820,
+      "threshold_annual": 5000000,
+      "num_entries": 1,
+      "status": "below_threshold_but_deducted",
+      "message": "194Q for Sai Boutique: aggregate \u20b9381,820 is below annual threshold \u20b95,000,000. TDS deduction is not mandatory (but not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "SAHIB S CHOUDHARY & COMPANY",
+      "pan": "AEJPC0634D",
+      "form26_section": "194J(b)",
+      "aggregate_amount": 9000,
+      "threshold_annual": 30000,
+      "num_entries": 1,
+      "status": "below_threshold_but_deducted",
+      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is not mandatory (but not wrong if deducted)."
     },
     {
       "check": "missing_tds",

@@ -26,7 +26,8 @@ from pathlib import Path
 from agents.event_logger import EventLogger, reset_logger
 
 
-def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, event_callback=None) -> dict:
+def run_pipeline(form26_path: str | None = None, tally_path: str | None = None,
+                 form24_path: str | None = None, event_callback=None) -> dict:
     """Run the full TDS reconciliation pipeline.
 
     Args:
@@ -56,7 +57,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, 
     logger.agent_start("Parser Agent", "Starting Parser Agent...")
     if form26_path and tally_path:
         from agents.parser_agent import run as parser_run
-        parser_run(form26_path, tally_path, str(parsed_dir))
+        parser_run(form26_path, tally_path, str(parsed_dir), form24_path=form24_path)
         logger.success("Parser Agent", "Parsed input files")
     else:
         if not (parsed_dir / "parsed_form26.json").exists():
@@ -78,7 +79,12 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, 
         gst_count = len(tally.get("purchase_gst_exp_register", {}).get("entries", []))
         pr_count = len(tally.get("purchase_register", {}).get("entries", []))
 
-        logger.detail("Parser Agent", f"Form 26: {f26_count} entries across {len(sections)} sections")
+        f24_count = sum(1 for e in f26.get("entries", []) if e.get("source") == "form24")
+        f26_only = f26_count - f24_count
+        if f24_count > 0:
+            logger.detail("Parser Agent", f"Form 26: {f26_only} entries, Form 24: {f24_count} salary entries")
+        else:
+            logger.detail("Parser Agent", f"Form 26: {f26_count} entries across {len(sections)} sections")
         logger.detail("Parser Agent", f"Sections found: {', '.join(sorted(sections))}")
         logger.detail("Parser Agent", f"Tally Journal Register: {jr_count} entries")
         logger.detail("Parser Agent", f"Tally GST Expense Register: {gst_count} entries")
@@ -142,7 +148,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, 
         answer = logger.question(
             "Matcher Agent",
             "q_unmatched",
-            f"{unmatched_count} entries in Form 26 could not be matched to Tally records. How should I proceed?",
+            f"{unmatched_count} entries could not be matched. How should I proceed?",
             options=[
                 {"id": "flag_review", "label": "Flag for review", "description": "Add to manual review queue for human verification"},
                 {"id": "mark_exempt", "label": "Mark as exempt", "description": "Treat as below-threshold or exempt entries"},
@@ -150,12 +156,15 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None, 
             ],
             allow_text_input=True,
             multi_select=False,
+            timeout=30,  # 30s timeout for demo — auto-continue if no answer
         )
         if answer:
             selected = answer.get("selected", [])
             logger.detail("Matcher Agent", f"User decided: {', '.join(selected)}")
             if answer.get("text_input"):
                 logger.detail("Matcher Agent", f"User note: {answer['text_input']}")
+        else:
+            logger.detail("Matcher Agent", "Auto-continuing: flagging unmatched entries for review")
 
     # ---- Step 3: TDS Checker ----
     logger.agent_start("TDS Checker", "Starting TDS Checker Agent...")

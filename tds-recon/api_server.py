@@ -52,8 +52,9 @@ def get_status():
 async def upload_files(
     form26: UploadFile = File(...),
     tally: UploadFile = File(...),
+    form24: UploadFile | None = File(None),
 ):
-    """Upload Form 26 and Tally XLSX files. Saves to data/uploads/."""
+    """Upload Form 26, Tally, and optionally Form 24 XLSX files."""
     UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
     form26_path = UPLOADS_DIR / "form26.xlsx"
@@ -64,11 +65,19 @@ async def upload_files(
     with open(tally_path, "wb") as f:
         shutil.copyfileobj(tally.file, f)
 
-    return {
+    result = {
         "status": "uploaded",
         "form26": form26.filename,
         "tally": tally.filename,
     }
+
+    if form24 and form24.filename:
+        form24_path = UPLOADS_DIR / "form24.xlsx"
+        with open(form24_path, "wb") as f:
+            shutil.copyfileobj(form24.file, f)
+        result["form24"] = form24.filename
+
+    return result
 
 
 @app.get("/api/run/stream/upload")
@@ -93,8 +102,10 @@ def run_pipeline_with_upload():
     def run_in_thread():
         from reconcile import run_pipeline as _run
 
+        form24_path = UPLOADS_DIR / "form24.xlsx"
+        f24 = str(form24_path) if form24_path.exists() else None
         # Pass callback directly — reconcile.py resets the logger internally
-        result = _run(str(form26_path), str(tally_path), event_callback=on_event)
+        result = _run(str(form26_path), str(tally_path), form24_path=f24, event_callback=on_event)
 
         results_data = _load_results()
         event_queue.put({

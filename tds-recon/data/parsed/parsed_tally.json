@@ -1,16 +1,16 @@
 {
-  "source_file": "/home/user/aitdsrecon/data/hpc/Tally extract.xlsx",
-  "parsed_at": "2026-03-23T12:03:51.010250",
+  "source_file": "data/hpc/Tally extract.xlsx",
+  "parsed_at": "2026-04-01T17:50:01.123804",
   "journal_register": {
     "total_entries": 716,
     "entries_by_type": {
-      "other": 120,
+      "salary": 260,
       "freight_expense": 113,
       "tds_deduction": 132,
       "packing_expense": 81,
-      "discount": 47,
       "brokerage": 43,
-      "salary": 135,
+      "other": 20,
+      "discount": 22,
       "rent": 4,
       "interest_payment": 36,
       "consultancy": 2,
@@ -24,7 +24,7 @@
         "particulars": "Tata AIG General Insurance Co. Ltd.",
         "voucher_no": "5",
         "gross_total": 17916.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Motor Car Insurance": 17916.0
         },
@@ -84,7 +84,7 @@
         "particulars": "Suhag Mahal Clothing Bareilly",
         "voucher_no": "4",
         "gross_total": 348.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 348.0
         },
@@ -134,7 +134,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "43",
         "gross_total": 150.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 150.0
         },
@@ -146,7 +146,7 @@
         "particulars": "Modern Cloth Store Islampur",
         "voucher_no": "35",
         "gross_total": 4013.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 4013.0
         },
@@ -182,7 +182,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "44",
         "gross_total": 150.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 150.0
         },
@@ -194,7 +194,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "45",
         "gross_total": 450.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 450.0
         },
@@ -206,7 +206,7 @@
         "particulars": "Lemos Kolkata",
         "voucher_no": "7",
         "gross_total": 494.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 494.0
         },
@@ -353,7 +353,7 @@
         "particulars": "B D Automobiles Pvt. Ltd.",
         "voucher_no": "9",
         "gross_total": 14354.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Motor Car Expenses": 14354.0
         },
@@ -365,7 +365,7 @@
         "particulars": "Lemos Kolkata",
         "voucher_no": "63",
         "gross_total": 1.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 1.0
         },
@@ -377,7 +377,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "118",
         "gross_total": 684.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 684.0
         },
@@ -389,7 +389,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "119",
         "gross_total": 817.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 817.0
         },
@@ -461,7 +461,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "25",
         "gross_total": 240.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 240.0
         },
@@ -473,7 +473,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "26",
         "gross_total": 900.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 900.0
         },
@@ -485,7 +485,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "27",
         "gross_total": 180.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 180.0
         },
@@ -497,7 +497,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "28",
         "gross_total": 7740.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 7740.0
         },
@@ -509,7 +509,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "29",
         "gross_total": 4230.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 4230.0
         },
@@ -727,7 +727,7 @@
         "particulars": "Avadh Clubs Ltd.",
         "voucher_no": "130",
         "gross_total": 4950.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Travelling Expenses": 4950.0
         },
@@ -859,7 +859,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "59",
         "gross_total": 8800.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 8800.0
         },
@@ -871,7 +871,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "60",
         "gross_total": 4170.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 4170.0
         },
@@ -883,7 +883,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "61",
         "gross_total": 770.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 770.0
         },
@@ -895,7 +895,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "62",
         "gross_total": 250.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 250.0
         },
@@ -1158,7 +1158,7 @@
           "Interest Paid": 19858.0,
           "Rupa Khaitan": 19858.0
         },
-        "loan_party": "Rupa Khaitan"
+        "loan_party": null
       },
       {
         "source": "tally_journal",
@@ -1578,7 +1578,7 @@
         "particulars": "Sweat Shirts",
         "voucher_no": "131",
         "gross_total": 12986.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 12986.0
         },
@@ -1590,7 +1590,7 @@
         "particulars": "Royal Sundaram General Insurance Co. Ltd.",
         "voucher_no": "108",
         "gross_total": 24770.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Motor Car Insurance": 24770.0
         },
@@ -1650,7 +1650,7 @@
         "particulars": "Suvadra Textiles Bhadrak",
         "voucher_no": "117",
         "gross_total": 1074.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 1074.0
         },
@@ -1662,7 +1662,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "168",
         "gross_total": 310.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 310.0
         },
@@ -1674,7 +1674,7 @@
         "particulars": "Sweat Shirts",
         "voucher_no": "132",
         "gross_total": 16257.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 16257.0
         },
@@ -1806,7 +1806,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "139",
         "gross_total": 1470.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 1470.0
         },
@@ -1818,7 +1818,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "140",
         "gross_total": 190.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 190.0
         },
@@ -1830,7 +1830,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "141",
         "gross_total": 320.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 320.0
         },
@@ -1842,7 +1842,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "142",
         "gross_total": 11190.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 11190.0
         },
@@ -1854,7 +1854,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "143",
         "gross_total": 4280.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 4280.0
         },
@@ -2086,7 +2086,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "169",
         "gross_total": 360.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 360.0
         },
@@ -2110,7 +2110,7 @@
         "particulars": "Dhanlaxmi Hajipur",
         "voucher_no": "159",
         "gross_total": 3038.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 3038.0
         },
@@ -2206,7 +2206,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "173",
         "gross_total": 1530.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 1530.0
         },
@@ -2218,7 +2218,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "174",
         "gross_total": 3810.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 3810.0
         },
@@ -2230,7 +2230,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "175",
         "gross_total": 9410.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 9410.0
         },
@@ -2242,7 +2242,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "176",
         "gross_total": 390.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 390.0
         },
@@ -2362,7 +2362,7 @@
         "particulars": "VRL Logistics Ltd.",
         "voucher_no": "196",
         "gross_total": 340.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 340.0
         },
@@ -2523,7 +2523,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "190",
         "gross_total": 1320.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 1320.0
         },
@@ -2621,7 +2621,7 @@
         "particulars": "Paridhan Kendra Azamgarh",
         "voucher_no": "206",
         "gross_total": 580.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 580.0
         },
@@ -2633,7 +2633,7 @@
         "particulars": "Mahalaxmi Narkatiaganj",
         "voucher_no": "207",
         "gross_total": 715.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 715.0
         },
@@ -2645,7 +2645,7 @@
         "particulars": "Chander Textiles Jalandhar",
         "voucher_no": "208",
         "gross_total": 348.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 348.0
         },
@@ -2705,7 +2705,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "212",
         "gross_total": 180.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 180.0
         },
@@ -2717,7 +2717,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "213",
         "gross_total": 870.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 870.0
         },
@@ -2729,7 +2729,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "214",
         "gross_total": 3060.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 3060.0
         },
@@ -2741,7 +2741,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "215",
         "gross_total": 370.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 370.0
         },
@@ -2753,7 +2753,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "216",
         "gross_total": 8780.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 8780.0
         },
@@ -3040,7 +3040,7 @@
           "Interest Paid": 20416.0,
           "Rupa Khaitan": 20416.0
         },
-        "loan_party": "Rupa Khaitan"
+        "loan_party": null
       },
       {
         "source": "tally_journal",
@@ -3534,7 +3534,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "280",
         "gross_total": 300.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 300.0
         },
@@ -3750,7 +3750,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "296",
         "gross_total": 620.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 620.0
         },
@@ -3762,7 +3762,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "297",
         "gross_total": 420.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 420.0
         },
@@ -3774,7 +3774,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "298",
         "gross_total": 9900.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 9900.0
         },
@@ -3786,7 +3786,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "299",
         "gross_total": 4110.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 4110.0
         },
@@ -3822,7 +3822,7 @@
         "particulars": "Rajhans Cuttack",
         "voucher_no": "300",
         "gross_total": 2790.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 2790.0
         },
@@ -4105,7 +4105,7 @@
         "particulars": "",
         "voucher_no": "310",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Vikash Agarwal": 14000.0,
           "Incentive Paid for Staff": 14000.0
@@ -4118,7 +4118,7 @@
         "particulars": "",
         "voucher_no": "320",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Surendra Singh": 21000.0,
           "Incentive Paid for Staff": 21000.0
@@ -4131,7 +4131,7 @@
         "particulars": "",
         "voucher_no": "321",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Anup Kumar Bajpai": 17500.0,
           "Incentive Paid for Staff": 17500.0
@@ -4144,7 +4144,7 @@
         "particulars": "",
         "voucher_no": "322",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Santosh Kumar": 13300.0,
           "Incentive Paid for Staff": 13300.0
@@ -4157,7 +4157,7 @@
         "particulars": "",
         "voucher_no": "323",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Sunil Kumar Murarka": 10500.0,
           "Incentive Paid for Staff": 10500.0
@@ -4170,7 +4170,7 @@
         "particulars": "",
         "voucher_no": "324",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Sujit Kumar Yadav": 11900.0,
           "Incentive Paid for Staff": 11900.0
@@ -4183,7 +4183,7 @@
         "particulars": "",
         "voucher_no": "326",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Sujit Singh Chandrabanshi": 14000.0,
           "Incentive Paid for Staff": 14000.0
@@ -4196,7 +4196,7 @@
         "particulars": "",
         "voucher_no": "327",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Pramod Kumar Singh": 14000.0,
           "Incentive Paid for Staff": 14000.0
@@ -4209,7 +4209,7 @@
         "particulars": "Mahalaxmi Narkatiaganj",
         "voucher_no": "334",
         "gross_total": 2334.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 2334.0
         },
@@ -4221,7 +4221,7 @@
         "particulars": "Chandan Shree Katihar (TRS)",
         "voucher_no": "335",
         "gross_total": 1769.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 1769.0
         },
@@ -4413,7 +4413,7 @@
         "particulars": "Kalpana Emporium Raebareli",
         "voucher_no": "340",
         "gross_total": 486.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 486.0
         },
@@ -4581,7 +4581,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "352",
         "gross_total": 170.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 170.0
         },
@@ -4593,7 +4593,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "353",
         "gross_total": 470.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 470.0
         },
@@ -4605,7 +4605,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "354",
         "gross_total": 2760.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 2760.0
         },
@@ -4617,7 +4617,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "355",
         "gross_total": 290.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 290.0
         },
@@ -4629,7 +4629,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "356",
         "gross_total": 7400.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 7400.0
         },
@@ -4825,7 +4825,7 @@
         "particulars": "Sweat Shirts",
         "voucher_no": "420",
         "gross_total": 13987.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 13987.0
         },
@@ -4885,7 +4885,7 @@
         "particulars": "Sen Associates",
         "voucher_no": "650",
         "gross_total": 13500.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Trademark Registration Fees": 13500.0
         },
@@ -5173,7 +5173,7 @@
         "particulars": "Sweat Shirts",
         "voucher_no": "419",
         "gross_total": 9131.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 9131.0
         },
@@ -5329,7 +5329,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "413",
         "gross_total": 760.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 760.0
         },
@@ -5341,7 +5341,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "414",
         "gross_total": 100.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 100.0
         },
@@ -5353,7 +5353,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "415",
         "gross_total": 1690.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 1690.0
         },
@@ -5365,7 +5365,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "416",
         "gross_total": 280.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 280.0
         },
@@ -5377,7 +5377,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "417",
         "gross_total": 3150.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 3150.0
         },
@@ -5676,7 +5676,7 @@
           "Interest Paid": 20757.0,
           "Rupa Khaitan": 20757.0
         },
-        "loan_party": "Rupa Khaitan"
+        "loan_party": null
       },
       {
         "source": "tally_journal",
@@ -5989,7 +5989,7 @@
         "particulars": "",
         "voucher_no": "453",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Input Reveres": 12327.36,
           "Input C GST": 6163.68,
@@ -6075,7 +6075,7 @@
         "particulars": "Zenith Fashions Pvt. Ltd. Bhubaneswar",
         "voucher_no": "467",
         "gross_total": 6849.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 6849.0
         },
@@ -6087,7 +6087,7 @@
         "particulars": "VRL Logistics Ltd.",
         "voucher_no": "506",
         "gross_total": 640.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 640.0
         },
@@ -6111,7 +6111,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "555",
         "gross_total": 200.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 200.0
         },
@@ -6171,7 +6171,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "556",
         "gross_total": 200.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 200.0
         },
@@ -6183,7 +6183,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "557",
         "gross_total": 300.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 300.0
         },
@@ -6303,7 +6303,7 @@
         "particulars": "B D Automobiles Pvt. Ltd.",
         "voucher_no": "493",
         "gross_total": 11534.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Motor Car Expenses": 9774.52,
           "Input C GST": 879.74,
@@ -6317,7 +6317,7 @@
         "particulars": "",
         "voucher_no": "494",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Input Reveres": 1759.48,
           "Input C GST": 879.74,
@@ -6367,7 +6367,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "489",
         "gross_total": 570.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 570.0
         },
@@ -6379,7 +6379,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "490",
         "gross_total": 310.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 310.0
         },
@@ -6391,7 +6391,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "491",
         "gross_total": 3270.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 3270.0
         },
@@ -6403,7 +6403,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "492",
         "gross_total": 1600.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 1600.0
         },
@@ -6439,7 +6439,7 @@
         "particulars": "Shiprocket Pvt. Ltd. Gurugram",
         "voucher_no": "516",
         "gross_total": 853.88,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Shiprocket Pvt. Ltd. Delhi": 51.76,
           "Bank Charges": 905.64
@@ -6452,7 +6452,7 @@
         "particulars": "Razorpay Software Pvt. Ltd.",
         "voucher_no": "515",
         "gross_total": 23.79,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Bank Charges": 23.79
         },
@@ -6767,7 +6767,7 @@
         "particulars": "VRL Logistics Ltd.",
         "voucher_no": "552",
         "gross_total": 850.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 850.0
         },
@@ -6803,7 +6803,7 @@
         "particulars": "VRL Logistics Ltd.",
         "voucher_no": "553",
         "gross_total": 1720.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 1720.0
         },
@@ -6911,7 +6911,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "520",
         "gross_total": 150.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 150.0
         },
@@ -6923,7 +6923,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "521",
         "gross_total": 510.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 510.0
         },
@@ -6935,7 +6935,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "522",
         "gross_total": 300.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 300.0
         },
@@ -6947,7 +6947,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "523",
         "gross_total": 1600.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 1600.0
         },
@@ -6959,7 +6959,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "524",
         "gross_total": 3090.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 3090.0
         },
@@ -7095,7 +7095,7 @@
         "particulars": "Razorpay Software Pvt. Ltd.",
         "voucher_no": "560",
         "gross_total": 203.93,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Bank Charges": 203.93
         },
@@ -7107,7 +7107,7 @@
         "particulars": "Shiprocket Pvt. Ltd. Delhi",
         "voucher_no": "561",
         "gross_total": 109.81,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Bank Charges": 109.81
         },
@@ -7119,7 +7119,7 @@
         "particulars": "Shiprocket Pvt. Ltd. Gurugram",
         "voucher_no": "562",
         "gross_total": 4226.41,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Bank Charges": 4226.41
         },
@@ -7131,7 +7131,7 @@
         "particulars": "Yes Sir Dresses Aurangabad",
         "voucher_no": "639",
         "gross_total": 60752.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Continental Mall": 60752.0
         },
@@ -7143,7 +7143,7 @@
         "particulars": "",
         "voucher_no": "600",
         "gross_total": 0.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Bank Charges": 175.27,
           "Razorpay Charges": 175.27
@@ -7357,7 +7357,7 @@
           "Interest Paid": 20638.0,
           "Rupa Khaitan": 20638.0
         },
-        "loan_party": "Rupa Khaitan"
+        "loan_party": null
       },
       {
         "source": "tally_journal",
@@ -7788,7 +7788,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "602",
         "gross_total": 320.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 320.0
         },
@@ -7800,7 +7800,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "603",
         "gross_total": 540.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 540.0
         },
@@ -7812,7 +7812,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "604",
         "gross_total": 6640.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 6640.0
         },
@@ -7824,7 +7824,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "605",
         "gross_total": 2110.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 2110.0
         },
@@ -8080,7 +8080,7 @@
         "particulars": "Chhaparia Textile Kharsia",
         "voucher_no": "640",
         "gross_total": 2319.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 2319.0
         },
@@ -8092,7 +8092,7 @@
         "particulars": "Pawan Textiles Jalandhar",
         "voucher_no": "641",
         "gross_total": 531.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 531.0
         },
@@ -8104,7 +8104,7 @@
         "particulars": "Rajlaxmi Couture Siyavar Raipur",
         "voucher_no": "642",
         "gross_total": 8200.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 8200.0
         },
@@ -8116,7 +8116,7 @@
         "particulars": "Sarathas Trichy",
         "voucher_no": "643",
         "gross_total": 15934.52,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 15934.52
         },
@@ -8128,7 +8128,7 @@
         "particulars": "Mack Collections Pvt. Ltd. Sevak Road (TRS)",
         "voucher_no": "644",
         "gross_total": 166.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 166.0
         },
@@ -8152,7 +8152,7 @@
         "particulars": "Ramesh's Rohtak",
         "voucher_no": "646",
         "gross_total": 5418.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 5418.0
         },
@@ -8164,7 +8164,7 @@
         "particulars": "Chander Textiles Jalandhar",
         "voucher_no": "648",
         "gross_total": 244.0,
-        "entry_type": "discount",
+        "entry_type": "salary",
         "account_postings": {
           "Cash Discount": 244.0
         },
@@ -8752,7 +8752,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "699",
         "gross_total": 130.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 130.0
         },
@@ -8764,7 +8764,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "700",
         "gross_total": 480.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 480.0
         },
@@ -8776,7 +8776,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "701",
         "gross_total": 8560.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 8560.0
         },
@@ -8788,7 +8788,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "702",
         "gross_total": 360.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 360.0
         },
@@ -8800,7 +8800,7 @@
         "particulars": "CESC Limited",
         "voucher_no": "703",
         "gross_total": 1880.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Electricity Charges": 1880.0
         },
@@ -8836,7 +8836,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "706",
         "gross_total": 310.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 310.0
         },
@@ -8848,7 +8848,7 @@
         "particulars": "The ASR Transport Co. (P) Ltd. Dealer BPCL",
         "voucher_no": "707",
         "gross_total": 615.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 615.0
         },
@@ -8860,7 +8860,7 @@
         "particulars": "Patel Fleet Logistics Pvt. Ltd.",
         "voucher_no": "708",
         "gross_total": 310.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 310.0
         },
@@ -8872,7 +8872,7 @@
         "particulars": "The ASR Transport Co. (P) Ltd. Dealer BPCL",
         "voucher_no": "709",
         "gross_total": 615.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Carriage Outward Paid": 615.0
         },
@@ -8920,7 +8920,7 @@
         "particulars": "Raymond Lifestyle Limited (Vapi)",
         "voucher_no": "715",
         "gross_total": 14400.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Incentive From Raymond": 14400.0
         },
@@ -8944,7 +8944,7 @@
         "particulars": "Dindayal Jalan Retails Pvt. Ltd.",
         "voucher_no": "717",
         "gross_total": 90043.0,
-        "entry_type": "other",
+        "entry_type": "salary",
         "account_postings": {
           "Incentive Paid": 90043.0
         },

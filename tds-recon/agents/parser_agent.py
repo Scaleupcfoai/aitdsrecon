@@ -142,6 +142,64 @@ def parse_form26(filepath: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# 1b. Parse Form 24 (Salary TDS — Section 192)
+# ---------------------------------------------------------------------------
+
+def parse_form24(filepath: str) -> list[dict]:
+    """
+    Parse Form 24Q Deduction Register (Salary TDS).
+    Similar structure to Form 26 but no Section column (all are 192)
+    and no PAN column. Employee names are abbreviated.
+
+    Returns list of dicts compatible with Form 26 structure.
+    """
+    wb = openpyxl.load_workbook(filepath, data_only=True)
+    ws = wb["Deduction Details"]
+
+    entries = []
+    for row in ws.iter_rows(min_row=5, max_row=ws.max_row):
+        raw_name = row[1].value  # B column
+        amount = row[2].value    # C column
+
+        # Skip empty rows
+        if not raw_name or not amount:
+            continue
+        name_str = str(raw_name).strip()
+
+        # Skip total/subtotal rows (rows without a date are totals)
+        date_val = row[3].value
+        if not date_val:
+            continue
+        if "Total" in name_str or "Grand" in name_str:
+            continue
+
+        # Compute effective tax rate
+        tax_deducted = row[7].value or 0
+        tax_rate = round(tax_deducted / amount * 100, 2) if amount else 0
+
+        entry = {
+            "source": "form24",
+            "vendor_name": name_str,  # abbreviated name like "AD (D1)"
+            "vendor_id": "",
+            "pan": "",
+            "section": "192",
+            "amount_paid": amount,            # C: Salary paid
+            "amount_paid_date": date_val,     # D: Date
+            "income_tax": row[4].value or 0,  # E: IT Rs
+            "surcharge": row[5].value or 0,   # F
+            "cess": row[6].value or 0,        # G
+            "tax_rate_pct": tax_rate,
+            "tax_deducted": tax_deducted,     # H: Tax Deducted Rs
+            "tax_deducted_date": row[8].value,  # I: Tax Deducted Date
+            "non_deduction_reason": row[9].value,  # J
+        }
+        entries.append(entry)
+
+    wb.close()
+    return entries
+
+
+# ---------------------------------------------------------------------------
 # 2. Parse Tally — Journal Register (the complex 2D one)
 # ---------------------------------------------------------------------------
 
@@ -421,7 +479,7 @@ def parse_purchase_register(ws) -> list[dict]:
 # Main — Run Parser Agent
 # ---------------------------------------------------------------------------
 
-def run(form26_path: str, tally_path: str, output_dir: str):
+def run(form26_path: str, tally_path: str, output_dir: str, form24_path: str | None = None):
     """Run the parser agent end-to-end."""
 
     output_dir = Path(output_dir)
@@ -431,6 +489,16 @@ def run(form26_path: str, tally_path: str, output_dir: str):
     print("[Parser] Parsing Form 26...")
     form26_entries = parse_form26(form26_path)
     print(f"  → {len(form26_entries)} entries extracted")
+
+    # --- Parse Form 24 (if provided) ---
+    form24_entries = []
+    if form24_path and Path(form24_path).exists():
+        print("\n[Parser] Parsing Form 24 (Salary TDS)...")
+        form24_entries = parse_form24(form24_path)
+        print(f"  → {len(form24_entries)} salary TDS entries extracted")
+        # Merge into form26_entries — they share the same structure
+        form26_entries.extend(form24_entries)
+        print(f"  → Combined: {len(form26_entries)} total entries (Form 26 + Form 24)")
 
     # Count by section
     sections = {}
