@@ -142,8 +142,80 @@ def parse_form26(filepath: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# 1b. Parse Form 24 (Salary TDS — Section 192)
+# ---------------------------------------------------------------------------
+
+def parse_form24(filepath: str) -> list[dict]:
+    """
+    Parse Form 24Q Deduction Register (Salary TDS).
+    Similar structure to Form 26 but no Section column (all are 192)
+    and no PAN column. Employee names are abbreviated.
+
+    Returns list of dicts compatible with Form 26 structure.
+    """
+    wb = openpyxl.load_workbook(filepath, data_only=True)
+    ws = wb["Deduction Details"]
+
+    entries = []
+    for row in ws.iter_rows(min_row=5, max_row=ws.max_row):
+        raw_name = row[1].value  # B column
+        amount = row[2].value    # C column
+
+        # Skip empty rows
+        if not raw_name or not amount:
+            continue
+        name_str = str(raw_name).strip()
+
+        # Skip total/subtotal rows (rows without a date are totals)
+        date_val = row[3].value
+        if not date_val:
+            continue
+        if "Total" in name_str or "Grand" in name_str:
+            continue
+
+        # Compute effective tax rate
+        tax_deducted = row[7].value or 0
+        tax_rate = round(tax_deducted / amount * 100, 2) if amount else 0
+
+        entry = {
+            "source": "form24",
+            "vendor_name": name_str,  # abbreviated name like "AD (D1)"
+            "vendor_id": "",
+            "pan": "",
+            "section": "192",
+            "amount_paid": amount,            # C: Salary paid
+            "amount_paid_date": date_val,     # D: Date
+            "income_tax": row[4].value or 0,  # E: IT Rs
+            "surcharge": row[5].value or 0,   # F
+            "cess": row[6].value or 0,        # G
+            "tax_rate_pct": tax_rate,
+            "tax_deducted": tax_deducted,     # H: Tax Deducted Rs
+            "tax_deducted_date": row[8].value,  # I: Tax Deducted Date
+            "non_deduction_reason": row[9].value,  # J
+        }
+        entries.append(entry)
+
+    wb.close()
+    return entries
+
+
+# ---------------------------------------------------------------------------
 # 2. Parse Tally — Journal Register (the complex 2D one)
 # ---------------------------------------------------------------------------
+
+def _get_direction(cell) -> str:
+    """Extract Cr/Dr direction from a Tally cell's number format.
+    Tally encodes direction in the format string, not the sign.
+    Returns 'dr' (debit/expense), 'cr' (credit/reversal), or '' (unknown).
+    """
+    fmt = getattr(cell, 'number_format', '') or ''
+    fmt_lower = fmt.lower()
+    if ' dr"' in fmt_lower or '"dr"' in fmt_lower:
+        return 'dr'
+    elif ' cr"' in fmt_lower or '"cr"' in fmt_lower:
+        return 'cr'
+    return ''
+
 
 def parse_journal_register(ws) -> list[dict]:
     """
@@ -180,6 +252,7 @@ def parse_journal_register(ws) -> list[dict]:
         voucher_no = row[2].value     # C
         value = row[3].value          # D
         gross_total = row[4].value    # E
+        gross_total_dir = _get_direction(row[4])  # Cr/Dr from cell format
 
         # Skip empty/summary rows
         if particulars and "Grand Total" in str(particulars):
@@ -189,6 +262,7 @@ def parse_journal_register(ws) -> list[dict]:
 
         # Collect all non-zero account columns for this row
         account_postings = {}
+        posting_directions = {}  # col_name → 'dr'/'cr'
         for cell in row:
             col_letter = cell.column_letter
             if col_letter in headers and cell.value is not None and cell.value != 0:
@@ -196,6 +270,7 @@ def parse_journal_register(ws) -> list[dict]:
                 if col_name in JOURNAL_META_COLUMNS:
                     continue
                 account_postings[col_name] = cell.value
+                posting_directions[col_name] = _get_direction(cell)
 
         if not account_postings:
             continue
@@ -219,8 +294,10 @@ def parse_journal_register(ws) -> list[dict]:
             "particulars": str(particulars or "").strip(),
             "voucher_no": str(voucher_no or "").strip(),
             "gross_total": gross_total,
+            "gross_total_direction": gross_total_dir,  # 'dr'=expense, 'cr'=reversal
             "entry_type": entry_type,
             "account_postings": account_postings,
+            "posting_directions": posting_directions,
             "loan_party": loan_party,
         }
         entries.append(entry)
@@ -299,6 +376,7 @@ def parse_purchase_gst_exp_register(ws) -> list[dict]:
 
         # Collect values by column type
         gross_total = None
+        gross_total_dir = ''
         expense_heads = {}
         gst_amounts = {}
         rounding = 0
@@ -314,6 +392,7 @@ def parse_purchase_gst_exp_register(ws) -> list[dict]:
 
             if col_name == "Gross Total":
                 gross_total = cell.value
+                gross_total_dir = _get_direction(cell)
             elif col_name == "Value":
                 value = cell.value
             elif col_name == "Addl. Cost":
@@ -339,6 +418,7 @@ def parse_purchase_gst_exp_register(ws) -> list[dict]:
             "voucher_no": str(voucher_no or "").strip(),
             "value": value,
             "gross_total": gross_total,
+            "gross_total_direction": gross_total_dir,
             "base_amount": base_amount,
             "total_gst": total_gst,
             "rounding": rounding,
@@ -421,7 +501,7 @@ def parse_purchase_register(ws) -> list[dict]:
 # Main — Run Parser Agent
 # ---------------------------------------------------------------------------
 
-def run(form26_path: str, tally_path: str, output_dir: str):
+def run(form26_path: str, tally_path: str, output_dir: str, form24_path: str | None = None):
     """Run the parser agent end-to-end."""
 
     output_dir = Path(output_dir)
@@ -431,6 +511,16 @@ def run(form26_path: str, tally_path: str, output_dir: str):
     print("[Parser] Parsing Form 26...")
     form26_entries = parse_form26(form26_path)
     print(f"  → {len(form26_entries)} entries extracted")
+
+    # --- Parse Form 24 (if provided) ---
+    form24_entries = []
+    if form24_path and Path(form24_path).exists():
+        print("\n[Parser] Parsing Form 24 (Salary TDS)...")
+        form24_entries = parse_form24(form24_path)
+        print(f"  → {len(form24_entries)} salary TDS entries extracted")
+        # Merge into form26_entries — they share the same structure
+        form26_entries.extend(form24_entries)
+        print(f"  → Combined: {len(form26_entries)} total entries (Form 26 + Form 24)")
 
     # Count by section
     sections = {}
@@ -442,7 +532,8 @@ def run(form26_path: str, tally_path: str, output_dir: str):
 
     # --- Parse Tally ---
     print("\n[Parser] Parsing Tally extract...")
-    wb = openpyxl.load_workbook(tally_path, data_only=True)
+    # Open WITHOUT data_only so we can read Cr/Dr number formats from cells
+    wb = openpyxl.load_workbook(tally_path)
 
     print("  Parsing Journal Register...")
     journal_entries = parse_journal_register(wb["Journal Register"])
