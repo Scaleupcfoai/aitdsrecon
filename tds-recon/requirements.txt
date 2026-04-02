@@ -4,3 +4,4 @@ openpyxl
 pydantic
 python-multipart
 httpx
+python-dotenv
