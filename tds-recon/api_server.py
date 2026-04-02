@@ -17,7 +17,7 @@ import httpx
 import shutil
 from dotenv import load_dotenv
 
-load_dotenv()  # Reads .env file from current directory
+load_dotenv(Path(__file__).parent / ".env")  # Reads .env from same folder as api_server.py
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
