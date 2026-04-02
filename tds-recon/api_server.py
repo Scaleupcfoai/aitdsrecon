@@ -213,6 +213,63 @@ async def preview_columns(
     return preview
 
 
+@app.get("/api/preview-columns/existing")
+def preview_existing_columns():
+    """Preview columns from already-parsed data on disk (for 'Use Existing Data' flow)."""
+    preview = {"form26": {}, "tally": {}}
+
+    # Read parsed Form 26
+    f26_path = PARSED_DIR / "parsed_form26.json"
+    if f26_path.exists():
+        with open(f26_path) as f:
+            f26 = json.load(f)
+        entries = f26.get("entries", [])
+        sections = f26.get("entries_by_section", {})
+        sample_rows = []
+        for e in entries[:3]:
+            sample_rows.append({
+                "vendor": (e.get("vendor_name") or "Unknown")[:40],
+                "section": e.get("section", ""),
+                "amount": e.get("amount_paid", 0),
+                "tax_deducted": e.get("tax_deducted", 0),
+            })
+        preview["form26"] = {
+            "filename": Path(f26.get("source_file", "Form 26")).name,
+            "sheet_names": ["Deduction Details"],
+            "detected_sheet": "Deduction Details",
+            "headers": ["Vendor Name", "Section", "Amt Paid", "Date", "IT Rs", "Surcharge", "Cess", "Tax Rate %", "Tax Deducted", "Tax Date"],
+            "total_entries": f26.get("total_entries", len(entries)),
+            "sections": sections,
+            "sample_rows": sample_rows,
+        }
+    else:
+        preview["form26"] = {"error": "No parsed Form 26 data found. Upload files first."}
+
+    # Read parsed Tally
+    tally_path = PARSED_DIR / "parsed_tally.json"
+    if tally_path.exists():
+        with open(tally_path) as f:
+            tally = json.load(f)
+        registers = {}
+        for reg_name in ["journal_register", "purchase_gst_exp_register", "purchase_register"]:
+            reg = tally.get(reg_name, {})
+            if reg:
+                display_name = reg_name.replace("_", " ").title().replace("Gst Exp", "GST Exp.")
+                registers[display_name] = {
+                    "entry_count": reg.get("total_entries", len(reg.get("entries", []))),
+                    "headers": list(reg.get("entries_by_type", {}).keys()) if "entries_by_type" in reg else [],
+                }
+        preview["tally"] = {
+            "filename": Path(tally.get("source_file", "Tally Extract")).name,
+            "sheet_names": list(registers.keys()),
+            "registers": registers,
+        }
+    else:
+        preview["tally"] = {"error": "No parsed Tally data found. Upload files first."}
+
+    return preview
+
+
 @app.get("/api/run/stream/upload")
 def run_pipeline_with_upload():
     """Run the full pipeline on uploaded files with real-time SSE.
