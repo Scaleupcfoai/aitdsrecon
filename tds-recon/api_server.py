@@ -6,12 +6,14 @@ Run: uvicorn api_server:app --reload --port 8000
 """
 
 import json
+import os
 import queue
 import sys
 import threading
 import time
 from pathlib import Path
 
+import httpx
 import shutil
 
 from fastapi import FastAPI, File, UploadFile
@@ -547,6 +549,133 @@ def submit_review(request: ReviewRequest):
     decisions = [d.model_dump() for d in request.decisions]
     result = apply_corrections(str(RULES_DIR), str(RESULTS_DIR), decisions)
     return result
+
+
+# ---------------------------------------------------------------------------
+# LLM Chat
+# ---------------------------------------------------------------------------
+
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+
+SYSTEM_PROMPT = """You are Lekha AI, a TDS reconciliation assistant for Indian tax compliance.
+You are helping a CA/accountant review TDS reconciliation results for FY 2024-25 (AY 2025-26).
+
+Rules:
+- Answer using ONLY the reconciliation data provided below. Do not make up numbers.
+- Use ₹ with Indian number format (e.g. ₹1,24,533).
+- Be specific: name vendors, sections, amounts, rates when answering.
+- If the data doesn't contain what was asked, say so clearly.
+- Keep responses concise (3-5 sentences unless the user asks for detail).
+- You can NOT run the pipeline, modify data, or trigger actions. You only answer questions about the results.
+
+Here is the complete reconciliation data:
+
+"""
+
+
+def _build_compact_results() -> str | None:
+    """Build a compact JSON string of pipeline results for the LLM context."""
+    summary_path = RESULTS_DIR / "reconciliation_summary.json"
+    checker_path = RESULTS_DIR / "checker_results.json"
+    match_path = RESULTS_DIR / "match_results.json"
+
+    if not summary_path.exists():
+        return None
+
+    with open(summary_path) as f:
+        summary = json.load(f)
+
+    checker = {}
+    if checker_path.exists():
+        with open(checker_path) as f:
+            checker = json.load(f)
+
+    compact_matches = []
+    if match_path.exists():
+        with open(match_path) as f:
+            raw = json.load(f)
+        for m in raw.get("matches", []):
+            f26 = m.get("form26_entry", {})
+            compact_matches.append({
+                "vendor": f26.get("vendor_name", ""),
+                "pan": f26.get("pan", ""),
+                "section": f26.get("section", ""),
+                "amount_paid": f26.get("amount_paid", 0),
+                "tax_deducted": f26.get("tax_deducted", 0),
+                "tax_rate_pct": f26.get("tax_rate_pct", 0),
+                "confidence": m.get("confidence", 0),
+                "match_type": m.get("pass_name", ""),
+            })
+
+    context = {
+        "reconciliation_summary": summary,
+        "compliance_findings": checker.get("findings", []),
+        "compliance_summary": checker.get("summary", {}),
+        "matched_entries": compact_matches,
+    }
+    return json.dumps(context, default=str)
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: list[dict] = []
+
+
+@app.post("/api/chat")
+async def chat(request: ChatRequest):
+    """LLM chat endpoint. Sends user message + pipeline results to Gemini 2.5 Flash."""
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    if not api_key:
+        return {"error": "GEMINI_API_KEY not set", "response": "I'm not connected to my AI backend right now. Please set the GEMINI_API_KEY environment variable and restart the server."}
+
+    # Build context from pipeline results
+    compact_results = _build_compact_results()
+    if not compact_results:
+        return {"response": "No reconciliation data available yet. Please run the pipeline first, then ask me questions about the results."}
+
+    system_prompt = SYSTEM_PROMPT + compact_results
+
+    # Build conversation: history + new message
+    contents = []
+    for msg in request.history[-10:]:  # Last 10 messages
+        role = "user" if msg.get("role") == "user" else "model"
+        text = msg.get("content", "")
+        if text:
+            contents.append({"role": role, "parts": [{"text": text}]})
+    contents.append({"role": "user", "parts": [{"text": request.message}]})
+
+    payload = {
+        "contents": contents,
+        "systemInstruction": {"parts": [{"text": system_prompt}]},
+        "generationConfig": {
+            "temperature": 0.3,
+            "maxOutputTokens": 1024,
+        },
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post(
+                f"{GEMINI_API_URL}?key={api_key}",
+                json=payload,
+                headers={"Content-Type": "application/json"},
+            )
+        if resp.status_code != 200:
+            error_detail = resp.text[:200]
+            return {"error": f"Gemini API error ({resp.status_code})", "response": f"I encountered an issue connecting to my AI backend. Error: {error_detail}"}
+
+        data = resp.json()
+        candidates = data.get("candidates", [])
+        if not candidates:
+            return {"response": "I couldn't generate a response. Please try rephrasing your question."}
+
+        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+        return {"response": text}
+
+    except httpx.TimeoutException:
+        return {"response": "The request timed out. Please try again with a simpler question."}
+    except Exception as e:
+        return {"error": str(e), "response": "Something went wrong while processing your question. Please try again."}
 
 
 # ---------------------------------------------------------------------------
