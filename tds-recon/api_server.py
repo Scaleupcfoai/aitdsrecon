@@ -652,7 +652,7 @@ async def chat(request: ChatRequest):
         "systemInstruction": {"parts": [{"text": system_prompt}]},
         "generationConfig": {
             "temperature": 0.3,
-            "maxOutputTokens": 1024,
+            "maxOutputTokens": 4096,
         },
     }
 
