@@ -80,6 +80,139 @@ async def upload_files(
     return result
 
 
+@app.post("/api/preview-columns")
+async def preview_columns(
+    form26: UploadFile = File(...),
+    tally: UploadFile = File(...),
+    form24: UploadFile | None = File(None),
+):
+    """Lightweight preview: read headers, sample rows, and entry counts from uploaded files.
+
+    Returns enough info for the UI to show a confirmation card before running the pipeline.
+    Files are saved to disk (same as /api/upload) so the pipeline can use them directly.
+    """
+    import openpyxl
+
+    # Save files to disk (reuse upload logic)
+    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+    form26_path = UPLOADS_DIR / "form26.xlsx"
+    tally_path = UPLOADS_DIR / "tally.xlsx"
+
+    with open(form26_path, "wb") as f:
+        shutil.copyfileobj(form26.file, f)
+    with open(tally_path, "wb") as f:
+        shutil.copyfileobj(tally.file, f)
+
+    form24_saved = False
+    if form24 and form24.filename:
+        form24_path = UPLOADS_DIR / "form24.xlsx"
+        with open(form24_path, "wb") as f:
+            shutil.copyfileobj(form24.file, f)
+        form24_saved = True
+
+    preview = {"form26": {}, "tally": {}}
+
+    # --- Form 26 preview ---
+    try:
+        wb = openpyxl.load_workbook(str(form26_path), data_only=True)
+        sheet_names = wb.sheetnames
+        ws = wb["Deduction Details"]
+
+        # Read header row (row 4 has column labels)
+        headers = []
+        for cell in ws[4]:
+            if cell.value:
+                headers.append(str(cell.value).strip())
+
+        # Count entries and sections (lightweight scan)
+        sections = {}
+        sample_rows = []
+        total = 0
+        for row in ws.iter_rows(min_row=5, max_row=ws.max_row):
+            raw_name = row[1].value
+            section = row[2].value
+            if not raw_name or not section:
+                continue
+            if "Total" in str(raw_name) or "Grand" in str(raw_name):
+                continue
+            total += 1
+            s = str(section).strip()
+            sections[s] = sections.get(s, 0) + 1
+            if len(sample_rows) < 3:
+                sample_rows.append({
+                    "vendor": str(raw_name).split("(")[0].strip()[:40],
+                    "section": s,
+                    "amount": row[3].value,
+                    "tax_deducted": row[9].value,
+                })
+        wb.close()
+
+        preview["form26"] = {
+            "filename": form26.filename,
+            "sheet_names": sheet_names,
+            "detected_sheet": "Deduction Details",
+            "headers": headers,
+            "total_entries": total,
+            "sections": sections,
+            "sample_rows": sample_rows,
+        }
+    except Exception as e:
+        preview["form26"] = {"filename": form26.filename, "error": str(e)}
+
+    # --- Tally preview ---
+    try:
+        wb = openpyxl.load_workbook(str(tally_path), data_only=True)
+        sheet_names = wb.sheetnames
+        registers = {}
+
+        for sheet_name in sheet_names:
+            ws = wb[sheet_name]
+            # Read headers from row 7 (Tally standard)
+            headers = []
+            for cell in ws[7]:
+                if cell.value:
+                    headers.append(str(cell.value).strip())
+            # Count data rows
+            row_count = 0
+            for row in ws.iter_rows(min_row=8, max_row=ws.max_row):
+                if row[1].value and "Grand Total" not in str(row[1].value):
+                    row_count += 1
+            registers[sheet_name] = {
+                "headers": headers,
+                "entry_count": row_count,
+            }
+        wb.close()
+
+        preview["tally"] = {
+            "filename": tally.filename,
+            "sheet_names": sheet_names,
+            "registers": registers,
+        }
+    except Exception as e:
+        preview["tally"] = {"filename": tally.filename, "error": str(e)}
+
+    # --- Form 24 preview (if uploaded) ---
+    if form24_saved:
+        try:
+            form24_path = UPLOADS_DIR / "form24.xlsx"
+            wb = openpyxl.load_workbook(str(form24_path), data_only=True)
+            ws = wb["Deduction Details"]
+            emp_count = 0
+            for row in ws.iter_rows(min_row=5, max_row=ws.max_row):
+                if row[1].value and row[3].value and "Total" not in str(row[1].value):
+                    emp_count += 1
+            wb.close()
+            preview["form24"] = {
+                "filename": form24.filename,
+                "total_entries": emp_count,
+                "section": "192 (Salary)",
+            }
+        except Exception as e:
+            preview["form24"] = {"filename": form24.filename, "error": str(e)}
+
+    return preview
+
+
 @app.get("/api/run/stream/upload")
 def run_pipeline_with_upload():
     """Run the full pipeline on uploaded files with real-time SSE.
