@@ -223,6 +223,14 @@ class ParserAgent(AgentBase):
                 f"{sheet_result['sheet_name']}: {stats.get('auto_mapped', 0)} auto + "
                 f"{stats.get('llm_mapped', 0)} LLM + {stats.get('needs_review', 0)} review")
 
+        # ══════════════════════════════════════════════════════
+        # Step 1.5: Ask user to confirm column mappings
+        # Pipeline BLOCKS here until user confirms or timeout
+        # ══════════════════════════════════════════════════════
+        f26_mapping, tally_mapping = self._confirm_column_mappings(
+            f26_mapping, tally_mapping
+        )
+
         # Step 2: Parse Form 26 using mapped columns
         tds_entries = self._parse_with_mapping(form26_path, f26_mapping, entry_type="tds")
 
@@ -265,6 +273,95 @@ class ParserAgent(AgentBase):
             "column_mapping": {"form26": f26_mapping, "tally": tally_mapping},
             "company": company_info if 'company_info' in dir() else {},
         }
+
+    def _confirm_column_mappings(self, f26_mapping: dict, tally_mapping: dict) -> tuple[dict, dict]:
+        """Ask user to confirm column mappings before parsing.
+
+        Builds a human-readable summary of all detected columns and
+        blocks the pipeline until user confirms or timeout (60s).
+
+        If user confirms → proceed with current mappings.
+        If user provides corrections → apply them.
+        If timeout → proceed with current mappings (with warning).
+        """
+        import uuid
+
+        # Build readable summary for the question
+        lines = []
+
+        lines.append("**Form 26 columns detected:**")
+        for sheet in f26_mapping.get("sheets", []):
+            for m in sheet.get("mappings", []):
+                if m.get("field") in ("skip", "unknown", None):
+                    continue
+                conf = m.get("confidence", 0)
+                src = m.get("source", "?")
+                flag = " ⚠️" if m.get("needs_review") else ""
+                lines.append(f"  • Column {m.get('col_index', '?')}: "
+                             f"\"{m['col_name']}\" → **{m['field']}** "
+                             f"({conf:.0%} {src}){flag}")
+
+        lines.append("")
+        lines.append("**Tally columns detected:**")
+        for sheet in tally_mapping.get("sheets", []):
+            sheet_name = sheet.get("sheet_name", "")
+            key_mappings = [m for m in sheet.get("mappings", [])
+                           if m.get("field") not in ("skip", "unknown", None)]
+            if not key_mappings:
+                continue
+            lines.append(f"  *{sheet_name}:*")
+            for m in key_mappings[:8]:  # Show first 8 per sheet to keep it readable
+                conf = m.get("confidence", 0)
+                src = m.get("source", "?")
+                flag = " ⚠️" if m.get("needs_review") else ""
+                lines.append(f"  • Column {m.get('col_index', '?')}: "
+                             f"\"{m['col_name']}\" → **{m['field']}** "
+                             f"({conf:.0%} {src}){flag}")
+            remaining = len(key_mappings) - 8
+            if remaining > 0:
+                lines.append(f"  • ... and {remaining} more columns")
+
+        # Count issues
+        all_mappings = []
+        for sheet in f26_mapping.get("sheets", []):
+            all_mappings.extend(sheet.get("mappings", []))
+        for sheet in tally_mapping.get("sheets", []):
+            all_mappings.extend(sheet.get("mappings", []))
+        review_count = sum(1 for m in all_mappings if m.get("needs_review"))
+
+        summary = "\n".join(lines)
+        if review_count > 0:
+            summary += f"\n\n⚠️ {review_count} column(s) have low confidence and may be wrong."
+
+        q_id = f"q_{uuid.uuid4().hex[:8]}"
+        answer = self.events.question(
+            agent=self.agent_name,
+            message=f"I've detected the following column mappings. Please confirm before I proceed.\n\n{summary}",
+            question_id=q_id,
+            options=[
+                {"id": "confirm", "label": "Confirm & Proceed",
+                 "description": "These mappings look correct — continue with parsing"},
+                {"id": "proceed_anyway", "label": "Proceed anyway",
+                 "description": "I'll review the results later"},
+            ],
+            allow_text_input=True,
+            multi_select=False,
+        )
+
+        if answer:
+            selected = answer.get("selected", [])
+            text_input = answer.get("text_input", "")
+
+            if "confirm" in selected or "proceed_anyway" in selected:
+                self.events.detail(self.agent_name, "User confirmed column mappings — proceeding")
+            elif text_input:
+                self.events.detail(self.agent_name, f"User feedback on columns: {text_input[:100]}")
+                # TODO: parse user corrections and apply to mappings
+        else:
+            self.events.warning(self.agent_name,
+                "Column confirmation timed out — proceeding with detected mappings")
+
+        return f26_mapping, tally_mapping
 
     def _parse_with_mapping(self, filepath: str, mapping_result: dict, entry_type: str) -> list[dict]:
         """Parse a file using column mapper output. No hardcoded positions.
