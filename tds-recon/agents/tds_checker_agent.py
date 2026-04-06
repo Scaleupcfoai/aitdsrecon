@@ -23,11 +23,14 @@ Outputs:
 """
 
 import json
+import math
 import re
 import sys
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
+
+import openpyxl
 
 
 # ---------------------------------------------------------------------------
@@ -789,6 +792,222 @@ def build_matched_tally_keys(matches: list[dict]) -> set[str]:
 
 
 # ---------------------------------------------------------------------------
+# Check 6: TDS Timing Compliance (Deduction + Deposit)
+# ---------------------------------------------------------------------------
+
+def parse_challan_register(filepath: str) -> list[dict]:
+    """Parse Form 26 Challan Register to extract deposit dates per section."""
+    wb = openpyxl.load_workbook(filepath, data_only=True)
+    ws = wb["Challan Details"]
+
+    challans = []
+    current_section = None
+
+    for row in ws.iter_rows(min_row=5, max_row=ws.max_row):
+        sec = row[1].value
+        if sec and "Total" not in str(sec) and "Grand" not in str(sec):
+            current_section = str(sec).strip()
+
+        challan_sr = str(row[2].value or "").strip()
+        if not challan_sr or not current_section:
+            continue
+
+        deposit_date = row[12].value  # Cha/Vch Date
+        if not deposit_date:
+            continue
+
+        # Parse quarter from "1 : Q2"
+        quarter = ""
+        if ":" in challan_sr:
+            quarter = challan_sr.split(":")[-1].strip()
+
+        challans.append({
+            "section": current_section,
+            "challan_sr": challan_sr,
+            "quarter": quarter,
+            "amount": row[10].value or 0,  # Total Paid
+            "challan_no": row[11].value,
+            "deposit_date": deposit_date,
+        })
+
+    wb.close()
+    return challans
+
+
+def get_deposit_due_date(deduction_date: datetime) -> datetime:
+    """Calculate TDS deposit due date per Rule 30.
+    - March deductions: due April 30
+    - All other months: due 7th of next month
+    """
+    if deduction_date.month == 3:
+        return datetime(deduction_date.year, 4, 30)
+    elif deduction_date.month == 12:
+        return datetime(deduction_date.year + 1, 1, 7)
+    else:
+        return datetime(deduction_date.year, deduction_date.month + 1, 7)
+
+
+def find_challan_for_entry(challans: list[dict], section: str,
+                           deduction_date: datetime) -> dict | None:
+    """Find the challan that covers a specific TDS deduction.
+    Match by section + closest deposit date on or after the deduction date.
+    """
+    section_challans = [c for c in challans if c["section"] == section]
+    if not section_challans:
+        return None
+
+    # Find challan with deposit date closest to (and >= ) deduction date
+    best = None
+    best_diff = None
+    for c in section_challans:
+        dep_date = parse_date(c["deposit_date"])
+        if not dep_date:
+            continue
+        diff = (dep_date - deduction_date).days
+        if diff >= -7:  # Allow 7 days before (challan could slightly predate deduction)
+            if best_diff is None or abs(diff) < abs(best_diff):
+                best = c
+                best_diff = diff
+
+    return best
+
+
+def months_between(d1: datetime, d2: datetime) -> int:
+    """Calculate months (or part of month) between two dates for penalty.
+    Returns at least 1 if any days late."""
+    days = (d2 - d1).days
+    if days <= 0:
+        return 0
+    return math.ceil(days / 30)
+
+
+def check_tds_timing(matches: list[dict], challans: list[dict]) -> list[dict]:
+    """Check TDS deduction and deposit timing for all matched entries.
+
+    For each match (including each Tally entry in aggregated matches):
+    - Compare expense date (Tally) vs deduction date (Form 26)
+    - Compare deposit date (challan) vs deposit due date (Rule 30)
+
+    Returns list of timing findings.
+    """
+    findings = []
+
+    for m in matches:
+        f26 = m["form26_entry"]
+        tally_entries = m["tally_entries"]
+        section = f26.get("section", "")
+        tds_amount = f26.get("tax_deducted", 0) or 0
+        deduction_date = parse_date(f26.get("tax_deducted_date"))
+
+        if tds_amount == 0 or not deduction_date:
+            continue
+
+        # Per-entry deduction timing check
+        for t in tally_entries:
+            expense_date = parse_date(t.get("date"))
+            if not expense_date:
+                continue
+
+            days_diff = (deduction_date - expense_date).days
+
+            if days_diff > 0:
+                # Late deduction: TDS deducted after expense date
+                months_late = months_between(expense_date, deduction_date)
+                # For aggregated matches, prorate TDS by entry amount
+                entry_amount = t.get("amount", 0) or 0
+                total_tally = sum(te.get("amount", 0) or 0 for te in tally_entries)
+                if total_tally > 0 and len(tally_entries) > 1:
+                    entry_tds = round(tds_amount * entry_amount / total_tally, 2)
+                else:
+                    entry_tds = tds_amount
+
+                penalty = round(entry_tds * 0.01 * months_late, 2)
+
+                findings.append({
+                    "check": "tds_timing",
+                    "sub_check": "late_deduction",
+                    "severity": "error",
+                    "vendor": f26.get("vendor_name", ""),
+                    "pan": f26.get("pan", ""),
+                    "form26_section": section,
+                    "expense_date": expense_date.isoformat()[:10],
+                    "deduction_date": deduction_date.isoformat()[:10],
+                    "days_late": days_diff,
+                    "months_late": months_late,
+                    "expense_amount": entry_amount,
+                    "tds_amount": entry_tds,
+                    "penalty_rate_pct": 1.0,
+                    "estimated_penalty": penalty,
+                    "tally_party": t.get("party_name", ""),
+                    "message": (
+                        f"Late TDS deduction on {f26['vendor_name']} "
+                        f"({section}): Expense on {expense_date.strftime('%d-%b-%Y')}, "
+                        f"TDS deducted on {deduction_date.strftime('%d-%b-%Y')} "
+                        f"({days_diff} days late, {months_late} month(s)). "
+                        f"Interest u/s 201(1A): ₹{penalty:,.0f} "
+                        f"({entry_tds:,.0f} × 1% × {months_late} months)."
+                    ),
+                })
+
+            elif days_diff < -30:
+                # Advance deduction — unusual, flag as info
+                findings.append({
+                    "check": "tds_timing",
+                    "sub_check": "advance_deduction",
+                    "severity": "info",
+                    "vendor": f26.get("vendor_name", ""),
+                    "form26_section": section,
+                    "expense_date": expense_date.isoformat()[:10],
+                    "deduction_date": deduction_date.isoformat()[:10],
+                    "days_early": abs(days_diff),
+                    "message": (
+                        f"TDS deducted {abs(days_diff)} days before expense for "
+                        f"{f26['vendor_name']} ({section}). Unusual — verify."
+                    ),
+                })
+
+        # Deposit timing check
+        if challans:
+            challan = find_challan_for_entry(challans, section, deduction_date)
+            deposit_due = get_deposit_due_date(deduction_date)
+
+            if challan:
+                actual_deposit = parse_date(challan["deposit_date"])
+                if actual_deposit and actual_deposit > deposit_due:
+                    days_late = (actual_deposit - deposit_due).days
+                    months_late = months_between(deposit_due, actual_deposit)
+                    penalty = round(tds_amount * 0.015 * months_late, 2)
+
+                    findings.append({
+                        "check": "tds_timing",
+                        "sub_check": "late_deposit",
+                        "severity": "error",
+                        "vendor": f26.get("vendor_name", ""),
+                        "pan": f26.get("pan", ""),
+                        "form26_section": section,
+                        "deduction_date": deduction_date.isoformat()[:10],
+                        "deposit_due_date": deposit_due.isoformat()[:10],
+                        "actual_deposit_date": actual_deposit.isoformat()[:10],
+                        "days_late": days_late,
+                        "months_late": months_late,
+                        "tds_amount": tds_amount,
+                        "penalty_rate_pct": 1.5,
+                        "estimated_penalty": penalty,
+                        "challan_no": challan.get("challan_no"),
+                        "message": (
+                            f"Late TDS deposit for {f26['vendor_name']} "
+                            f"({section}): Due by {deposit_due.strftime('%d-%b-%Y')}, "
+                            f"deposited on {actual_deposit.strftime('%d-%b-%Y')} "
+                            f"({days_late} days late). "
+                            f"Interest u/s 201(1A): ₹{penalty:,.0f} "
+                            f"({tds_amount:,.0f} × 1.5% × {months_late} months)."
+                        ),
+                    })
+
+    return findings
+
+
+# ---------------------------------------------------------------------------
 # Main Runner
 # ---------------------------------------------------------------------------
 
@@ -903,6 +1122,41 @@ def run(parsed_dir: str, results_dir: str, event_callback=None) -> dict:
     else:
         emit("No missing TDS detected", "success")
 
+    # ---- TDS Timing Compliance ----
+    emit("Checking TDS deduction and deposit timing...")
+    # Try to load challan register
+    challans = []
+    base_dir = Path(__file__).parent.parent.parent  # repo root
+    challan_paths = [
+        base_dir / "data" / "hpc" / "Form 26 challan register.xlsx",
+        parsed_path.parent / "uploads" / "challan.xlsx",
+        parsed_path / "challan_register.json",
+    ]
+    for cp in challan_paths:
+        if cp.exists() and cp.suffix == ".xlsx":
+            try:
+                challans = parse_challan_register(str(cp))
+                emit(f"Loaded {len(challans)} challan entries from {cp.name}")
+            except Exception as e:
+                emit(f"Could not parse challan register: {e}", "warning")
+            break
+
+    timing_findings = check_tds_timing(matches, challans)
+    all_findings.extend(timing_findings)
+
+    late_deductions = [f for f in timing_findings if f.get("sub_check") == "late_deduction"]
+    late_deposits = [f for f in timing_findings if f.get("sub_check") == "late_deposit"]
+    total_penalty = sum(f.get("estimated_penalty", 0) for f in timing_findings)
+
+    if late_deductions:
+        emit(f"{len(late_deductions)} late TDS deduction(s) found — estimated interest ₹{sum(f['estimated_penalty'] for f in late_deductions):,.0f}", "warning")
+    if late_deposits:
+        emit(f"{len(late_deposits)} late TDS deposit(s) found — estimated interest ₹{sum(f['estimated_penalty'] for f in late_deposits):,.0f}", "warning")
+    if not late_deductions and not late_deposits:
+        emit("All TDS deducted and deposited on time", "success")
+    if not challans:
+        emit("Challan register not found — deposit timing not checked", "warning")
+
     # ---- Summarize ----
     summary = {
         "total_findings": len(all_findings),
@@ -912,6 +1166,7 @@ def run(parsed_dir: str, results_dir: str, event_callback=None) -> dict:
             "base_amount_validation": len(base_findings),
             "threshold_validation": len(threshold_findings),
             "missing_tds": len(missing_findings),
+            "tds_timing": len(timing_findings),
         },
         "by_severity": {
             "error": sum(1 for f in all_findings if f["severity"] == "error"),
