@@ -225,12 +225,30 @@ class ParserAgent(AgentBase):
 
         # Step 2: Parse Form 26 using mapped columns
         tds_entries = self._parse_with_mapping(form26_path, f26_mapping, entry_type="tds")
+
+        # ── Log sample parsed TDS entries ──
+        if tds_entries:
+            print(f"\n  SAMPLE PARSED TDS ENTRIES (first 3 of {len(tds_entries)}):")
+            for i, e in enumerate(tds_entries[:3]):
+                print(f"    [{i+1}] name={e.get('party_name', '?')!r}  section={e.get('tds_section', '?')}  "
+                      f"gross={e.get('gross_amount', '?')}  tds={e.get('tds_amount', '?')}  "
+                      f"date={e.get('date_of_deduction', '?')}  rate={e.get('raw_data', {}).get('tax_rate_pct', '?')}")
+
         tds_count = self.db.entries.bulk_insert_tds(tds_entries) if tds_entries else 0
         sections = set(e["tds_section"] for e in tds_entries if e.get("tds_section"))
         self.events.detail(self.agent_name, f"Form 26: {tds_count} entries across {len(sections)} sections")
 
         # Step 3: Parse Tally using mapped columns
         ledger_entries = self._parse_with_mapping(tally_path, tally_mapping, entry_type="ledger")
+
+        # ── Log sample parsed ledger entries ──
+        if ledger_entries:
+            print(f"\n  SAMPLE PARSED LEDGER ENTRIES (first 3 of {len(ledger_entries)}):")
+            for i, e in enumerate(ledger_entries[:3]):
+                print(f"    [{i+1}] name={e.get('party_name', '?')!r}  amount={e.get('amount', '?')}  "
+                      f"gst={e.get('gst_amount', '?')}  date={e.get('invoice_date', '?')}  "
+                      f"type={e.get('expense_type', '?')}  section={e.get('tds_section', '?')}")
+
         ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries) if ledger_entries else 0
         self.events.detail(self.agent_name, f"Tally: {ledger_count} ledger entries")
 
@@ -268,6 +286,14 @@ class ParserAgent(AgentBase):
             for m in sheet_result.get("mappings", []):
                 if m.get("field") and m["field"] not in ("skip", "unknown"):
                     field_to_col[m["field"]] = m.get("col_index", 0) - 1  # 0-based
+
+            # ── Log the field→column mapping the parser will use ──
+            sheet_label = sheet_result.get("sheet_name", "?")
+            print(f"\n  PARSER using field→column map for [{sheet_label}] ({entry_type}):")
+            for field, col_idx in sorted(field_to_col.items()):
+                print(f"    {field:<25} → column {col_idx + 1} (0-based: {col_idx})")
+            if not field_to_col:
+                print(f"    (no fields mapped — skipping this sheet)")
 
             if not field_to_col:
                 continue

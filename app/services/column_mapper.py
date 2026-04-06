@@ -319,8 +319,32 @@ class ColumnMapper:
             auto_mapped = [r for r in fuzzy_results if r["confidence"] >= AUTO_MAP_THRESHOLD]
             uncertain = [r for r in fuzzy_results if r["confidence"] < AUTO_MAP_THRESHOLD]
 
+            # ── Detailed logging for debugging ──
+            print(f"\n{'='*70}")
+            print(f"  COLUMN MAPPING: {sheet['sheet_name']}")
+            print(f"  Fields: {'TDS' if fields == TDS_FIELDS else 'LEDGER'} | Header row: {sheet['header_row']}")
+            print(f"{'='*70}")
+
+            if auto_mapped:
+                print(f"\n  ✓ AUTO-MAPPED (fuzzy confidence >= {AUTO_MAP_THRESHOLD}):")
+                for r in auto_mapped:
+                    print(f"    Col {r['col_index']:>3} | {r['col_name']:<35} → {r['suggested_field']:<20} "
+                          f"(conf={r['confidence']:.2f}, method={r['method']})")
+
+            if uncertain:
+                print(f"\n  ? UNCERTAIN (fuzzy confidence < {AUTO_MAP_THRESHOLD}) — sending to LLM:")
+                for r in uncertain:
+                    print(f"    Col {r['col_index']:>3} | {r['col_name']:<35} → {r['suggested_field'] or '???':<20} "
+                          f"(conf={r['confidence']:.2f}, method={r['method']})")
+
             # Step 3: Send uncertain to LLM
             llm_results = llm_map_uncertain(uncertain, sheet["sheet_name"], sheet["sample_rows"], self.llm)
+
+            if llm_results:
+                print(f"\n  ✦ LLM RESPONSE:")
+                for m in llm_results:
+                    print(f"    {m.get('col_name', '?'):<35} → {m.get('field', '?'):<20} "
+                          f"(conf={m.get('confidence', 0):.2f}) {m.get('reason', '')[:60]}")
 
             # Build final mappings
             final_mappings = []
@@ -353,6 +377,18 @@ class ColumnMapper:
                 })
 
             needs_review = [m["col_name"] for m in final_mappings if m.get("needs_review")]
+
+            # ── Log final mappings ──
+            print(f"\n  FINAL MAPPINGS for {sheet['sheet_name']}:")
+            for m in final_mappings:
+                flag = "⚠ REVIEW" if m.get("needs_review") else "✓"
+                print(f"    {flag} Col {m.get('col_index', '?'):>3} | {m['col_name']:<35} → {m['field']:<20} "
+                      f"(conf={m['confidence']:.2f}, src={m['source']})")
+            if needs_review:
+                print(f"\n  ⚠ COLUMNS NEEDING HUMAN REVIEW (proceeding WITHOUT confirmation):")
+                for col in needs_review:
+                    print(f"    - {col}")
+            print(f"{'='*70}\n")
 
             result_sheets.append({
                 "sheet_name": sheet["sheet_name"],
