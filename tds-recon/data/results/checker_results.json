@@ -1,22 +1,21 @@
 {
-  "run_timestamp": "2026-04-01T18:40:31.484937",
+  "run_timestamp": "2026-04-06T12:45:03.123872",
   "summary": {
-    "total_findings": 11,
+    "total_findings": 12,
     "by_check": {
       "section_validation": 6,
       "rate_validation": 0,
       "base_amount_validation": 0,
       "threshold_validation": 3,
-      "missing_tds": 2
+      "missing_tds": 3
     },
     "by_severity": {
-      "error": 0,
+      "error": 1,
       "warning": 7,
       "info": 4
     },
-    "matches_checked": 103,
+    "matches_checked": 79,
     "sections_in_scope": [
-      "192",
       "194A",
       "194C",
       "194H",
@@ -121,6 +120,18 @@
     {
       "check": "threshold_validation",
       "severity": "info",
+      "vendor": "SAHIB S CHOUDHARY & COMPANY",
+      "pan": "AEJPC0634D",
+      "form26_section": "194J(b)",
+      "aggregate_amount": 9000,
+      "threshold_annual": 30000,
+      "num_entries": 1,
+      "status": "below_threshold_but_deducted",
+      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is not mandatory (but not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
       "vendor": "Raymond Limited",
       "pan": "AAACR4896A",
       "form26_section": "194Q",
@@ -143,18 +154,6 @@
       "message": "194Q for Sai Boutique: aggregate \u20b9381,820 is below annual threshold \u20b95,000,000. TDS deduction is not mandatory (but not wrong if deducted)."
     },
     {
-      "check": "threshold_validation",
-      "severity": "info",
-      "vendor": "SAHIB S CHOUDHARY & COMPANY",
-      "pan": "AEJPC0634D",
-      "form26_section": "194J(b)",
-      "aggregate_amount": 9000,
-      "threshold_annual": 30000,
-      "num_entries": 1,
-      "status": "below_threshold_but_deducted",
-      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is not mandatory (but not wrong if deducted)."
-    },
-    {
       "check": "missing_tds",
       "severity": "warning",
       "vendor": "Kochar Tradelink LLP",
@@ -169,10 +168,10 @@
       "needs_review": true,
       "review_reasons": [
         "Has entries on quarter/year-end dates (2025-03-31) alongside other dates \u2014 may include provisions or reversals.",
-        "Same transaction (\u20b938,743) appears in both Journal Register and GST Exp Register \u2014 counted once from Journal. Please confirm these are the same entry.",
-        "Has both Dr (1) and Cr (1) entries \u2014 Cr entries may be reversals. Verify net expense."
+        "Same transaction (\u20b938,743) appears in both Journal Register and GST Exp Register \u2014 counted once from Journal. Please confirm these are the same entry."
       ],
-      "message": "No Form 26 entry found for Kochar Tradelink LLP under 194H. Tally shows \u20b944,932 in Brokerage and Commission. TDS may be missing. Review: Has entries on quarter/year-end dates (2025-03-31) alongside other dates \u2014 may include provisions or reversals. | Same transaction (\u20b938,743) appears in both Journal Register and GST Exp Register \u2014 counted once from Journal. Please confirm these are the same entry. | Has both Dr (1) and Cr (1) entries \u2014 Cr entries may be reversals. Verify net expense."
+      "vendor_in_f26": false,
+      "message": "No Form 26 entry found for Kochar Tradelink LLP under 194H. Tally shows \u20b944,932 in Brokerage and Commission. TDS may be missing. Review: Has entries on quarter/year-end dates (2025-03-31) alongside other dates \u2014 may include provisions or reversals. | Same transaction (\u20b938,743) appears in both Journal Register and GST Exp Register \u2014 counted once from Journal. Please confirm these are the same entry."
     },
     {
       "check": "missing_tds",
@@ -190,7 +189,25 @@
       "review_reasons": [
         "Has entries on quarter/year-end dates (2025-03-31) alongside other dates \u2014 may include provisions or reversals."
       ],
+      "vendor_in_f26": false,
       "message": "No Form 26 entry found for Pukesh Sharma under 194H. Tally shows \u20b920,877 in Brokerage and Commission. TDS may be missing. Review: Has entries on quarter/year-end dates (2025-03-31) alongside other dates \u2014 may include provisions or reversals."
+    },
+    {
+      "check": "partial_tds",
+      "severity": "error",
+      "vendor": "Sahib S Choudhary & Co.",
+      "vendor_normalized": "sahib s choudhary &",
+      "expected_section": "194J(b)",
+      "aggregate_amount": 30000.0,
+      "threshold": 30000,
+      "num_tally_entries": 1,
+      "expense_heads": [
+        "Audit Fees"
+      ],
+      "needs_review": false,
+      "review_reasons": [],
+      "vendor_in_f26": true,
+      "message": "Vendor Sahib S Choudhary & Co. has Form 26 entry under 194J(b) but additional \u20b930,000 in books (Audit Fees) is not covered. TDS may be short-deducted."
     }
   ]
 }
