@@ -194,8 +194,38 @@ def entity_type_from_pan(pan: str) -> str:
         return "individual_huf"
     elif fourth == "F":
         return "firm"  # treated as individual_huf for TDS rates
+    elif fourth in ("A", "T", "B", "L", "J"):
+        return "individual_huf"  # AOP, Trust, BOI, Local Auth, Artificial — individual rates
+    elif fourth == "G":
+        return "government"
     else:
         return "unknown"
+
+
+def is_valid_pan(pan: str) -> bool:
+    """Check if PAN follows the valid format: 5 letters + 4 digits + 1 letter.
+    Also rejects known placeholder PANs."""
+    if not pan or len(pan) != 10:
+        return False
+    import re
+    if not re.match(r'^[A-Z]{5}[0-9]{4}[A-Z]$', pan.upper()):
+        return False
+    # Reject known placeholders (all same digits, sequential)
+    if pan[5:9] in ("0000", "0001", "9999"):
+        return False
+    return True
+
+
+def pan_name_initial_matches(pan: str, vendor_name: str) -> bool:
+    """Check if PAN 5th character matches the first letter of the entity name.
+    For individuals (4th=P): 5th char = first letter of surname.
+    For others: 5th char = first letter of entity name."""
+    if not pan or len(pan) < 5 or not vendor_name:
+        return True  # can't verify, assume ok
+    pan5 = pan[4].upper()
+    # For company/firm, check against entity name first letter
+    name_initial = vendor_name.strip()[0].upper() if vendor_name.strip() else ""
+    return pan5 == name_initial
 
 
 def expected_rate(section: str, pan: str) -> float | None:
@@ -338,48 +368,97 @@ def _section_message(status, section, heads, expected, ambiguous):
 # Check 2: Rate Validation
 # ---------------------------------------------------------------------------
 
-def check_rate(match_entry: dict) -> dict | None:
-    """Validate if the TDS rate applied matches expected rate for section + entity."""
+def check_rate(match_entry: dict) -> list[dict]:
+    """Validate TDS rate and PAN compliance for a matched entry.
+
+    Returns a list of findings (0, 1, or 2):
+    - PAN validity / Section 206AA check
+    - Rate mismatch check (entity-type-aware)
+    """
     f26 = match_entry["form26_entry"]
     section = f26["section"]
     pan = f26.get("pan", "")
     actual_rate = f26.get("tax_rate_pct")
     amount_paid = f26.get("amount_paid", 0)
     tax_deducted = f26.get("tax_deducted", 0)
+    vendor = f26.get("vendor_name", "")
 
-    if actual_rate is None:
-        return None
+    findings = []
 
-    exp_rate = expected_rate(section, pan)
-    if exp_rate is None:
-        return None
+    # ── PAN Validation + Section 206AA ──
+    if not pan or not is_valid_pan(pan):
+        # Section 206AA: No valid PAN → TDS at 20% or applicable rate, whichever is higher
+        section_rate = expected_rate(section, "XXXPX0000X") or 0  # default individual rate
+        min_206aa_rate = max(20.0, section_rate)
+        if actual_rate is not None and actual_rate < min_206aa_rate:
+            short_deduction = round(amount_paid * (min_206aa_rate - actual_rate) / 100, 2)
+            findings.append({
+                "check": "pan_validation",
+                "severity": "error",
+                "vendor": vendor,
+                "pan": pan or "(missing)",
+                "form26_section": section,
+                "actual_rate_pct": actual_rate,
+                "required_rate_pct": min_206aa_rate,
+                "amount_paid": amount_paid,
+                "short_deduction": short_deduction,
+                "message": (
+                    f"Invalid/missing PAN for {vendor} — Section 206AA requires TDS at "
+                    f"{min_206aa_rate}% (applied {actual_rate}%). "
+                    f"Potential short deduction: ₹{short_deduction:,.0f}."
+                ),
+            })
+        elif not pan:
+            findings.append({
+                "check": "pan_validation",
+                "severity": "warning",
+                "vendor": vendor,
+                "pan": "(missing)",
+                "form26_section": section,
+                "message": f"PAN missing for {vendor}. Section 206AA may apply (20% minimum rate).",
+            })
 
-    # Compare rates
-    if abs(actual_rate - exp_rate) < 0.01:
-        return None  # rate matches
-
-    # Also verify via actual computation
-    if amount_paid > 0:
-        computed_rate = round(tax_deducted / amount_paid * 100, 2)
     else:
-        computed_rate = 0
+        # PAN is valid — check entity type vs rate
+        etype = entity_type_from_pan(pan)
 
-    etype = entity_type_from_pan(pan)
-    return {
-        "check": "rate_validation",
-        "severity": "error",
-        "vendor": f26["vendor_name"],
-        "pan": pan,
-        "entity_type": etype,
-        "form26_section": section,
-        "actual_rate_pct": actual_rate,
-        "expected_rate_pct": exp_rate,
-        "computed_rate_pct": computed_rate,
-        "amount_paid": amount_paid,
-        "tax_deducted": tax_deducted,
-        "message": (f"TDS rate mismatch: {section} on {f26['vendor_name']} ({etype}) — "
-                    f"applied {actual_rate}% but expected {exp_rate}%."),
-    }
+        if etype == "government":
+            # Government entities — generally exempt, skip rate check
+            return findings
+
+        if actual_rate is None:
+            return findings
+
+        exp_rate = expected_rate(section, pan)
+        if exp_rate is None:
+            return findings
+
+        # Rate mismatch check
+        if abs(actual_rate - exp_rate) >= 0.01:
+            if amount_paid > 0:
+                computed_rate = round(tax_deducted / amount_paid * 100, 2)
+            else:
+                computed_rate = 0
+
+            findings.append({
+                "check": "rate_validation",
+                "severity": "error",
+                "vendor": vendor,
+                "pan": pan,
+                "entity_type": etype,
+                "form26_section": section,
+                "actual_rate_pct": actual_rate,
+                "expected_rate_pct": exp_rate,
+                "computed_rate_pct": computed_rate,
+                "amount_paid": amount_paid,
+                "tax_deducted": tax_deducted,
+                "message": (
+                    f"TDS rate mismatch: {section} on {vendor} ({etype}) — "
+                    f"applied {actual_rate}% but expected {exp_rate}%."
+                ),
+            })
+
+    return findings
 
 
 # ---------------------------------------------------------------------------
@@ -1054,18 +1133,25 @@ def run(parsed_dir: str, results_dir: str, event_callback=None) -> dict:
     else:
         emit("All sections correctly classified", "success")
 
-    # ---- Rate Validation ----
-    emit("Validating TDS rates against Income Tax rules...")
+    # ---- Rate + PAN Validation ----
+    emit("Validating TDS rates and PAN compliance...")
     rate_findings = []
+    pan_findings = []
     for m in matches:
-        finding = check_rate(m)
-        if finding:
-            rate_findings.append(finding)
+        results = check_rate(m)
+        for f in results:
+            if f["check"] == "pan_validation":
+                pan_findings.append(f)
+            else:
+                rate_findings.append(f)
     all_findings.extend(rate_findings)
+    all_findings.extend(pan_findings)
+    if pan_findings:
+        emit(f"{len(pan_findings)} PAN issue(s) — Section 206AA may apply", "warning")
     if rate_findings:
-        emit(f"{len(rate_findings)} rate mismatches found", "warning")
-    else:
-        emit("All TDS rates correct", "success")
+        emit(f"{len(rate_findings)} rate mismatch(es) found", "warning")
+    if not rate_findings and not pan_findings:
+        emit("All TDS rates and PAN compliance verified", "success")
 
     # ---- Base Amount Validation ----
     emit("Checking if TDS computed on correct base amount (pre-GST)...")
@@ -1163,6 +1249,7 @@ def run(parsed_dir: str, results_dir: str, event_callback=None) -> dict:
         "by_check": {
             "section_validation": len(section_findings),
             "rate_validation": len(rate_findings),
+            "pan_validation": len(pan_findings),
             "base_amount_validation": len(base_findings),
             "threshold_validation": len(threshold_findings),
             "missing_tds": len(missing_findings),

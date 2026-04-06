@@ -1,17 +1,18 @@
 {
-  "run_timestamp": "2026-04-06T13:32:08.969338",
+  "run_timestamp": "2026-04-06T14:12:35.727518",
   "summary": {
-    "total_findings": 116,
+    "total_findings": 120,
     "by_check": {
       "section_validation": 6,
       "rate_validation": 0,
+      "pan_validation": 4,
       "base_amount_validation": 0,
       "threshold_validation": 3,
       "missing_tds": 3,
       "tds_timing": 104
     },
     "by_severity": {
-      "error": 105,
+      "error": 109,
       "warning": 7,
       "info": 4
     },
@@ -117,6 +118,54 @@
       "expected_sections": [],
       "status": "unclassified",
       "message": "Cannot classify expense(s): Professonal Charges. Manual review needed."
+    },
+    {
+      "check": "pan_validation",
+      "severity": "error",
+      "vendor": "Adi Debnath",
+      "pan": "AAAAA0001A",
+      "form26_section": "194A",
+      "actual_rate_pct": 10,
+      "required_rate_pct": 20.0,
+      "amount_paid": 82461,
+      "short_deduction": 8246.1,
+      "message": "Invalid/missing PAN for Adi Debnath \u2014 Section 206AA requires TDS at 20.0% (applied 10%). Potential short deduction: \u20b98,246."
+    },
+    {
+      "check": "pan_validation",
+      "severity": "error",
+      "vendor": "Adi Debnath",
+      "pan": "AAAAA0001A",
+      "form26_section": "194A",
+      "actual_rate_pct": 10,
+      "required_rate_pct": 20.0,
+      "amount_paid": 85749,
+      "short_deduction": 8574.9,
+      "message": "Invalid/missing PAN for Adi Debnath \u2014 Section 206AA requires TDS at 20.0% (applied 10%). Potential short deduction: \u20b98,575."
+    },
+    {
+      "check": "pan_validation",
+      "severity": "error",
+      "vendor": "Adi Debnath",
+      "pan": "AAAAA0001A",
+      "form26_section": "194A",
+      "actual_rate_pct": 10,
+      "required_rate_pct": 20.0,
+      "amount_paid": 88131,
+      "short_deduction": 8813.1,
+      "message": "Invalid/missing PAN for Adi Debnath \u2014 Section 206AA requires TDS at 20.0% (applied 10%). Potential short deduction: \u20b98,813."
+    },
+    {
+      "check": "pan_validation",
+      "severity": "error",
+      "vendor": "Adi Debnath",
+      "pan": "AAAAA0001A",
+      "form26_section": "194A",
+      "actual_rate_pct": 10,
+      "required_rate_pct": 20.0,
+      "amount_paid": 88212,
+      "short_deduction": 8821.2,
+      "message": "Invalid/missing PAN for Adi Debnath \u2014 Section 206AA requires TDS at 20.0% (applied 10%). Potential short deduction: \u20b98,821."
     },
     {
       "check": "threshold_validation",
