@@ -448,10 +448,11 @@ def build_excel_report(
     ws3.auto_filter.ref = ws3.dimensions
 
     # ========== Sheet 4: Late TDS Deduction ==========
-    if timing_findings:
+    if True:  # Always create timing sheets
+        timing_findings = timing_findings or []
         late_deductions = [f for f in timing_findings if f.get("sub_check") == "late_deduction"]
+        ws4 = wb.create_sheet("Late TDS Deduction")
         if late_deductions:
-            ws4 = wb.create_sheet("Late TDS Deduction")
             h4 = ["Sr.", "Vendor", "PAN", "Section", "Expense Head",
                    "Expense Amount", "TDS Amount",
                    "Expense Date", "Deduction Date", "Days Late", "Months",
@@ -481,11 +482,15 @@ def build_excel_report(
             ws4.column_dimensions["B"].width = 30
             ws4.column_dimensions["N"].width = 30
             ws4.auto_filter.ref = ws4.dimensions
+        else:
+            cell = ws4.cell(row=1, column=1, value="✓ All TDS deductions were made on time. Great compliance!")
+            cell.font = Font(bold=True, size=13, color="16A34A")
+            ws4.column_dimensions["A"].width = 60
 
         # ========== Sheet 5: Late TDS Deposit ==========
         late_deposits = [f for f in timing_findings if f.get("sub_check") == "late_deposit"]
+        ws5 = wb.create_sheet("Late TDS Deposit")
         if late_deposits:
-            ws5 = wb.create_sheet("Late TDS Deposit")
             h5 = ["Sr.", "Vendor", "PAN", "Section",
                    "TDS Amount", "Deduction Date",
                    "Deposit Due Date", "Actual Deposit Date", "Days Late", "Months",
@@ -513,6 +518,10 @@ def build_excel_report(
                 ws5.column_dimensions[openpyxl.utils.get_column_letter(col)].width = max(10, min(30, len(str(h5[col - 1])) + 4))
             ws5.column_dimensions["B"].width = 30
             ws5.auto_filter.ref = ws5.dimensions
+        else:
+            cell = ws5.cell(row=1, column=1, value="✓ All TDS deposits were made on time. Great compliance!")
+            cell.font = Font(bold=True, size=13, color="16A34A")
+            ws5.column_dimensions["A"].width = 60
 
     wb.save(str(filepath))
     wb.close()
