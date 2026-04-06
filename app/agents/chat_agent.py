@@ -24,8 +24,6 @@ Usage:
 import json
 from typing import Generator
 
-from groq import Groq
-
 from app.config import settings
 from app.db.repository import Repository
 from app.services.llm_prompts import CHAT_SYSTEM_PROMPT, CHAT_TOOLS
@@ -54,9 +52,17 @@ class ChatAgent:
         self.run_id = run_id  # most recent reconciliation run
         self.conversation_history = []
         self._client = None
+        self._provider = None
 
-        if settings.groq_api_key:
+        # Try Gemini first, fall back to Groq
+        if settings.gemini_api_key:
+            from google import genai
+            self._client = genai.Client(api_key=settings.gemini_api_key)
+            self._provider = "gemini"
+        elif settings.groq_api_key:
+            from groq import Groq
             self._client = Groq(api_key=settings.groq_api_key)
+            self._provider = "groq"
 
     @property
     def available(self) -> bool:
@@ -92,11 +98,44 @@ class ChatAgent:
             return "Chat is not available. Please configure the LLM API key."
 
         self.conversation_history.append({"role": "user", "content": message})
-
-        # Emit event
         self.events.emit("Chat Agent", f"User: {message[:80]}...", "info")
 
-        # Agentic loop
+        if self._provider == "gemini":
+            return self._chat_gemini()
+        else:
+            return self._chat_groq()
+
+    def _chat_gemini(self) -> str:
+        """Gemini chat — simple prompt-response (no tool calling for now)."""
+        from google.genai import types
+
+        # Build full prompt with conversation context
+        conv_text = "\n".join(
+            f"{'User' if m['role'] == 'user' else 'Assistant'}: {m['content']}"
+            for m in self.conversation_history if m.get("content")
+        )
+
+        config = types.GenerateContentConfig(
+            system_instruction=self._build_system_prompt(),
+            temperature=0.2,
+            max_output_tokens=2000,
+        )
+
+        response = self._client.models.generate_content(
+            model=settings.llm_model,
+            contents=conv_text,
+            config=config,
+        )
+
+        final_text = response.text or ""
+        self.conversation_history.append({"role": "assistant", "content": final_text})
+        self.events.emit("Chat Agent", f"Response: {final_text[:100]}...", "info")
+        return final_text
+
+    def _chat_groq(self) -> str:
+        """Groq chat with tool-use loop (legacy)."""
+        from groq import Groq
+
         while True:
             response = self._client.chat.completions.create(
                 model=settings.llm_model,
@@ -113,9 +152,7 @@ class ChatAgent:
             choice = response.choices[0]
             message_obj = choice.message
 
-            # Check for tool calls
             if message_obj.tool_calls:
-                # LLM wants to call tools — execute them
                 self.conversation_history.append({
                     "role": "assistant",
                     "content": message_obj.content or "",
@@ -132,9 +169,7 @@ class ChatAgent:
 
                     self.events.emit("Chat Agent", f"Calling tool: {tool_name}", "llm_call",
                                      {"tool": tool_name, "args": tool_args})
-
                     tool_result = self._execute_tool(tool_name, tool_args)
-
                     self.events.emit("Chat Agent", f"Tool result: {str(tool_result)[:100]}...", "llm_response")
 
                     self.conversation_history.append({
@@ -142,33 +177,59 @@ class ChatAgent:
                         "tool_call_id": tool_call.id,
                         "content": json.dumps(tool_result, default=str),
                     })
-
-                # Loop back — LLM will process tool results
                 continue
 
-            # No tool calls — this is the final text response
             final_text = message_obj.content or ""
             self.conversation_history.append({"role": "assistant", "content": final_text})
-
             self.events.emit("Chat Agent", f"Response: {final_text[:100]}...", "info")
             return final_text
 
     def chat_stream(self, message: str) -> Generator[str, None, None]:
-        """Send a message and stream the response token by token.
-
-        Yields text chunks as they arrive. For tool calls, yields
-        status updates like "[Calling get_findings...]" between chunks.
-        """
-        # For streaming, we first do the agentic loop (tool calls),
-        # then stream the final response
+        """Send a message and stream the response token by token."""
         if not self._client:
             yield "Chat is not available. Please configure the LLM API key."
             return
 
         self.conversation_history.append({"role": "user", "content": message})
 
-        # Handle tool calls (non-streaming — tools need complete args)
-        max_loops = 3  # Reduced from 5 — prevents runaway tool chains
+        if self._provider == "gemini":
+            # Gemini: simple prompt-response, yield in chunks
+            from google.genai import types
+
+            conv_text = "\n".join(
+                f"{'User' if m['role'] == 'user' else 'Assistant'}: {m['content']}"
+                for m in self.conversation_history if m.get("content")
+            )
+
+            config = types.GenerateContentConfig(
+                system_instruction=self._build_system_prompt(),
+                temperature=0.2,
+                max_output_tokens=2000,
+            )
+
+            response = self._client.models.generate_content(
+                model=settings.llm_model,
+                contents=conv_text,
+                config=config,
+            )
+
+            final_text = response.text or ""
+            self.conversation_history.append({"role": "assistant", "content": final_text})
+
+            # Yield in chunks
+            words = final_text.split(" ")
+            chunk = ""
+            for word in words:
+                chunk += word + " "
+                if len(chunk) > 30:
+                    yield chunk
+                    chunk = ""
+            if chunk:
+                yield chunk
+            return
+
+        # Groq: tool-use loop (legacy)
+        max_loops = 3
         for loop_idx in range(max_loops):
             response = self._client.chat.completions.create(
                 model=settings.llm_model,
@@ -186,11 +247,8 @@ class ChatAgent:
             message_obj = choice.message
 
             if not message_obj.tool_calls:
-                # No tool calls — stream the final response
                 final_text = message_obj.content or ""
                 self.conversation_history.append({"role": "assistant", "content": final_text})
-
-                # Yield in chunks to simulate streaming
                 words = final_text.split(" ")
                 chunk = ""
                 for word in words:
@@ -202,7 +260,6 @@ class ChatAgent:
                     yield chunk
                 return
 
-            # Execute tool calls
             self.conversation_history.append({
                 "role": "assistant",
                 "content": message_obj.content or "",
@@ -216,12 +273,8 @@ class ChatAgent:
             for tool_call in message_obj.tool_calls:
                 tool_name = tool_call.function.name
                 tool_args = json.loads(tool_call.function.arguments) if tool_call.function.arguments else {}
-
-                # Yield tool call status to the user
                 yield f"\n🔧 *{tool_name}*...\n"
-
                 tool_result = self._execute_tool(tool_name, tool_args)
-
                 self.conversation_history.append({
                     "role": "tool",
                     "tool_call_id": tool_call.id,

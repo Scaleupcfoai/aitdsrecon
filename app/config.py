@@ -32,10 +32,13 @@ class Settings(BaseSettings):
     # ── Anthropic (added later — empty string means disabled) ──
     anthropic_api_key: str = ""
 
-    # ── LLM for column mapping (Groq free tier, swap to Anthropic later) ──
+    # ── Groq (legacy, kept for fallback) ──
     groq_api_key: str = ""
-    llm_model: str = "llama-3.3-70b-versatile"  # Groq model
-    llm_provider: Literal["groq", "anthropic"] = "groq"
+
+    # ── Gemini (primary LLM) ──
+    gemini_api_key: str = ""
+    llm_model: str = "gemini-2.5-flash"
+    llm_provider: Literal["gemini", "groq", "anthropic"] = "gemini"
     llm_temperature: float = 0.1  # low = more deterministic
     llm_max_tokens: int = 2000
 

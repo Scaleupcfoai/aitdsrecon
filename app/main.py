@@ -62,7 +62,7 @@ def create_app() -> FastAPI:
             "status": "ok",
             "version": "3.0.0",
             "environment": settings.environment,
-            "llm_available": bool(settings.groq_api_key),
+            "llm_available": bool(settings.gemini_api_key or settings.groq_api_key),
         }
 
     return app

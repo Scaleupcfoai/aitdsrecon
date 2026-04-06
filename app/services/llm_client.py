@@ -1,7 +1,7 @@
 """
 Unified LLM Client — single interface for all agents to call LLMs.
 
-Currently uses Groq (free tier). Swap to Anthropic by changing provider in config.
+Currently uses Google Gemini (gemini-2.5-flash). Falls back to Groq if configured.
 Every LLM call emits an SSE event so the UI shows LLM "thinking" in real-time.
 
 Usage:
@@ -16,9 +16,6 @@ Usage:
 
 import json
 import time
-from typing import Generator
-
-from groq import Groq
 
 from app.config import settings
 from app.pipeline.events import EventEmitter
@@ -28,6 +25,7 @@ class LLMClient:
     """Unified LLM client. All agents use this for LLM calls.
 
     Features:
+    - Supports Gemini (primary) and Groq (fallback)
     - Emits SSE events on every call (UI shows LLM thinking)
     - Graceful fallback (returns None if LLM unavailable)
     - JSON mode support (for structured responses)
@@ -36,13 +34,24 @@ class LLMClient:
 
     def __init__(self, events: EventEmitter | None = None):
         self.events = events
-        self._client = None
-        if settings.groq_api_key:
-            self._client = Groq(api_key=settings.groq_api_key)
+        self._gemini_client = None
+        self._groq_client = None
+        self._provider = None
+
+        # Try Gemini first (primary)
+        if settings.gemini_api_key:
+            from google import genai
+            self._gemini_client = genai.Client(api_key=settings.gemini_api_key)
+            self._provider = "gemini"
+        # Fall back to Groq
+        elif settings.groq_api_key:
+            from groq import Groq
+            self._groq_client = Groq(api_key=settings.groq_api_key)
+            self._provider = "groq"
 
     @property
     def available(self) -> bool:
-        return self._client is not None
+        return self._provider is not None
 
     def complete(
         self,
@@ -54,21 +63,8 @@ class LLMClient:
         max_tokens: int | None = None,
         include_knowledge: bool = True,
     ) -> str | None:
-        """Send a prompt to the LLM and return the response text.
-
-        Args:
-            prompt: The user message / question
-            system: System prompt (role definition)
-            agent_name: Which agent is calling (for SSE events)
-            json_mode: If True, request JSON output format
-            temperature: Override default (0.1)
-            max_tokens: Override default (2000)
-            include_knowledge: If True, inject TDS knowledge base into system prompt
-
-        Returns:
-            Response text, or None if LLM unavailable/failed
-        """
-        if not self._client:
+        """Send a prompt to the LLM and return the response text."""
+        if not self.available:
             return None
 
         # Inject knowledge base into system prompt
@@ -99,34 +95,21 @@ class LLMClient:
         start = time.time()
 
         try:
-            messages = []
-            if system:
-                messages.append({"role": "system", "content": system})
-            messages.append({"role": "user", "content": prompt})
-
-            kwargs = {
-                "model": settings.llm_model,
-                "messages": messages,
-                "temperature": temp,
-                "max_tokens": tokens,
-            }
-            if json_mode:
-                kwargs["response_format"] = {"type": "json_object"}
-
-            response = self._client.chat.completions.create(**kwargs)
-            result = response.choices[0].message.content
+            if self._provider == "gemini":
+                result = self._call_gemini(prompt, system, temp, tokens, json_mode)
+            else:
+                result = self._call_groq(prompt, system, temp, tokens, json_mode)
 
             elapsed_ms = int((time.time() - start) * 1000)
-            tokens_used = getattr(response.usage, 'total_tokens', 0) if response.usage else 0
 
             # Emit SSE event: LLM response received
             result_preview = result[:200] + "..." if len(result) > 200 else result
             if self.events:
                 self.events.emit(
                     agent_name,
-                    f"LLM responded ({elapsed_ms}ms, {tokens_used} tokens)",
+                    f"LLM responded ({elapsed_ms}ms, {self._provider})",
                     "llm_response",
-                    {"response_preview": result_preview, "elapsed_ms": elapsed_ms, "tokens": tokens_used},
+                    {"response_preview": result_preview, "elapsed_ms": elapsed_ms},
                 )
 
             return result
@@ -135,13 +118,15 @@ class LLMClient:
             error_msg = str(e)
 
             # Retry once on rate limit
-            if "rate_limit" in error_msg.lower() or "429" in error_msg:
+            if "rate_limit" in error_msg.lower() or "429" in error_msg or "resource_exhausted" in error_msg.lower():
                 if self.events:
                     self.events.emit(agent_name, "Rate limited, retrying in 2s...", "warning")
                 time.sleep(2)
                 try:
-                    response = self._client.chat.completions.create(**kwargs)
-                    return response.choices[0].message.content
+                    if self._provider == "gemini":
+                        return self._call_gemini(prompt, system, temp, tokens, json_mode)
+                    else:
+                        return self._call_groq(prompt, system, temp, tokens, json_mode)
                 except Exception as retry_err:
                     error_msg = str(retry_err)
 
@@ -153,7 +138,45 @@ class LLMClient:
                     "warning",
                 )
 
-            return None  # graceful fallback — agent uses deterministic result
+            return None
+
+    def _call_gemini(self, prompt: str, system: str, temp: float, max_tokens: int, json_mode: bool) -> str:
+        """Call Google Gemini API."""
+        from google.genai import types
+
+        config = types.GenerateContentConfig(
+            system_instruction=system if system else None,
+            temperature=temp,
+            max_output_tokens=max_tokens,
+        )
+        if json_mode:
+            config.response_mime_type = "application/json"
+
+        response = self._gemini_client.models.generate_content(
+            model=settings.llm_model,
+            contents=prompt,
+            config=config,
+        )
+        return response.text
+
+    def _call_groq(self, prompt: str, system: str, temp: float, max_tokens: int, json_mode: bool) -> str:
+        """Call Groq API (fallback)."""
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        kwargs = {
+            "model": settings.llm_model,
+            "messages": messages,
+            "temperature": temp,
+            "max_tokens": max_tokens,
+        }
+        if json_mode:
+            kwargs["response_format"] = {"type": "json_object"}
+
+        response = self._groq_client.chat.completions.create(**kwargs)
+        return response.choices[0].message.content
 
     def complete_json(
         self,
@@ -166,18 +189,15 @@ class LLMClient:
 
         Handles: empty response, non-JSON, markdown-wrapped JSON,
         JSON arrays (takes first element), string confidence values.
-        Returns parsed dict, or None if failed.
         """
         result = self.complete(prompt, system, agent_name, json_mode=True, include_knowledge=include_knowledge)
         if not result or not result.strip():
             return None
         try:
             parsed = json.loads(result)
-            # If LLM returned a list, take first element
             if isinstance(parsed, list):
                 parsed = parsed[0] if parsed else None
             if isinstance(parsed, dict):
-                # Fix confidence as string (some LLMs do "0.85" instead of 0.85)
                 for key in ("confidence",):
                     if key in parsed and isinstance(parsed[key], str):
                         try:
@@ -195,7 +215,6 @@ class LLMClient:
                     return parsed
             except (ValueError, json.JSONDecodeError):
                 pass
-            # Try array extraction
             try:
                 start = result.index("[")
                 end = result.rindex("]") + 1
