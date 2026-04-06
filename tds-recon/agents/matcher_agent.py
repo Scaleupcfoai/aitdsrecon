@@ -60,6 +60,34 @@ FUZZY_DATE_DAYS = 30
 # GST rates to try when adjusting
 GST_RATES = [0.18, 0.12, 0.05, 0.28]
 
+# ─── Expense head → TDS section classification ───
+# Used to route GST Exp Register entries to correct section pools
+SECTION_EXPENSE_KEYWORDS = {
+    "194A": {"interest", "loan"},
+    "194C": {
+        "freight", "carriage", "transport", "logistics", "packing",
+        "printing", "stationary", "shop repair", "maintenance",
+        "computer repair", "contractor",
+    },
+    "194H": {"brokerage", "commission"},
+    "194J(b)": {
+        "professional", "consultancy", "audit", "legal", "software",
+        "gst annual return", "domain",
+    },
+}
+
+def classify_expense_to_section(head: str) -> str:
+    """Classify an expense head to its most likely TDS section.
+    Returns the section string or 'unknown'."""
+    head_lower = head.lower().strip()
+    # Remove GST rate suffixes like _18%, _12% etc.
+    head_clean = re.sub(r'_\d+%$', '', head_lower).strip()
+    for section, keywords in SECTION_EXPENSE_KEYWORDS.items():
+        for kw in keywords:
+            if kw in head_clean:
+                return section
+    return "unknown"
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -217,19 +245,30 @@ def build_tally_194c_entries(tally: dict) -> list[dict]:
                 "_matched": False,
             })
 
-    # From Purchase GST Exp Register: service/contractor expenses
+    # From Purchase GST Exp Register: only entries classified as 194C
     for e in tally["purchase_gst_exp_register"]["entries"]:
-        if e.get("particulars"):
+        if not e.get("particulars"):
+            continue
+        heads = e.get("expense_heads", {})
+        # Check if ANY expense head classifies as 194C
+        has_194c_head = any(
+            classify_expense_to_section(h) == "194C" for h in heads
+        )
+        # Also include entries with unknown classification (could be contractor)
+        has_unknown_only = all(
+            classify_expense_to_section(h) == "unknown" for h in heads
+        ) if heads else False
+        if has_194c_head or has_unknown_only:
             entries.append({
                 "tally_source": "gst_exp",
                 "date": e["date"],
                 "party_name": e["particulars"],
-                "amount": e["base_amount"],  # Use BASE amount for TDS comparison
+                "amount": e["base_amount"],
                 "gross_amount": e["gross_total"],
                 "total_gst": e["total_gst"],
                 "amount_is_base": True,
                 "voucher_no": e["voucher_no"],
-                "expense_heads": e.get("expense_heads", {}),
+                "expense_heads": heads,
                 "raw": e,
                 "_matched": False,
             })
@@ -239,10 +278,15 @@ def build_tally_194c_entries(tally: dict) -> list[dict]:
 
 def build_tally_194h_entries(tally: dict) -> list[dict]:
     """
-    Extract 194H-relevant entries from Tally Journal Register.
-    These are brokerage/commission entries with 'Brokerage and Commission' posting.
+    Extract 194H-relevant entries from Tally.
+
+    Sources:
+    1. Journal Register — brokerage entries
+    2. Purchase GST Exp Register — entries with brokerage/commission expense heads
     """
     entries = []
+
+    # From Journal Register
     for e in tally["journal_register"]["entries"]:
         if e["entry_type"] == "brokerage" and e.get("particulars"):
             amount = e["account_postings"].get("Brokerage and Commission", 0)
@@ -258,6 +302,27 @@ def build_tally_194h_entries(tally: dict) -> list[dict]:
                 "raw": e,
                 "_matched": False,
             })
+
+    # From Purchase GST Exp Register — entries classified as 194H
+    for e in tally["purchase_gst_exp_register"]["entries"]:
+        if not e.get("particulars"):
+            continue
+        heads = e.get("expense_heads", {})
+        if any(classify_expense_to_section(h) == "194H" for h in heads):
+            entries.append({
+                "tally_source": "gst_exp_brokerage",
+                "date": e["date"],
+                "party_name": e["particulars"],
+                "amount": e["base_amount"],
+                "gross_amount": e["gross_total"],
+                "total_gst": e["total_gst"],
+                "amount_is_base": True,
+                "voucher_no": e["voucher_no"],
+                "expense_heads": heads,
+                "raw": e,
+                "_matched": False,
+            })
+
     return entries
 
 
@@ -303,13 +368,13 @@ def build_tally_194j_entries(tally: dict) -> list[dict]:
                 "_matched": False,
             })
 
-    # From Purchase GST Exp Register — entries with professional expense heads
+    # From Purchase GST Exp Register — entries classified as 194J(b)
     for e in tally["purchase_gst_exp_register"]["entries"]:
         if not e.get("particulars"):
             continue
         heads = e.get("expense_heads", {})
         has_professional = any(
-            h.lower().strip() in PROFESSIONAL_HEADS for h in heads
+            classify_expense_to_section(h) == "194J(b)" for h in heads
         )
         if has_professional:
             entries.append({

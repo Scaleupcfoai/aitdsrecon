@@ -1,5 +1,5 @@
 {
-  "run_timestamp": "2026-04-06T12:45:03.078775",
+  "run_timestamp": "2026-04-06T13:02:29.354159",
   "sections_processed": [
     "192",
     "194A",
@@ -14,14 +14,14 @@
     "ignored_vendors": 2,
     "exempt_vendors": 0,
     "below_threshold_vendors": 60,
-    "below_threshold_entries": 224
+    "below_threshold_entries": 203
   },
   "summary": {
     "form26_total": 85,
     "form26_matched": 79,
     "form26_unmatched": 6,
-    "below_threshold_resolved": 224,
-    "total_resolved": 303,
+    "below_threshold_resolved": 203,
+    "total_resolved": 282,
     "matches_by_pass": {
       "pass0_learned_rules": 0,
       "pass1_exact": 43,
@@ -4425,20 +4425,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-04-19T00:00:00",
-      "party_name": "Kamal Kishor Bagri",
-      "amount": 7023.0,
-      "gross_amount": 8287.0,
-      "total_gst": 1264.14,
-      "amount_is_base": true,
-      "voucher_no": "15",
-      "expense_heads": {
-        "Brokerage and Commission_18%": 7023.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-04-26T00:00:00",
       "party_name": "TCI Express Limited",
       "amount": 5393.0,
@@ -4462,20 +4448,6 @@
       "voucher_no": "17",
       "expense_heads": {
         "Freight Charges_18%": 4951.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-04-30T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 225.4,
-      "gross_amount": 265.97,
-      "total_gst": 40.57,
-      "amount_is_base": true,
-      "voucher_no": "18",
-      "expense_heads": {
-        "Domain Expenses": 225.4
       },
       "_below_threshold": true
     },
@@ -4664,20 +4636,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-05-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "33",
-      "expense_heads": {
-        "Domain Expenses": 276.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-05-31T00:00:00",
       "party_name": "SBI General Insurance Co. Ltd",
       "amount": 9000.0,
       "gross_amount": 10620.0,
@@ -4761,20 +4719,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-06-06T00:00:00",
-      "party_name": "Kochar Tradelink LLP",
-      "amount": 38743.0,
-      "gross_amount": 45717.0,
-      "total_gst": 6973.74,
-      "amount_is_base": true,
-      "voucher_no": "39",
-      "expense_heads": {
-        "Brokerage and Commission_18%": 38743.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-06-12T00:00:00",
       "party_name": "Bharti Airtel Ltd.",
       "amount": 499.0,
@@ -4826,20 +4770,6 @@
       "voucher_no": "44",
       "expense_heads": {
         "Packing Charges_18%": 19390.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-06-30T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "45",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -4972,20 +4902,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-07-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "58",
-      "expense_heads": {
-        "Domain Expenses": 276.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-07-31T00:00:00",
       "party_name": "Chiptronics Solutions",
       "amount": 3380.02,
       "gross_amount": 3988.0,
@@ -5083,20 +4999,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-08-12T00:00:00",
-      "party_name": "Arihant Systems",
-      "amount": 1695.0,
-      "gross_amount": 2000.0,
-      "total_gst": 305.1,
-      "amount_is_base": true,
-      "voucher_no": "63",
-      "expense_heads": {
-        "Software Expenses": 1695.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-08-17T00:00:00",
       "party_name": "Ranka Infotech",
       "amount": 300.0,
@@ -5120,20 +5022,6 @@
       "voucher_no": "69",
       "expense_heads": {
         "Carriage Outward Paid GST 5%": 600.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-08-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "70",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -5266,20 +5154,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-09-12T00:00:00",
-      "party_name": "Sahib S Choudhary & Co.",
-      "amount": 30000.0,
-      "gross_amount": 35400.0,
-      "total_gst": 5400.0,
-      "amount_is_base": true,
-      "voucher_no": "77",
-      "expense_heads": {
-        "Audit Fees": 30000.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-09-12T00:00:00",
       "party_name": "Desire",
       "amount": 2966.1,
       "gross_amount": 3500.0,
@@ -5344,20 +5218,6 @@
       "voucher_no": "86",
       "expense_heads": {
         "Printing & Stationary_18%": 490.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-09-30T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "87",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -5442,20 +5302,6 @@
       "voucher_no": "98",
       "expense_heads": {
         "Travelling Expenses_12%": 7142.86
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-09-30T00:00:00",
-      "party_name": "Career Softech",
-      "amount": 225.0,
-      "gross_amount": 266.0,
-      "total_gst": 40.5,
-      "amount_is_base": true,
-      "voucher_no": "99",
-      "expense_heads": {
-        "Software Expenses": 225.0
       },
       "_below_threshold": true
     },
@@ -5589,20 +5435,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-10-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "105",
-      "expense_heads": {
-        "Domain Expenses": 276.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-10-31T00:00:00",
       "party_name": "A2z Work Pvt. Ltd.",
       "amount": 1965.0,
       "gross_amount": 2319.0,
@@ -5687,20 +5519,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-11-09T00:00:00",
-      "party_name": "Dynavision Technologies Pvt. Ltd.",
-      "amount": 24300.0,
-      "gross_amount": 28674.0,
-      "total_gst": 4374.0,
-      "amount_is_base": true,
-      "voucher_no": "108",
-      "expense_heads": {
-        "Software Expenses": 24300.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-11-12T00:00:00",
       "party_name": "Bharti Airtel Ltd.",
       "amount": 499.0,
@@ -5758,20 +5576,6 @@
     {
       "tally_source": "gst_exp",
       "date": "2024-11-20T00:00:00",
-      "party_name": "Dynavision Technologies Pvt. Ltd.",
-      "amount": 1300.0,
-      "gross_amount": 1534.0,
-      "total_gst": 234.0,
-      "amount_is_base": true,
-      "voucher_no": "119",
-      "expense_heads": {
-        "Software Expenses": 1300.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-11-20T00:00:00",
       "party_name": "Shree Shyam Air Services Pvt. Ltd.",
       "amount": 1351.58,
       "gross_amount": 1595.0,
@@ -5794,20 +5598,6 @@
       "voucher_no": "121",
       "expense_heads": {
         "Postage & Stamp_18%": 1325.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-11-30T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "122",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -6037,20 +5827,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2024-12-18T00:00:00",
-      "party_name": "Aditya Infotech Ltd.",
-      "amount": 761.86,
-      "gross_amount": 899.0,
-      "total_gst": 137.13,
-      "amount_is_base": true,
-      "voucher_no": "142",
-      "expense_heads": {
-        "Software Expenses": 761.86
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2024-12-20T00:00:00",
       "party_name": "Ranka Infotech",
       "amount": 300.0,
@@ -6060,20 +5836,6 @@
       "voucher_no": "143",
       "expense_heads": {
         "Printing & Stationary_18%": 300.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2024-12-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "144",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -6191,20 +5953,6 @@
     },
     {
       "tally_source": "gst_exp",
-      "date": "2025-01-07T00:00:00",
-      "party_name": "Sahib S Choudhary & Co.",
-      "amount": 9000.0,
-      "gross_amount": 10620.0,
-      "total_gst": 1620.0,
-      "amount_is_base": true,
-      "voucher_no": "153",
-      "expense_heads": {
-        "GST Annual Return Charges": 9000.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
       "date": "2025-01-12T00:00:00",
       "party_name": "Bharti Airtel Ltd.",
       "amount": 499.0,
@@ -6229,20 +5977,6 @@
       "expense_heads": {
         "Travelling Expenses_5%": 4574.0,
         "Misc. Account": 161.3
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-01-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 1136.0,
-      "gross_amount": 1340.48,
-      "total_gst": 204.48,
-      "amount_is_base": true,
-      "voucher_no": "161",
-      "expense_heads": {
-        "Domain Expenses": 1136.0
       },
       "_below_threshold": true
     },
@@ -6397,20 +6131,6 @@
       "voucher_no": "177",
       "expense_heads": {
         "Printing & Stationary_12%": 2080.36
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-02-28T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "179",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -6748,20 +6468,6 @@
       "voucher_no": "212",
       "expense_heads": {
         "Shop Repair & Maintenance Exp._18%": 4950.0
-      },
-      "_below_threshold": true
-    },
-    {
-      "tally_source": "gst_exp",
-      "date": "2025-03-31T00:00:00",
-      "party_name": "Google India Pvt. Ltd.",
-      "amount": 276.0,
-      "gross_amount": 325.68,
-      "total_gst": 49.68,
-      "amount_is_base": true,
-      "voucher_no": "213",
-      "expense_heads": {
-        "Domain Expenses": 276.0
       },
       "_below_threshold": true
     },
@@ -8499,20 +8205,6 @@
       },
       {
         "tally_source": "gst_exp",
-        "date": "2024-04-19T00:00:00",
-        "party_name": "Kamal Kishor Bagri",
-        "amount": 7023.0,
-        "gross_amount": 8287.0,
-        "total_gst": 1264.14,
-        "amount_is_base": true,
-        "voucher_no": "15",
-        "expense_heads": {
-          "Brokerage and Commission_18%": 7023.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
         "date": "2024-04-26T00:00:00",
         "party_name": "TCI Express Limited",
         "amount": 5393.0,
@@ -8536,20 +8228,6 @@
         "voucher_no": "17",
         "expense_heads": {
           "Freight Charges_18%": 4951.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-04-30T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 225.4,
-        "gross_amount": 265.97,
-        "total_gst": 40.57,
-        "amount_is_base": true,
-        "voucher_no": "18",
-        "expense_heads": {
-          "Domain Expenses": 225.4
         },
         "_below_threshold": true
       },
@@ -8738,20 +8416,6 @@
       {
         "tally_source": "gst_exp",
         "date": "2024-05-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "33",
-        "expense_heads": {
-          "Domain Expenses": 276.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-05-31T00:00:00",
         "party_name": "SBI General Insurance Co. Ltd",
         "amount": 9000.0,
         "gross_amount": 10620.0,
@@ -8835,20 +8499,6 @@
       },
       {
         "tally_source": "gst_exp",
-        "date": "2024-06-06T00:00:00",
-        "party_name": "Kochar Tradelink LLP",
-        "amount": 38743.0,
-        "gross_amount": 45717.0,
-        "total_gst": 6973.74,
-        "amount_is_base": true,
-        "voucher_no": "39",
-        "expense_heads": {
-          "Brokerage and Commission_18%": 38743.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
         "date": "2024-06-12T00:00:00",
         "party_name": "Bharti Airtel Ltd.",
         "amount": 499.0,
@@ -8900,20 +8550,6 @@
         "voucher_no": "44",
         "expense_heads": {
           "Packing Charges_18%": 19390.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-06-30T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "45",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -9046,20 +8682,6 @@
       {
         "tally_source": "gst_exp",
         "date": "2024-07-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "58",
-        "expense_heads": {
-          "Domain Expenses": 276.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-07-31T00:00:00",
         "party_name": "Chiptronics Solutions",
         "amount": 3380.02,
         "gross_amount": 3988.0,
@@ -9157,20 +8779,6 @@
       },
       {
         "tally_source": "gst_exp",
-        "date": "2024-08-12T00:00:00",
-        "party_name": "Arihant Systems",
-        "amount": 1695.0,
-        "gross_amount": 2000.0,
-        "total_gst": 305.1,
-        "amount_is_base": true,
-        "voucher_no": "63",
-        "expense_heads": {
-          "Software Expenses": 1695.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
         "date": "2024-08-17T00:00:00",
         "party_name": "Ranka Infotech",
         "amount": 300.0,
@@ -9194,20 +8802,6 @@
         "voucher_no": "69",
         "expense_heads": {
           "Carriage Outward Paid GST 5%": 600.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-08-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "70",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -9340,20 +8934,6 @@
       {
         "tally_source": "gst_exp",
         "date": "2024-09-12T00:00:00",
-        "party_name": "Sahib S Choudhary & Co.",
-        "amount": 30000.0,
-        "gross_amount": 35400.0,
-        "total_gst": 5400.0,
-        "amount_is_base": true,
-        "voucher_no": "77",
-        "expense_heads": {
-          "Audit Fees": 30000.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-09-12T00:00:00",
         "party_name": "Desire",
         "amount": 2966.1,
         "gross_amount": 3500.0,
@@ -9418,20 +8998,6 @@
         "voucher_no": "86",
         "expense_heads": {
           "Printing & Stationary_18%": 490.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-09-30T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "87",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -9516,20 +9082,6 @@
         "voucher_no": "98",
         "expense_heads": {
           "Travelling Expenses_12%": 7142.86
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-09-30T00:00:00",
-        "party_name": "Career Softech",
-        "amount": 225.0,
-        "gross_amount": 266.0,
-        "total_gst": 40.5,
-        "amount_is_base": true,
-        "voucher_no": "99",
-        "expense_heads": {
-          "Software Expenses": 225.0
         },
         "_below_threshold": true
       },
@@ -9663,20 +9215,6 @@
       {
         "tally_source": "gst_exp",
         "date": "2024-10-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "105",
-        "expense_heads": {
-          "Domain Expenses": 276.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-10-31T00:00:00",
         "party_name": "A2z Work Pvt. Ltd.",
         "amount": 1965.0,
         "gross_amount": 2319.0,
@@ -9761,20 +9299,6 @@
       },
       {
         "tally_source": "gst_exp",
-        "date": "2024-11-09T00:00:00",
-        "party_name": "Dynavision Technologies Pvt. Ltd.",
-        "amount": 24300.0,
-        "gross_amount": 28674.0,
-        "total_gst": 4374.0,
-        "amount_is_base": true,
-        "voucher_no": "108",
-        "expense_heads": {
-          "Software Expenses": 24300.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
         "date": "2024-11-12T00:00:00",
         "party_name": "Bharti Airtel Ltd.",
         "amount": 499.0,
@@ -9832,20 +9356,6 @@
       {
         "tally_source": "gst_exp",
         "date": "2024-11-20T00:00:00",
-        "party_name": "Dynavision Technologies Pvt. Ltd.",
-        "amount": 1300.0,
-        "gross_amount": 1534.0,
-        "total_gst": 234.0,
-        "amount_is_base": true,
-        "voucher_no": "119",
-        "expense_heads": {
-          "Software Expenses": 1300.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-11-20T00:00:00",
         "party_name": "Shree Shyam Air Services Pvt. Ltd.",
         "amount": 1351.58,
         "gross_amount": 1595.0,
@@ -9868,20 +9378,6 @@
         "voucher_no": "121",
         "expense_heads": {
           "Postage & Stamp_18%": 1325.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-11-30T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "122",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -10111,20 +9607,6 @@
       },
       {
         "tally_source": "gst_exp",
-        "date": "2024-12-18T00:00:00",
-        "party_name": "Aditya Infotech Ltd.",
-        "amount": 761.86,
-        "gross_amount": 899.0,
-        "total_gst": 137.13,
-        "amount_is_base": true,
-        "voucher_no": "142",
-        "expense_heads": {
-          "Software Expenses": 761.86
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
         "date": "2024-12-20T00:00:00",
         "party_name": "Ranka Infotech",
         "amount": 300.0,
@@ -10134,20 +9616,6 @@
         "voucher_no": "143",
         "expense_heads": {
           "Printing & Stationary_18%": 300.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2024-12-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "144",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -10265,20 +9733,6 @@
       },
       {
         "tally_source": "gst_exp",
-        "date": "2025-01-07T00:00:00",
-        "party_name": "Sahib S Choudhary & Co.",
-        "amount": 9000.0,
-        "gross_amount": 10620.0,
-        "total_gst": 1620.0,
-        "amount_is_base": true,
-        "voucher_no": "153",
-        "expense_heads": {
-          "GST Annual Return Charges": 9000.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
         "date": "2025-01-12T00:00:00",
         "party_name": "Bharti Airtel Ltd.",
         "amount": 499.0,
@@ -10303,20 +9757,6 @@
         "expense_heads": {
           "Travelling Expenses_5%": 4574.0,
           "Misc. Account": 161.3
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2025-01-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 1136.0,
-        "gross_amount": 1340.48,
-        "total_gst": 204.48,
-        "amount_is_base": true,
-        "voucher_no": "161",
-        "expense_heads": {
-          "Domain Expenses": 1136.0
         },
         "_below_threshold": true
       },
@@ -10471,20 +9911,6 @@
         "voucher_no": "177",
         "expense_heads": {
           "Printing & Stationary_12%": 2080.36
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2025-02-28T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "179",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -10822,20 +10248,6 @@
         "voucher_no": "212",
         "expense_heads": {
           "Shop Repair & Maintenance Exp._18%": 4950.0
-        },
-        "_below_threshold": true
-      },
-      {
-        "tally_source": "gst_exp",
-        "date": "2025-03-31T00:00:00",
-        "party_name": "Google India Pvt. Ltd.",
-        "amount": 276.0,
-        "gross_amount": 325.68,
-        "total_gst": 49.68,
-        "amount_is_base": true,
-        "voucher_no": "213",
-        "expense_heads": {
-          "Domain Expenses": 276.0
         },
         "_below_threshold": true
       },
@@ -11253,6 +10665,32 @@
         "account_postings": {
           "Brokerage and Commission": 240.0
         }
+      },
+      {
+        "tally_source": "gst_exp_brokerage",
+        "date": "2024-04-19T00:00:00",
+        "party_name": "Kamal Kishor Bagri",
+        "amount": 7023.0,
+        "gross_amount": 8287.0,
+        "total_gst": 1264.14,
+        "amount_is_base": true,
+        "voucher_no": "15",
+        "expense_heads": {
+          "Brokerage and Commission_18%": 7023.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_brokerage",
+        "date": "2024-06-06T00:00:00",
+        "party_name": "Kochar Tradelink LLP",
+        "amount": 38743.0,
+        "gross_amount": 45717.0,
+        "total_gst": 6973.74,
+        "amount_is_base": true,
+        "voucher_no": "39",
+        "expense_heads": {
+          "Brokerage and Commission_18%": 38743.0
+        }
       }
     ],
     "194J(b)": [
@@ -11279,6 +10717,84 @@
       },
       {
         "tally_source": "gst_exp_professional",
+        "date": "2024-04-30T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 225.4,
+        "gross_amount": 265.97,
+        "total_gst": 40.57,
+        "amount_is_base": true,
+        "voucher_no": "18",
+        "expense_heads": {
+          "Domain Expenses": 225.4
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-05-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "33",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-06-30T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "45",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-07-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "58",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-08-12T00:00:00",
+        "party_name": "Arihant Systems",
+        "amount": 1695.0,
+        "gross_amount": 2000.0,
+        "total_gst": 305.1,
+        "amount_is_base": true,
+        "voucher_no": "63",
+        "expense_heads": {
+          "Software Expenses": 1695.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-08-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "70",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
         "date": "2024-09-12T00:00:00",
         "party_name": "Sahib S Choudhary & Co.",
         "amount": 30000.0,
@@ -11288,6 +10804,149 @@
         "voucher_no": "77",
         "expense_heads": {
           "Audit Fees": 30000.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-09-30T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "87",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-09-30T00:00:00",
+        "party_name": "Career Softech",
+        "amount": 225.0,
+        "gross_amount": 266.0,
+        "total_gst": 40.5,
+        "amount_is_base": true,
+        "voucher_no": "99",
+        "expense_heads": {
+          "Software Expenses": 225.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-10-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "105",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-11-09T00:00:00",
+        "party_name": "Dynavision Technologies Pvt. Ltd.",
+        "amount": 24300.0,
+        "gross_amount": 28674.0,
+        "total_gst": 4374.0,
+        "amount_is_base": true,
+        "voucher_no": "108",
+        "expense_heads": {
+          "Software Expenses": 24300.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-11-20T00:00:00",
+        "party_name": "Dynavision Technologies Pvt. Ltd.",
+        "amount": 1300.0,
+        "gross_amount": 1534.0,
+        "total_gst": 234.0,
+        "amount_is_base": true,
+        "voucher_no": "119",
+        "expense_heads": {
+          "Software Expenses": 1300.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-11-30T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "122",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-12-18T00:00:00",
+        "party_name": "Aditya Infotech Ltd.",
+        "amount": 761.86,
+        "gross_amount": 899.0,
+        "total_gst": 137.13,
+        "amount_is_base": true,
+        "voucher_no": "142",
+        "expense_heads": {
+          "Software Expenses": 761.86
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2024-12-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "144",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2025-01-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 1136.0,
+        "gross_amount": 1340.48,
+        "total_gst": 204.48,
+        "amount_is_base": true,
+        "voucher_no": "161",
+        "expense_heads": {
+          "Domain Expenses": 1136.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2025-02-28T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "179",
+        "expense_heads": {
+          "Domain Expenses": 276.0
+        }
+      },
+      {
+        "tally_source": "gst_exp_professional",
+        "date": "2025-03-31T00:00:00",
+        "party_name": "Google India Pvt. Ltd.",
+        "amount": 276.0,
+        "gross_amount": 325.68,
+        "total_gst": 49.68,
+        "amount_is_base": true,
+        "voucher_no": "213",
+        "expense_heads": {
+          "Domain Expenses": 276.0
         }
       }
     ],
