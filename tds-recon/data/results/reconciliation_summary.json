@@ -1,10 +1,9 @@
 {
-  "report_generated": "2026-04-01T18:40:37.379881",
+  "report_generated": "2026-04-06T12:49:57.792890",
   "assessment_year": "2025-26",
   "financial_year": "2024-25",
   "scope": {
     "sections_reconciled": [
-      "192",
       "194A",
       "194C",
       "194H",
@@ -14,19 +13,18 @@
     "sections_pending": []
   },
   "matching": {
-    "form26_total": 109,
-    "form26_in_scope": 109,
-    "matched_with_tds": 103,
+    "form26_total": 85,
+    "form26_in_scope": 85,
+    "matched_with_tds": 79,
     "below_threshold_resolved": 224,
-    "total_resolved": 327,
+    "total_resolved": 303,
     "unmatched": 6,
-    "match_rate_pct": 98.2,
-    "avg_confidence": 0.964,
+    "match_rate_pct": 98.1,
+    "avg_confidence": 0.968,
     "by_pass": {
-      "exact_amount_date": 24,
       "exact_match": 43,
-      "gst_adjusted_base": 1,
       "fuzzy_match": 16,
+      "gst_adjusted_base": 1,
       "aggregated_cumulative": 2,
       "aggregated_monthly": 13,
       "aggregated_subset": 2,
@@ -34,14 +32,6 @@
     }
   },
   "section_wise": {
-    "192": {
-      "form26_count": 24,
-      "form26_amount": 16800000,
-      "form26_tds": 5040000,
-      "matched_count": 24,
-      "matched_amount": 16800000,
-      "matched_tds": 5040000
-    },
     "194A": {
       "form26_count": 36,
       "form26_amount": 7610092,
@@ -84,22 +74,23 @@
     }
   },
   "compliance": {
-    "total_findings": 11,
-    "errors": 0,
+    "total_findings": 12,
+    "errors": 1,
     "warnings": 7,
     "info": 4,
     "by_check": {
       "section_validation": 6,
       "threshold_validation": 3,
-      "missing_tds": 2
+      "missing_tds": 2,
+      "partial_tds": 1
     },
     "missing_tds_exposure": 65809.0,
-    "clean_bill": true
+    "clean_bill": false
   },
   "amounts": {
-    "total_form26_payments": 85392520,
-    "total_form26_tds": 5918092,
-    "matched_payments": 73348187,
-    "matched_tds": 5906048
+    "total_form26_payments": 68592520,
+    "total_form26_tds": 878092,
+    "matched_payments": 56548187,
+    "matched_tds": 866048
   }
 }

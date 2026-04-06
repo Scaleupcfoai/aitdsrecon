@@ -381,28 +381,46 @@ def build_excel_report(
 
     row_num = 2
 
-    # Below-threshold grouped by vendor
+    # Section threshold descriptions
+    THRESHOLD_DESC = {
+        "192": "₹2,50,000 basic exemption",
+        "194A": "₹5,000 annual limit",
+        "194C": "₹1,00,000 annual limit",
+        "194H": "₹15,000 annual limit",
+        "194J(a)": "₹30,000 annual limit",
+        "194J(b)": "₹30,000 annual limit",
+        "194Q": "₹50,00,000 annual limit",
+    }
+
+    # Below-threshold grouped by (vendor, section)
     vendor_groups = {}
     for e in below_threshold_entries:
         v = e.get("party_name", "Unknown")
-        if v not in vendor_groups:
-            vendor_groups[v] = {"amount": 0, "count": 0, "heads": set()}
-        vendor_groups[v]["amount"] += e.get("amount", 0)
-        vendor_groups[v]["count"] += 1
+        sec = e.get("_section", "194C")  # section tagged during collection
+        key = (v, sec)
+        if key not in vendor_groups:
+            vendor_groups[key] = {"amount": 0, "count": 0, "heads": set(), "section": sec}
+        vendor_groups[key]["amount"] += e.get("amount", 0)
+        vendor_groups[key]["count"] += 1
         if e.get("expense_heads"):
-            vendor_groups[v]["heads"].update(e["expense_heads"].keys())
+            vendor_groups[key]["heads"].update(e["expense_heads"].keys())
         src = e.get("tally_source", "")
         if "freight" in src:
-            vendor_groups[v]["heads"].add("Freight Charges")
+            vendor_groups[key]["heads"].add("Freight Charges")
+        if "brokerage" in src:
+            vendor_groups[key]["heads"].add("Brokerage and Commission")
+        if "interest" in src:
+            vendor_groups[key]["heads"].add("Interest Paid")
 
-    for v, data in sorted(vendor_groups.items(), key=lambda x: -x[1]["amount"]):
+    for (v, sec), data in sorted(vendor_groups.items(), key=lambda x: -x[1]["amount"]):
+        threshold_text = THRESHOLD_DESC.get(sec, "annual limit")
         ws3.cell(row=row_num, column=1, value=row_num - 1)
         ws3.cell(row=row_num, column=2, value=v)
-        ws3.cell(row=row_num, column=3, value="194C")
+        ws3.cell(row=row_num, column=3, value=sec)
         ws3.cell(row=row_num, column=4, value=round(data["amount"], 2))
         ws3.cell(row=row_num, column=5, value=data["count"])
-        ws3.cell(row=row_num, column=6, value=f"Below threshold - aggregate Rs {data['amount']:,.0f} < Rs 1,00,000 annual limit")
-        ws3.cell(row=row_num, column=7, value="; ".join(sorted(data["heads"])) if data["heads"] else "Contractor/Freight")
+        ws3.cell(row=row_num, column=6, value=f"Below threshold - aggregate Rs {data['amount']:,.0f} < {threshold_text}")
+        ws3.cell(row=row_num, column=7, value="; ".join(sorted(data["heads"])) if data["heads"] else "")
         style_row(ws3, row_num, len(h3))
         row_num += 1
 
@@ -490,12 +508,19 @@ def run(parsed_dir: str, results_dir: str) -> dict:
 
     # ---- 4. Excel Workbook (3 sheets) ----
     excel_file = results_path / "tds_recon_report.xlsx"
-    below_threshold = match_data.get("unmatched_tally_194c", [])
-    below_threshold = [e for e in below_threshold if e.get("_below_threshold")]
-    # Also include below-threshold from 194A if any
-    below_threshold_a = match_data.get("unmatched_tally_194a", [])
-    below_threshold_a = [e for e in below_threshold_a if e.get("_below_threshold")]
-    below_threshold.extend(below_threshold_a)
+    # Collect below-threshold entries from ALL sections via unmatched_tally dict
+    below_threshold = []
+    unmatched_tally = match_data.get("unmatched_tally", {})
+    for sec, entries in unmatched_tally.items():
+        for e in entries:
+            if e.get("_below_threshold"):
+                below_threshold.append({**e, "_section": sec})
+    # Backward compat: also check old keys
+    for old_key, sec in [("unmatched_tally_194c", "194C"), ("unmatched_tally_194a", "194A")]:
+        if not unmatched_tally and old_key in match_data:
+            for e in match_data[old_key]:
+                if e.get("_below_threshold"):
+                    below_threshold.append({**e, "_section": sec})
     build_excel_report(excel_file, finding_rows, match_rows, below_threshold, match_data.get("exemptions", []))
     print(f"  → {excel_file} (3 sheets)")
 
