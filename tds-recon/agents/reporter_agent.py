@@ -275,12 +275,15 @@ def build_excel_report(
     match_rows: list[dict],
     below_threshold_entries: list[dict],
     exemptions: list[dict],
+    timing_findings: list[dict] = None,
 ):
     """Build a multi-sheet Excel workbook.
 
     Sheet 1: Issues for Human Review (findings — wrong section, missing TDS, etc.)
     Sheet 2: TDS Report — all matched entries with expense head
     Sheet 3: Zero TDS Entries — below-threshold and exempt with reason
+    Sheet 4: Late TDS Deduction — per-entry deduction timing violations
+    Sheet 5: Late TDS Deposit — challan deposit timing violations
     """
     import openpyxl
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -444,6 +447,73 @@ def build_excel_report(
     ws3.column_dimensions["G"].width = 40
     ws3.auto_filter.ref = ws3.dimensions
 
+    # ========== Sheet 4: Late TDS Deduction ==========
+    if timing_findings:
+        late_deductions = [f for f in timing_findings if f.get("sub_check") == "late_deduction"]
+        if late_deductions:
+            ws4 = wb.create_sheet("Late TDS Deduction")
+            h4 = ["Sr.", "Vendor", "PAN", "Section", "Expense Head",
+                   "Expense Amount", "TDS Amount",
+                   "Expense Date", "Deduction Date", "Days Late", "Months",
+                   "Penalty Rate", "Estimated Interest", "Tally Party"]
+            write_header(ws4, h4)
+
+            for i, f in enumerate(late_deductions, 2):
+                ws4.cell(row=i, column=1, value=i - 1)
+                ws4.cell(row=i, column=2, value=f.get("vendor", ""))
+                ws4.cell(row=i, column=3, value=f.get("pan", ""))
+                ws4.cell(row=i, column=4, value=f.get("form26_section", ""))
+                ws4.cell(row=i, column=5, value=f.get("tally_party", ""))
+                ws4.cell(row=i, column=6, value=f.get("expense_amount", 0))
+                ws4.cell(row=i, column=7, value=f.get("tds_amount", 0))
+                ws4.cell(row=i, column=8, value=f.get("expense_date", ""))
+                ws4.cell(row=i, column=9, value=f.get("deduction_date", ""))
+                ws4.cell(row=i, column=10, value=f.get("days_late", 0))
+                ws4.cell(row=i, column=11, value=f.get("months_late", 0))
+                ws4.cell(row=i, column=12, value="1% per month")
+                ws4.cell(row=i, column=13, value=f.get("estimated_penalty", 0))
+                ws4.cell(row=i, column=14, value=f.get("tally_party", ""))
+                fill = error_fill if f.get("days_late", 0) > 30 else warn_fill
+                style_row(ws4, i, len(h4), fill)
+
+            for col in range(1, len(h4) + 1):
+                ws4.column_dimensions[openpyxl.utils.get_column_letter(col)].width = max(10, min(30, len(str(h4[col - 1])) + 4))
+            ws4.column_dimensions["B"].width = 30
+            ws4.column_dimensions["N"].width = 30
+            ws4.auto_filter.ref = ws4.dimensions
+
+        # ========== Sheet 5: Late TDS Deposit ==========
+        late_deposits = [f for f in timing_findings if f.get("sub_check") == "late_deposit"]
+        if late_deposits:
+            ws5 = wb.create_sheet("Late TDS Deposit")
+            h5 = ["Sr.", "Vendor", "PAN", "Section",
+                   "TDS Amount", "Deduction Date",
+                   "Deposit Due Date", "Actual Deposit Date", "Days Late", "Months",
+                   "Penalty Rate", "Estimated Interest", "Challan No."]
+            write_header(ws5, h5)
+
+            for i, f in enumerate(late_deposits, 2):
+                ws5.cell(row=i, column=1, value=i - 1)
+                ws5.cell(row=i, column=2, value=f.get("vendor", ""))
+                ws5.cell(row=i, column=3, value=f.get("pan", ""))
+                ws5.cell(row=i, column=4, value=f.get("form26_section", ""))
+                ws5.cell(row=i, column=5, value=f.get("tds_amount", 0))
+                ws5.cell(row=i, column=6, value=f.get("deduction_date", ""))
+                ws5.cell(row=i, column=7, value=f.get("deposit_due_date", ""))
+                ws5.cell(row=i, column=8, value=f.get("actual_deposit_date", ""))
+                ws5.cell(row=i, column=9, value=f.get("days_late", 0))
+                ws5.cell(row=i, column=10, value=f.get("months_late", 0))
+                ws5.cell(row=i, column=11, value="1.5% per month")
+                ws5.cell(row=i, column=12, value=f.get("estimated_penalty", 0))
+                ws5.cell(row=i, column=13, value=f.get("challan_no", ""))
+                fill = error_fill if f.get("days_late", 0) > 30 else warn_fill
+                style_row(ws5, i, len(h5), fill)
+
+            for col in range(1, len(h5) + 1):
+                ws5.column_dimensions[openpyxl.utils.get_column_letter(col)].width = max(10, min(30, len(str(h5[col - 1])) + 4))
+            ws5.column_dimensions["B"].width = 30
+            ws5.auto_filter.ref = ws5.dimensions
+
     wb.save(str(filepath))
     wb.close()
 
@@ -521,8 +591,12 @@ def run(parsed_dir: str, results_dir: str) -> dict:
             for e in match_data[old_key]:
                 if e.get("_below_threshold"):
                     below_threshold.append({**e, "_section": sec})
-    build_excel_report(excel_file, finding_rows, match_rows, below_threshold, match_data.get("exemptions", []))
-    print(f"  → {excel_file} (3 sheets)")
+    timing_findings = [f for f in findings if f.get("check") == "tds_timing"]
+    build_excel_report(excel_file, finding_rows, match_rows, below_threshold,
+                       match_data.get("exemptions", []), timing_findings=timing_findings)
+    sheet_count = 3 + (1 if any(f.get("sub_check") == "late_deduction" for f in timing_findings) else 0) \
+                    + (1 if any(f.get("sub_check") == "late_deposit" for f in timing_findings) else 0)
+    print(f"  → {excel_file} ({sheet_count} sheets)")
 
     # ---- Print Summary ----
     print("\n" + "=" * 60)
