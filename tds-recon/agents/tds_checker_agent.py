@@ -667,7 +667,10 @@ def detect_missing_tds(
                 break
 
         if vendor_in_f26:
-            continue  # Already has Form 26 entries (exact or fuzzy)
+            # Vendor exists in Form 26, but unmatched Tally expenses may still
+            # exceed threshold — don't skip, let it fall through to threshold check.
+            # Flag as "partial coverage" instead of "missing TDS" if flagged.
+            pass
 
         total = ve["total_amount"]
         if total <= 0:
@@ -731,8 +734,21 @@ def detect_missing_tds(
             if review_reasons:
                 review_note = " Review: " + " | ".join(review_reasons)
 
+            if vendor_in_f26:
+                check_type = "partial_tds"
+                msg = (f"Vendor {ve['vendor_name']} has Form 26 entry under {sec} "
+                       f"but additional ₹{total:,.0f} in books "
+                       f"({', '.join(sorted(ve['expense_heads']))}) "
+                       f"is not covered. TDS may be short-deducted.{review_note}")
+            else:
+                check_type = "missing_tds"
+                msg = (f"No Form 26 entry found for {ve['vendor_name']} "
+                       f"under {sec}. Tally shows ₹{total:,.0f} in "
+                       f"{', '.join(sorted(ve['expense_heads']))}. "
+                       f"TDS may be missing.{review_note}")
+
             findings.append({
-                "check": "missing_tds",
+                "check": check_type,
                 "severity": severity,
                 "vendor": ve["vendor_name"],
                 "vendor_normalized": vendor_norm,
@@ -743,10 +759,8 @@ def detect_missing_tds(
                 "expense_heads": sorted(ve["expense_heads"]),
                 "needs_review": needs_review,
                 "review_reasons": review_reasons,
-                "message": (f"No Form 26 entry found for {ve['vendor_name']} "
-                            f"under {sec}. Tally shows ₹{total:,.0f} in "
-                            f"{', '.join(sorted(ve['expense_heads']))}. "
-                            f"TDS may be missing.{review_note}"),
+                "vendor_in_f26": vendor_in_f26,
+                "message": msg,
             })
 
     return findings
@@ -764,9 +778,9 @@ def build_matched_tally_keys(matches: list[dict]) -> set[str]:
         for t in m.get("tally_entries", []):
             src = t.get("tally_source", "")
             # Map matcher source names back to register sources
-            if src in ("journal_interest", "journal_freight"):
+            if src.startswith("journal"):
                 src = "journal"
-            elif src == "gst_exp":
+            elif src.startswith("gst_exp"):
                 src = "gst_exp"
             else:
                 src = src
