@@ -1,0 +1,83 @@
+# Target schema — the canonical fields we map source columns to.
+# Each field has: name, dtype, aliases, description, required flag.
+# Aliases are used in L1 exact matching (after normalisation + abbreviation expansion).
+
+tds_fields:
+  - name: party_name
+    dtype: string
+    required: true
+    description: "Vendor or party name (may include PAN in parentheses)"
+    aliases: ["name", "vendor name", "deductee name", "payee name", "party", "particulars"]
+
+  - name: pan
+    dtype: string
+    required: false
+    description: "PAN number (10-character alphanumeric: AAAAA0000A)"
+    aliases: ["pan number", "pan no", "permanent account number"]
+
+  - name: tds_section
+    dtype: string
+    required: true
+    description: "TDS section code (194A, 194C, 194H, etc.)"
+    aliases: ["section", "tds section", "sec", "section code"]
+
+  - name: gross_amount
+    dtype: float
+    required: true
+    description: "Gross amount paid or credited (base amount for TDS calculation)"
+    aliases: ["amount paid", "amount credited", "payment amount", "gross amount", "amt paid"]
+
+  - name: tds_amount
+    dtype: float
+    required: true
+    description: "Total TDS deducted (Income Tax + Surcharge + Cess)"
+    aliases: ["tax deducted", "tds deducted", "tds amount", "total tax"]
+
+  - name: date_of_deduction
+    dtype: date
+    required: true
+    description: "Date when TDS was deducted or payment was made"
+    aliases: ["deduction date", "payment date", "date of payment"]
+
+  - name: tax_rate
+    dtype: float
+    required: false
+    description: "TDS rate percentage (e.g., 2.0 for 2%)"
+    aliases: ["rate", "tds rate", "rate percent", "tax rate"]
+
+  - name: certificate_number
+    dtype: string
+    required: false
+    description: "TDS certificate number"
+    aliases: ["certificate no", "cert no", "tds certificate"]
+
+ledger_fields:
+  - name: party_name
+    dtype: string
+    required: true
+    description: "Vendor or party name"
+    aliases: ["particulars", "vendor", "name", "ledger name", "party"]
+
+  - name: amount
+    dtype: float
+    required: true
+    description: "Transaction value (may be gross including GST)"
+    aliases: ["value", "total", "debit", "credit", "gross total"]
+
+  - name: invoice_number
+    dtype: string
+    required: false
+    description: "Invoice or voucher reference number"
+    aliases: ["voucher no", "voucher number", "invoice no", "bill no", "ref", "reference"]
+
+  - name: invoice_date
+    dtype: date
+    required: true
+    description: "Transaction or invoice date"
+    aliases: ["date", "transaction date", "bill date"]
+
+  - name: expense_type
+    dtype: string
+    required: false
+    description: "Expense head or account type"
+    aliases: ["account", "head", "nature", "expense", "type", "ledger"]

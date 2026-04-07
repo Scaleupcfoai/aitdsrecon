@@ -1,0 +1,100 @@
+# Known file templates — L0 recognition.
+# If a file's columns match a template signature, use the hardcoded mapping.
+# No fuzzy matching, no LLM calls. 100% accurate for known formats.
+
+templates:
+
+  # ═══ Form 26 (TRACES export) ═══
+  # Government-standardized format. Column order is always the same.
+  - id: form26_traces
+    label: "Form 26 — TRACES Export"
+    file_type: tds
+
+    # Signature: columns that MUST be present (after lowercasing + \n→space)
+    # All must match for template to activate
+    signature:
+      must_contain_all: ["section", "tax deducted"]
+      must_contain_any: ["amt. paid", "amount paid", "amt paid"]
+
+    # Hardcoded column mapping by matching header name
+    # Each entry: match (substring in header) → target field
+    # not_contains: reject if header also contains this substring
+    columns:
+      - match: ["name"]
+        not_contains: ["file"]
+        target: party_name
+
+      - match: ["section"]
+        target: tds_section
+
+      - match: ["amt. paid", "amount paid", "amt paid"]
+        not_contains: ["date"]
+        target: gross_amount
+
+      - match: ["amt. paid", "amount paid", "amt paid"]
+        must_contain: ["date"]
+        target: date_of_deduction
+
+      - match: ["tax deducted"]
+        not_contains: ["date"]
+        target: tds_amount
+
+      - match: ["tax rate", "rate %"]
+        target: tax_rate
+
+    # Columns to explicitly skip (not errors, just not needed)
+    skip_patterns: ["surcharge", "cess", "income tax", "non deduction", "tax deducted date"]
+
+    # Metadata rows above header
+    metadata_rows:
+      row_1: company_name
+      row_2: form_type_and_period
+
+
+  # ═══ Tally Register (Purchase / Purchase GST Exp / Journal) ═══
+  # Semi-standardized: structural columns (1-6) are fixed,
+  # remaining columns are dynamic (expense heads + GST breakup)
+  - id: tally_register
+    label: "Tally Register Export"
+    file_type: ledger
+
+    signature:
+      must_contain_all: ["particulars", "voucher no"]
+      must_contain_any: ["gross total", "value"]
+
+    # Structural columns — mapped by header name (always present)
+    structural_columns:
+      - match: ["date"]
+        not_contains: ["update", "print"]
+        target: invoice_date
+
+      - match: ["particulars"]
+        target: party_name
+
+      - match: ["voucher no", "voucher number"]
+        target: invoice_number
+
+      - match: ["value"]
+        not_contains: ["gross"]
+        target: amount
+
+      - match: ["gross total"]
+        target: gross_total
+
+    # GST columns — detected by name pattern, summed for gst_amount
+    gst_patterns: ["input c gst", "input s gst", "input i gst",
+                    "c gst", "s gst", "i gst", "cgst", "sgst", "igst",
+                    "output c gst", "output s gst", "output i gst"]
+
+    # Skip patterns — not expense heads, not useful for matching
+    skip_patterns: ["rounded", "addl. cost", "discount received", "discount"]
+
+    # Everything else = expense head columns (stored in raw_data.expense_heads)
+
+    metadata_rows:
+      row_1: company_name
+      row_2: city
+      row_3: cin
+      row_4: email
+      row_5: register_name
+      row_6: period
