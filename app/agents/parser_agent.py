@@ -136,6 +136,18 @@ EXPENSE_TO_SECTION = {
 }
 
 
+def _looks_like_number(val: str) -> bool:
+    """Check if a string value looks like a number (e.g., '70168.0', '1234')."""
+    cleaned = val.strip().replace(",", "").replace(" ", "")
+    if not cleaned:
+        return False
+    try:
+        float(cleaned)
+        return True
+    except ValueError:
+        return False
+
+
 def classify_expense(text: str) -> str:
     if not text:
         return "other"
@@ -236,13 +248,15 @@ class ParserAgent(AgentBase):
             entries = self._build_tds_entries(m["sheet"]["df"], m["mapping"])
             tds_entries.extend(entries)
 
-        # Log samples
-        if tds_entries:
-            print(f"\n  SAMPLE PARSED TDS ENTRIES (first 3 of {len(tds_entries)}):")
-            for i, e in enumerate(tds_entries[:3]):
-                print(f"    [{i+1}] name={e.get('party_name', '?')!r}  section={e.get('tds_section', '?')}  "
-                      f"gross={e.get('gross_amount', '?')}  tds={e.get('tds_amount', '?')}  "
-                      f"date={e.get('date_of_deduction', '?')}")
+        # ═══ Self-Validate TDS entries ═══
+        tds_issues = self._validate_entries(tds_entries, "tds")
+        if tds_issues:
+            for issue in tds_issues:
+                self.events.warning(self.agent_name, f"TDS data quality: {issue}")
+            self.events.emit(self.agent_name,
+                f"Parser detected {len(tds_issues)} data quality issue(s) in Form 26 entries. "
+                f"This may indicate incorrect column mappings.",
+                "warning", data={"validation_issues": tds_issues, "entry_type": "tds"})
 
         tds_count = self.db.entries.bulk_insert_tds(tds_entries) if tds_entries else 0
         sections = set(e["tds_section"] for e in tds_entries if e.get("tds_section"))
@@ -253,18 +267,27 @@ class ParserAgent(AgentBase):
             entries = self._build_ledger_entries(m["sheet"]["df"], m["mapping"], m["sheet"]["sheet_name"])
             ledger_entries.extend(entries)
 
-        if ledger_entries:
-            print(f"\n  SAMPLE PARSED LEDGER ENTRIES (first 3 of {len(ledger_entries)}):")
-            for i, e in enumerate(ledger_entries[:3]):
-                print(f"    [{i+1}] name={e.get('party_name', '?')!r}  amount={e.get('amount', '?')}  "
-                      f"gst={e.get('gst_amount', '?')}  date={e.get('invoice_date', '?')}  "
-                      f"type={e.get('expense_type', '?')}")
+        # ═══ Self-Validate Ledger entries ═══
+        ledger_issues = self._validate_entries(ledger_entries, "ledger")
+        if ledger_issues:
+            for issue in ledger_issues:
+                self.events.warning(self.agent_name, f"Ledger data quality: {issue}")
+            self.events.emit(self.agent_name,
+                f"Parser detected {len(ledger_issues)} data quality issue(s) in Tally entries. "
+                f"This may indicate incorrect column mappings.",
+                "warning", data={"validation_issues": ledger_issues, "entry_type": "ledger"})
 
         ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries) if ledger_entries else 0
         self.events.detail(self.agent_name, f"Tally: {ledger_count} ledger entries")
 
+        # Combine all issues for the orchestrator to evaluate
+        all_issues = tds_issues + ledger_issues
+
         self.db.runs.update_status(self.run_id, "processing")
         self.events.success(self.agent_name, f"Parsed {tds_count} TDS + {ledger_count} ledger entries")
+        if all_issues:
+            self.events.warning(self.agent_name,
+                f"{len(all_issues)} data quality issue(s) detected — orchestrator will evaluate")
         self.events.agent_done(self.agent_name, "Parsing complete")
 
         return {
@@ -272,7 +295,99 @@ class ParserAgent(AgentBase):
             "ledger_count": ledger_count,
             "sections": sorted(sections),
             "company": company_info,
+            "validation_issues": all_issues,
         }
+
+    # ─── Self-Validation ────────────────────────────────────
+
+    @staticmethod
+    def _validate_entries(entries: list[dict], entry_type: str) -> list[str]:
+        """Validate parsed entries BEFORE they go to DB.
+
+        Catches column mapping errors that would poison downstream matching.
+        Returns list of issue descriptions. Empty = clean data.
+
+        Checks:
+        - Critical fields not null/empty beyond threshold
+        - Values that look like they came from the wrong column
+          (numbers as names, dates as amounts, etc.)
+        - Sanity checks on value ranges
+        """
+        if not entries:
+            return [f"0 {entry_type} entries parsed — file may be empty or mapping failed"]
+
+        issues = []
+        total = len(entries)
+
+        if entry_type == "tds":
+            # ── party_name checks ──
+            null_names = sum(1 for e in entries
+                            if not e.get("party_name") or str(e["party_name"]).strip() in ("", "None", "nan"))
+            if null_names > total * 0.3:
+                issues.append(f"party_name missing in {null_names}/{total} entries ({null_names*100//total}%) — likely wrong column mapped")
+
+            # Names that are numbers = reading amount column as name
+            numeric_names = sum(1 for e in entries
+                               if e.get("party_name") and _looks_like_number(str(e["party_name"])))
+            if numeric_names > total * 0.1:
+                issues.append(f"party_name contains numbers in {numeric_names}/{total} entries — column swap suspected")
+
+            # ── gross_amount checks ──
+            zero_amounts = sum(1 for e in entries if safe_float(e.get("gross_amount")) == 0)
+            if zero_amounts > total * 0.3:
+                issues.append(f"gross_amount is 0 in {zero_amounts}/{total} entries — likely wrong column or empty data")
+
+            # ── tds_amount checks ──
+            zero_tds = sum(1 for e in entries if safe_float(e.get("tds_amount")) == 0)
+            if zero_tds > total * 0.5:
+                issues.append(f"tds_amount is 0 in {zero_tds}/{total} entries — column mapping may have read date/text as amount")
+
+            # TDS > gross = impossible (TDS is always a fraction of gross)
+            tds_gt_gross = sum(1 for e in entries
+                              if safe_float(e.get("tds_amount")) > safe_float(e.get("gross_amount")) > 0)
+            if tds_gt_gross > total * 0.1:
+                issues.append(f"tds_amount > gross_amount in {tds_gt_gross}/{total} entries — columns may be swapped")
+
+            # ── date checks ──
+            null_dates = sum(1 for e in entries if not e.get("date_of_deduction"))
+            if null_dates > total * 0.5:
+                issues.append(f"date_of_deduction missing in {null_dates}/{total} entries — date column may not be mapped")
+
+            # ── section checks ──
+            null_sections = sum(1 for e in entries
+                               if not e.get("tds_section") or str(e["tds_section"]).strip() in ("", "nan"))
+            if null_sections > total * 0.3:
+                issues.append(f"tds_section missing in {null_sections}/{total} entries")
+
+        elif entry_type == "ledger":
+            # ── party_name checks ──
+            null_names = sum(1 for e in entries
+                            if not e.get("party_name") or str(e["party_name"]).strip() in ("", "None", "nan"))
+            if null_names > total * 0.3:
+                issues.append(f"party_name missing in {null_names}/{total} entries ({null_names*100//total}%)")
+
+            numeric_names = sum(1 for e in entries
+                               if e.get("party_name") and _looks_like_number(str(e["party_name"])))
+            if numeric_names > total * 0.1:
+                issues.append(f"party_name contains numbers in {numeric_names}/{total} entries — column swap suspected")
+
+            # ── amount checks ──
+            zero_amounts = sum(1 for e in entries if safe_float(e.get("amount")) == 0)
+            if zero_amounts > total * 0.5:
+                issues.append(f"amount is 0 in {zero_amounts}/{total} entries")
+
+            # ── date checks ──
+            null_dates = sum(1 for e in entries if not e.get("invoice_date"))
+            if null_dates > total * 0.5:
+                issues.append(f"invoice_date missing in {null_dates}/{total} entries")
+
+            # ── GST sanity: GST should not be > amount ──
+            gst_gt_amount = sum(1 for e in entries
+                               if e.get("gst_amount") and safe_float(e.get("gst_amount")) > safe_float(e.get("amount")) > 0)
+            if gst_gt_amount > total * 0.05:
+                issues.append(f"gst_amount > amount in {gst_gt_amount}/{total} entries — GST column may be wrong")
+
+        return issues
 
     # ─── Column confirmation (structured JSON for frontend) ──
 
