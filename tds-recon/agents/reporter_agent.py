@@ -276,14 +276,17 @@ def build_excel_report(
     below_threshold_entries: list[dict],
     exemptions: list[dict],
     timing_findings: list[dict] = None,
+    summary: dict = None,
+    all_findings: list[dict] = None,
 ):
     """Build a multi-sheet Excel workbook.
 
-    Sheet 1: Issues for Human Review (findings — wrong section, missing TDS, etc.)
-    Sheet 2: TDS Report — all matched entries with expense head
-    Sheet 3: Zero TDS Entries — below-threshold and exempt with reason
-    Sheet 4: Late TDS Deduction — per-entry deduction timing violations
-    Sheet 5: Late TDS Deposit — challan deposit timing violations
+    Sheet 1: Executive Summary — KPIs, expense head summary, timing summary
+    Sheet 2: Issues for Human Review
+    Sheet 3: TDS Report — all matched entries
+    Sheet 4: Zero TDS Entries
+    Sheet 5: Late TDS Deduction
+    Sheet 6: Late TDS Deposit
     """
     import openpyxl
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -317,9 +320,171 @@ def build_excel_report(
             if fill:
                 cell.fill = fill
 
-    # ========== Sheet 1: Issues for Human Review ==========
-    ws1 = wb.active
-    ws1.title = "Issues for Review"
+    # ========== Sheet 1: Executive Summary ==========
+    ws_exec = wb.active
+    ws_exec.title = "Executive Summary"
+    title_font = Font(bold=True, size=14, color="467273")
+    section_font = Font(bold=True, size=12, color="1F2937")
+    label_font = Font(size=11, color="6B7280")
+    value_font = Font(bold=True, size=11, color="1F2937")
+    green_font = Font(bold=True, size=11, color="16A34A")
+    red_font = Font(bold=True, size=11, color="DC2626")
+
+    timing_findings = timing_findings or []
+    all_findings = all_findings or []
+    summary = summary or {}
+
+    row = 1
+    ws_exec.cell(row=row, column=1, value="TDS Reconciliation — Executive Summary").font = title_font
+    ws_exec.merge_cells("A1:D1")
+    row += 1
+    m = summary.get("matching", {})
+    c = summary.get("compliance", {})
+    a = summary.get("amounts", {})
+    sw = summary.get("section_wise", {})
+
+    # ── KPI Overview ──
+    row += 1
+    ws_exec.cell(row=row, column=1, value="Reconciliation Overview").font = section_font
+    row += 1
+    kpis = [
+        ("Entries Analysed", f"{(m.get('total_resolved', 0) + m.get('unmatched', 0)):,}"),
+        ("Entries Reconciled", f"{m.get('total_resolved', 0):,} ({m.get('matched_with_tds', 0)} TDS + {m.get('below_threshold_resolved', 0)} exempt)"),
+        ("Unmatched / Flagged", f"{m.get('unmatched', 0):,}"),
+        ("Match Rate", f"{m.get('match_rate_pct', 0)}%"),
+        ("Total Expenses in Books", f"₹{a.get('total_form26_payments', 0):,.0f}"),
+        ("TDS Amount Reconciled", f"₹{a.get('matched_tds', 0):,.0f}"),
+    ]
+    for label, val in kpis:
+        ws_exec.cell(row=row, column=1, value=label).font = label_font
+        ws_exec.cell(row=row, column=2, value=val).font = value_font
+        row += 1
+
+    # ── Section-wise Summary ──
+    row += 1
+    ws_exec.cell(row=row, column=1, value="Section-wise Summary").font = section_font
+    row += 1
+    for col, h in enumerate(["Section", "Entries", "Matched", "Amount", "TDS"], 1):
+        cell = ws_exec.cell(row=row, column=col, value=h)
+        cell.font = Font(bold=True, size=10, color="FFFFFF")
+        cell.fill = header_fill
+    row += 1
+    for sec in sorted(sw.keys()):
+        data = sw[sec]
+        ws_exec.cell(row=row, column=1, value=sec).font = value_font
+        ws_exec.cell(row=row, column=2, value=data.get("form26_count", 0))
+        ws_exec.cell(row=row, column=3, value=data.get("matched_count", 0))
+        ws_exec.cell(row=row, column=4, value=f"₹{data.get('form26_amount', 0):,.0f}")
+        ws_exec.cell(row=row, column=5, value=f"₹{data.get('form26_tds', 0):,.0f}")
+        row += 1
+
+    # ── Expense Head Summary with Party Drill-down ──
+    row += 1
+    ws_exec.cell(row=row, column=1, value="Expense Head Summary (by Party)").font = section_font
+    row += 1
+    # Group matched entries by expense head → party
+    from collections import defaultdict as _dd
+    head_party = _dd(lambda: _dd(lambda: {"amount": 0, "tds": 0, "count": 0}))
+    for mr in match_rows:
+        heads = mr.get("expense_category", "Unclassified")
+        vendor = mr.get("vendor_name", "Unknown")
+        head_party[heads][vendor]["amount"] += mr.get("form26_amount", 0)
+        head_party[heads][vendor]["tds"] += mr.get("tds_amount", 0)
+        head_party[heads][vendor]["count"] += 1
+
+    for head in sorted(head_party.keys()):
+        parties = head_party[head]
+        total_amt = sum(p["amount"] for p in parties.values())
+        total_tds = sum(p["tds"] for p in parties.values())
+        ws_exec.cell(row=row, column=1, value=head).font = Font(bold=True, size=10)
+        ws_exec.cell(row=row, column=2, value=f"{sum(p['count'] for p in parties.values())} entries")
+        ws_exec.cell(row=row, column=3, value=f"₹{total_amt:,.0f}")
+        ws_exec.cell(row=row, column=4, value=f"TDS ₹{total_tds:,.0f}")
+        row += 1
+        for vendor in sorted(parties.keys(), key=lambda v: -parties[v]["amount"]):
+            p = parties[vendor]
+            ws_exec.cell(row=row, column=1, value=f"  └ {vendor}").font = label_font
+            ws_exec.cell(row=row, column=2, value=f"{p['count']}")
+            ws_exec.cell(row=row, column=3, value=f"₹{p['amount']:,.0f}")
+            ws_exec.cell(row=row, column=4, value=f"₹{p['tds']:,.0f}")
+            row += 1
+
+    # ── Late Deduction Summary ──
+    late_ded = [f for f in timing_findings if f.get("sub_check") == "late_deduction"]
+    late_dep = [f for f in timing_findings if f.get("sub_check") == "late_deposit"]
+
+    row += 1
+    ws_exec.cell(row=row, column=1, value="TDS Timing Compliance").font = section_font
+    row += 1
+
+    if late_ded:
+        total_interest = sum(f.get("estimated_penalty", 0) for f in late_ded)
+        # Top vendors by penalty
+        vendor_penalty = _dd(float)
+        for f in late_ded:
+            vendor_penalty[f.get("vendor", "")] += f.get("estimated_penalty", 0)
+        top_vendors = sorted(vendor_penalty.items(), key=lambda x: -x[1])[:5]
+        top_str = ", ".join(f"{v} (₹{p:,.0f})" for v, p in top_vendors)
+
+        ws_exec.cell(row=row, column=1, value="Late TDS Deduction").font = value_font
+        ws_exec.cell(row=row, column=2, value=f"{len(late_ded)} entries").font = red_font
+        row += 1
+        ws_exec.cell(row=row, column=1, value="Estimated Interest u/s 201(1A)").font = label_font
+        ws_exec.cell(row=row, column=2, value=f"₹{total_interest:,.0f}").font = red_font
+        row += 1
+        ws_exec.cell(row=row, column=1, value="Key Vendors").font = label_font
+        ws_exec.cell(row=row, column=2, value=top_str).font = value_font
+        row += 1
+    else:
+        ws_exec.cell(row=row, column=1, value="Late TDS Deduction").font = value_font
+        ws_exec.cell(row=row, column=2, value="✓ All deductions on time").font = green_font
+        row += 1
+
+    row += 1
+    if late_dep:
+        total_interest = sum(f.get("estimated_penalty", 0) for f in late_dep)
+        vendor_penalty = _dd(float)
+        for f in late_dep:
+            vendor_penalty[f.get("vendor", "")] += f.get("estimated_penalty", 0)
+        top_vendors = sorted(vendor_penalty.items(), key=lambda x: -x[1])[:5]
+        top_str = ", ".join(f"{v} (₹{p:,.0f})" for v, p in top_vendors)
+
+        ws_exec.cell(row=row, column=1, value="Late TDS Deposit").font = value_font
+        ws_exec.cell(row=row, column=2, value=f"{len(late_dep)} entries").font = red_font
+        row += 1
+        ws_exec.cell(row=row, column=1, value="Estimated Interest u/s 201(1A)").font = label_font
+        ws_exec.cell(row=row, column=2, value=f"₹{total_interest:,.0f}").font = red_font
+        row += 1
+        ws_exec.cell(row=row, column=1, value="Key Vendors").font = label_font
+        ws_exec.cell(row=row, column=2, value=top_str).font = value_font
+        row += 1
+    else:
+        ws_exec.cell(row=row, column=1, value="Late TDS Deposit").font = value_font
+        ws_exec.cell(row=row, column=2, value="✓ All deposits on time").font = green_font
+        row += 1
+
+    # ── Missing / Partial TDS Summary ──
+    missing = [f for f in all_findings if f.get("check") in ("missing_tds", "partial_tds")]
+    if missing:
+        row += 1
+        ws_exec.cell(row=row, column=1, value="Missing / Partial TDS").font = section_font
+        row += 1
+        for f in missing:
+            label = "Partial" if f["check"] == "partial_tds" else "Missing"
+            ws_exec.cell(row=row, column=1, value=f"{label}: {f.get('vendor', '')}").font = value_font
+            ws_exec.cell(row=row, column=2, value=f"{f.get('expected_section', f.get('form26_section', ''))}").font = label_font
+            ws_exec.cell(row=row, column=3, value=f"₹{f.get('aggregate_amount', 0):,.0f}").font = red_font
+            row += 1
+
+    # Column widths
+    ws_exec.column_dimensions["A"].width = 40
+    ws_exec.column_dimensions["B"].width = 30
+    ws_exec.column_dimensions["C"].width = 20
+    ws_exec.column_dimensions["D"].width = 20
+    ws_exec.column_dimensions["E"].width = 15
+
+    # ========== Sheet 2: Issues for Human Review ==========
+    ws1 = wb.create_sheet("Issues for Review")
     h1 = ["Sr.", "Severity", "Check Type", "Vendor", "PAN", "Section",
           "Amount", "Finding", "Remediation", "Status"]
     write_header(ws1, h1)
@@ -602,10 +767,11 @@ def run(parsed_dir: str, results_dir: str) -> dict:
                     below_threshold.append({**e, "_section": sec})
     timing_findings = [f for f in findings if f.get("check") == "tds_timing"]
     build_excel_report(excel_file, finding_rows, match_rows, below_threshold,
-                       match_data.get("exemptions", []), timing_findings=timing_findings)
-    sheet_count = 3 + (1 if any(f.get("sub_check") == "late_deduction" for f in timing_findings) else 0) \
-                    + (1 if any(f.get("sub_check") == "late_deposit" for f in timing_findings) else 0)
-    print(f"  → {excel_file} ({sheet_count} sheets)")
+                       match_data.get("exemptions", []),
+                       timing_findings=timing_findings,
+                       summary=summary,
+                       all_findings=findings)
+    print(f"  → {excel_file}")
 
     # ---- Print Summary ----
     print("\n" + "=" * 60)

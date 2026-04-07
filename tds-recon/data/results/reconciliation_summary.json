@@ -1,5 +1,5 @@
 {
-  "report_generated": "2026-04-07T10:15:08.201141",
+  "report_generated": "2026-04-07T10:34:57.195358",
   "assessment_year": "2025-26",
   "financial_year": "2024-25",
   "scope": {
@@ -74,14 +74,14 @@
     }
   },
   "compliance": {
-    "total_findings": 127,
+    "total_findings": 118,
     "errors": 109,
     "warnings": 7,
-    "info": 11,
+    "info": 2,
     "by_check": {
       "section_validation": 6,
       "pan_validation": 4,
-      "threshold_validation": 10,
+      "threshold_validation": 1,
       "missing_tds": 2,
       "partial_tds": 1,
       "tds_timing": 104
