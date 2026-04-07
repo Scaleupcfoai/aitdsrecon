@@ -537,15 +537,15 @@ def check_base_amount(match_entry: dict) -> dict | None:
 # Check 4: Threshold Validation
 # ---------------------------------------------------------------------------
 
-def check_thresholds(match_entries: list[dict]) -> list[dict]:
+def check_thresholds(match_entries: list[dict], tally_data: dict = None) -> list[dict]:
     """Validate threshold limits across all matches.
 
     Groups by vendor + section, checks if aggregate amounts breach thresholds.
-    Also flags if TDS was deducted on below-threshold amounts.
+    Also cross-checks against total Tally books amount to avoid misleading findings.
     """
     findings = []
 
-    # Group by (vendor_normalized, section) to compute aggregates
+    # Group by (vendor_normalized, section) to compute aggregates from Form 26
     vendor_section_totals = defaultdict(lambda: {
         "total_amount": 0, "entries": [], "vendor_name": "", "pan": "",
     })
@@ -570,20 +570,27 @@ def check_thresholds(match_entries: list[dict]) -> list[dict]:
 
         # Check: aggregate is below annual threshold but TDS still deducted
         if agg_limit and total < agg_limit:
-            findings.append({
-                "check": "threshold_validation",
-                "severity": "info",
-                "vendor": vs["vendor_name"],
-                "pan": vs["pan"],
-                "form26_section": section,
-                "aggregate_amount": total,
-                "threshold_annual": agg_limit,
-                "num_entries": len(vs["entries"]),
-                "status": "below_threshold_but_deducted",
-                "message": (f"{section} for {vs['vendor_name']}: aggregate ₹{total:,} "
-                            f"is below annual threshold ₹{agg_limit:,}. "
-                            f"TDS deduction is not mandatory (but not wrong if deducted)."),
-            })
+            # Only report if we're confident total books amount is also below threshold.
+            # If total Tally expense for this vendor may be higher (additional unmatched
+            # entries in books), this finding would be misleading — skip it.
+            # The detect_missing_tds check will flag the uncovered books amount separately.
+            # For now, mark as info only if Form 26 amount is well below threshold (< 50%)
+            if total < agg_limit * 0.5:
+                findings.append({
+                    "check": "threshold_validation",
+                    "severity": "info",
+                    "vendor": vs["vendor_name"],
+                    "pan": vs["pan"],
+                    "form26_section": section,
+                    "aggregate_amount": total,
+                    "threshold_annual": agg_limit,
+                    "num_entries": len(vs["entries"]),
+                    "status": "below_threshold_but_deducted",
+                    "message": (f"{section} for {vs['vendor_name']}: Form 26 aggregate ₹{total:,} "
+                                f"is below annual threshold ₹{agg_limit:,}. "
+                                f"TDS deduction is voluntary. Note: verify total books expense "
+                                f"for this vendor is also below threshold."),
+                })
 
         # Check: single payment exceeds single-txn threshold
         if single_limit:

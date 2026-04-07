@@ -1,5 +1,5 @@
 {
-  "run_timestamp": "2026-04-06T14:12:35.727518",
+  "run_timestamp": "2026-04-07T10:10:52.172476",
   "summary": {
     "total_findings": 120,
     "by_check": {
@@ -177,7 +177,7 @@
       "threshold_annual": 30000,
       "num_entries": 1,
       "status": "below_threshold_but_deducted",
-      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is not mandatory (but not wrong if deducted)."
+      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: Form 26 aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is voluntary. Note: verify total books expense for this vendor is also below threshold."
     },
     {
       "check": "threshold_validation",
@@ -189,7 +189,7 @@
       "threshold_annual": 5000000,
       "num_entries": 1,
       "status": "below_threshold_but_deducted",
-      "message": "194Q for Raymond Limited: aggregate \u20b91,480,982 is below annual threshold \u20b95,000,000. TDS deduction is not mandatory (but not wrong if deducted)."
+      "message": "194Q for Raymond Limited: Form 26 aggregate \u20b91,480,982 is below annual threshold \u20b95,000,000. TDS deduction is voluntary. Note: verify total books expense for this vendor is also below threshold."
     },
     {
       "check": "threshold_validation",
@@ -201,7 +201,7 @@
       "threshold_annual": 5000000,
       "num_entries": 1,
       "status": "below_threshold_but_deducted",
-      "message": "194Q for Sai Boutique: aggregate \u20b9381,820 is below annual threshold \u20b95,000,000. TDS deduction is not mandatory (but not wrong if deducted)."
+      "message": "194Q for Sai Boutique: Form 26 aggregate \u20b9381,820 is below annual threshold \u20b95,000,000. TDS deduction is voluntary. Note: verify total books expense for this vendor is also below threshold."
     },
     {
       "check": "missing_tds",
