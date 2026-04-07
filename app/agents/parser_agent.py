@@ -182,7 +182,7 @@ class ParserAgent(AgentBase):
                 self.company_id = company.id
                 self.events.detail(self.agent_name, f"Company ID: {company.id}")
 
-        cache = MappingCache()
+        cache = MappingCache(self.db)
 
         # ═══ Parse Form 26 ═══
         self.events.detail(self.agent_name, "Loading Form 26...")
@@ -214,6 +214,21 @@ class ParserAgent(AgentBase):
             gst_cols = [r for r in m["mapping"] if r.is_gst_column]
             self.events.detail(self.agent_name,
                 f"Tally [{m['sheet']['sheet_name']}]: {len(structural)} fields + {len(exp_heads)} expense heads + {len(gst_cols)} GST cols")
+
+        # ═══ Column Confirmation Gate ═══
+        # Pipeline BLOCKS here until user confirms in frontend.
+        # If mappings came from DB cache (confirmed=True), skip this step.
+        all_from_cache = all(
+            m["mapping"][0].method == "cached" if m["mapping"] else True
+            for m in f26_mappings + tally_mappings
+        )
+
+        if not all_from_cache:
+            confirmed = self._confirm_columns_structured(
+                f26_mappings, tally_mappings, cache
+            )
+            if not confirmed:
+                self.events.warning(self.agent_name, "Column confirmation timed out — proceeding with detected mappings")
 
         # ═══ Build entries ═══
         tds_entries = []
@@ -259,32 +274,182 @@ class ParserAgent(AgentBase):
             "company": company_info,
         }
 
+    # ─── Column confirmation (structured JSON for frontend) ──
+
+    def _confirm_columns_structured(self, f26_mappings, tally_mappings, cache) -> bool:
+        """Emit structured column mapping data for frontend confirmation.
+
+        Sends a 'question' event with type='column_confirmation' containing
+        structured JSON that the frontend renders as an editable table.
+
+        Pipeline BLOCKS until user confirms via POST /api/answer.
+        Returns True if confirmed, False if timed out.
+        """
+        import uuid
+
+        # Build structured mapping data for frontend
+        confirmation_data = {
+            "type": "column_confirmation",
+            "company_id": self.company_id,
+            "files": []
+        }
+
+        # Form 26 mappings
+        for m in f26_mappings:
+            file_data = {
+                "file_type": "tds",
+                "sheet_name": m["sheet"]["sheet_name"],
+                "total_rows": m["sheet"]["total_rows"],
+                "columns": []
+            }
+            for r in m["mapping"]:
+                if r.target == "skip":
+                    continue
+                file_data["columns"].append({
+                    "col_index": r.col_index,
+                    "source_name": r.source_name,
+                    "mapped_to": r.target,
+                    "confidence": r.confidence,
+                    "method": r.method,
+                    "tier": r.tier,
+                    "alternatives": r.alternatives,
+                    "sample_values": r.sample_values,
+                    "dtype": r.dtype_inferred,
+                })
+            confirmation_data["files"].append(file_data)
+
+        # Tally mappings (only structural columns, not 60+ expense heads)
+        for m in tally_mappings:
+            file_data = {
+                "file_type": "ledger",
+                "sheet_name": m["sheet"]["sheet_name"],
+                "total_rows": m["sheet"]["total_rows"],
+                "columns": []
+            }
+            for r in m["mapping"]:
+                if r.target in ("skip",) or r.is_expense_head or r.is_gst_column:
+                    continue  # Don't show expense heads in confirmation UI
+                file_data["columns"].append({
+                    "col_index": r.col_index,
+                    "source_name": r.source_name,
+                    "mapped_to": r.target,
+                    "confidence": r.confidence,
+                    "method": r.method,
+                    "tier": r.tier,
+                    "alternatives": r.alternatives,
+                    "sample_values": r.sample_values,
+                    "dtype": r.dtype_inferred,
+                })
+
+            # Summary of non-structural columns
+            gst_count = sum(1 for r in m["mapping"] if r.is_gst_column)
+            exp_count = sum(1 for r in m["mapping"] if r.is_expense_head)
+            file_data["gst_columns"] = gst_count
+            file_data["expense_head_columns"] = exp_count
+
+            confirmation_data["files"].append(file_data)
+
+        # Build human-readable summary for the question message
+        total_cols = sum(len(f["columns"]) for f in confirmation_data["files"])
+        high_conf = sum(
+            1 for f in confirmation_data["files"]
+            for c in f["columns"] if c["tier"] == "HIGH"
+        )
+        needs_review = total_cols - high_conf
+
+        message = f"I've detected column mappings for {len(confirmation_data['files'])} sheets ({total_cols} columns). "
+        if needs_review > 0:
+            message += f"{needs_review} column(s) need your review. "
+        else:
+            message += "All columns mapped with high confidence. "
+        message += "Please confirm before I proceed with parsing."
+
+        q_id = f"q_cols_{uuid.uuid4().hex[:8]}"
+
+        answer = self.events.question(
+            agent=self.agent_name,
+            message=message,
+            question_id=q_id,
+            options=[
+                {"id": "confirm", "label": "Confirm & Parse",
+                 "description": "These column mappings look correct"},
+                {"id": "proceed", "label": "Proceed without review",
+                 "description": "Skip review, use detected mappings"},
+            ],
+            allow_text_input=False,
+            multi_select=False,
+        )
+
+        # Attach the structured data to the question event
+        # The frontend reads this from event.data to render the table
+        self.events.emit(self.agent_name, "Column mappings ready for review", "detail",
+                        data=confirmation_data)
+
+        if answer:
+            selected = answer.get("selected", [])
+            confirmed_mappings = answer.get("confirmed_mappings")
+
+            if confirmed_mappings:
+                # User corrected some mappings in the frontend — save to DB
+                for file_mapping in confirmed_mappings:
+                    cache.save(
+                        company_id=file_mapping.get("company_id", self.company_id),
+                        file_type=file_mapping.get("file_type", "ledger"),
+                        mappings=file_mapping.get("columns", []),
+                    )
+                self.events.detail(self.agent_name, "User confirmed columns — mappings saved to DB")
+            elif "confirm" in selected:
+                # User accepted auto-detected mappings — save to DB as-is
+                for m in f26_mappings:
+                    cache.save(self.company_id, "tds",
+                              [r.to_dict() for r in m["mapping"] if r.target not in ("skip", None)])
+                for m in tally_mappings:
+                    cache.save(self.company_id, "ledger",
+                              [r.to_dict() for r in m["mapping"]
+                               if r.target not in ("skip", None) and not r.is_expense_head and not r.is_gst_column])
+                self.events.detail(self.agent_name, "User confirmed columns — mappings saved to DB")
+            else:
+                self.events.detail(self.agent_name, "User chose to proceed without saving")
+
+            return True
+
+        return False  # Timed out
+
     # ─── Column mapping per sheet ────────────────────────────
 
     def _map_sheet(self, sheet: dict, file_type: str, cache: MappingCache) -> list[MappingResult]:
-        """Map columns for a single sheet: cache → fingerprint → cascade."""
+        """Map columns for a single sheet: DB cache → fingerprint → cascade."""
         df = sheet["df"]
-        col_names = list(df.columns)
 
-        # Check cache first
-        client_id = self.company_id or self.firm_id
-        cached = cache.lookup(client_id, col_names)
+        # Check DB cache first (confirmed mappings from previous runs)
+        cached = cache.lookup(self.company_id, file_type)
         if cached:
             self.events.detail(self.agent_name,
-                f"Cache hit for [{sheet['sheet_name']}] — using saved mappings")
-            # Convert cache format to MappingResult
-            return [
-                MappingResult(
-                    source_name=c["source"],
-                    col_index=i,
-                    target=c["target"],
-                    confidence=c.get("confidence", 1.0),
-                    method=c.get("method", "cached"),
-                    tier="HIGH",
-                    reason="From saved mapping cache",
-                )
-                for i, c in enumerate(cached["columns"])
-            ]
+                f"Cache hit for [{sheet['sheet_name']}] — using confirmed mappings from DB")
+            # Convert DB cache format to MappingResult
+            # Match cached source_column names to current DataFrame columns
+            col_names = list(df.columns)
+            results = []
+            cache_map = {c["source"]: c for c in cached}
+            for idx, col_name in enumerate(col_names):
+                c = cache_map.get(col_name)
+                if c:
+                    results.append(MappingResult(
+                        source_name=col_name, col_index=idx,
+                        target=c["target"], confidence=c.get("confidence", 1.0),
+                        method="cached", tier="HIGH",
+                        reason="Confirmed mapping from DB",
+                    ))
+                else:
+                    # Column exists in file but not in cache — new column
+                    results.append(MappingResult(
+                        source_name=col_name, col_index=idx,
+                        target="expense_head" if file_type == "ledger" else None,
+                        confidence=0.5, method="unmatched", tier="LOW",
+                        reason="Not in saved mappings — new column",
+                        is_expense_head=(file_type == "ledger"),
+                    ))
+            return results
 
         # No cache → fingerprint + cascade
         fingerprints = fingerprint_columns(df)

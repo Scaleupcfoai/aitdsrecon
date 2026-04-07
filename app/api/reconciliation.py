@@ -107,19 +107,45 @@ class AnswerRequest(BaseModel):
     question_id: str
     selected: list[str] = []
     text_input: str | None = None
+    confirmed_mappings: list[dict] | None = None  # for column confirmation
 
 
 @router.post("/answer")
-def submit_answer(req: AnswerRequest):
+def submit_answer(
+    req: AnswerRequest,
+    db: Repository = Depends(get_db),
+):
     """Submit user answer to a pipeline question.
 
-    Called when the pipeline emits a 'question' event and the user
-    selects an option or types a response in the UI.
+    For column confirmation: includes confirmed_mappings list.
+    For other questions: includes selected options and/or text input.
     """
-    EventEmitter.set_answer(req.question_id, {
+    answer_data = {
         "selected": req.selected,
         "text_input": req.text_input,
-    })
+    }
+
+    # If this is a column confirmation, save mappings to DB
+    if req.confirmed_mappings:
+        answer_data["confirmed_mappings"] = req.confirmed_mappings
+
+        # Save to column_map table with confirmed=True
+        from app.matching.cache import MappingCache
+        cache = MappingCache(db)
+
+        # Group by file_type
+        for mapping in req.confirmed_mappings:
+            company_id = mapping.get("company_id", "")
+            file_type = mapping.get("file_type", "ledger")
+            columns = mapping.get("columns", [])
+            if company_id and columns:
+                cache.save(
+                    company_id=company_id,
+                    file_type=file_type,
+                    mappings=columns,
+                )
+
+    EventEmitter.set_answer(req.question_id, answer_data)
     return {"status": "ok", "question_id": req.question_id}
 
 

@@ -1,144 +1,91 @@
 """
-Column Mapping Cache — skip cascade on repeat uploads.
+Column Mapping Cache — backed by Supabase column_map table.
 
-Cache key: client_id + md5(sorted(lowercase column names))
-Same column set = same template, regardless of row count or data.
-
-On first upload: cascade runs → user confirms → cache saves.
-On repeat upload: cache hit → return saved mapping → skip everything.
-
-Storage: YAML files in data/mappings/{client_id}.yaml
-Future: move to Supabase for multi-user access.
+On first upload: cascade runs → user confirms in frontend → DB saves with confirmed=True.
+On repeat upload: DB lookup → if confirmed mappings exist → skip cascade entirely.
 
 Usage:
     from app.matching.cache import MappingCache
-    cache = MappingCache()
-    result = cache.lookup(client_id="hpc", column_names=["Date", "Name", "Amount"])
+    cache = MappingCache(db)
+    result = cache.lookup(company_id="abc", file_type="tds")
     if result:
-        # Cache hit — use saved mappings
+        # Cache hit — use saved confirmed mappings
     else:
-        # Cache miss — run cascade
-        ...
-        cache.save(client_id="hpc", column_names=[...], mappings=[...], confirmed_by="user")
+        # Cache miss — run cascade, then save after user confirms
+        cache.save(company_id="abc", file_type="tds", mappings=[...])
 """
 
-import hashlib
-import yaml
-from datetime import datetime
-from pathlib import Path
-
-
-CACHE_DIR = Path("data/mappings")
+from app.db.repository import Repository
 
 
 class MappingCache:
-    """File-based column mapping cache."""
+    """Database-backed column mapping cache using column_map table."""
 
-    def __init__(self, cache_dir: str | Path | None = None):
-        self.cache_dir = Path(cache_dir) if cache_dir else CACHE_DIR
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
+    def __init__(self, db: Repository):
+        self.db = db
 
-    def lookup(self, client_id: str, column_names: list[str]) -> dict | None:
-        """Check cache for a matching column set.
+    def lookup(self, company_id: str, file_type: str) -> list[dict] | None:
+        """Check DB for confirmed mappings for this company + file type.
 
-        Args:
-            client_id: Company/client identifier
-            column_names: List of column header names from the file
-
-        Returns:
-            Saved mapping dict if found, None if cache miss.
+        Returns list of {source_column, mapped_to, confidence} if found,
+        None if no confirmed mappings exist.
         """
-        fingerprint = self._compute_fingerprint(column_names)
-        cache_file = self.cache_dir / f"{self._safe_filename(client_id)}.yaml"
-
-        if not cache_file.exists():
+        if not company_id:
             return None
 
-        try:
-            with open(cache_file) as f:
-                data = yaml.safe_load(f)
-        except Exception:
+        confirmed = self.db.column_maps.get_confirmed(company_id, file_type)
+        if not confirmed:
             return None
 
-        if not data or "mappings" not in data:
-            return None
-
-        for entry in data["mappings"]:
-            if entry.get("file_fingerprint") == fingerprint:
-                return {
-                    "columns": entry.get("columns", []),
-                    "file_label": entry.get("file_label", ""),
-                    "confirmed_at": entry.get("confirmed_at", ""),
-                    "confirmed_by": entry.get("confirmed_by", ""),
-                    "from_cache": True,
-                }
-
-        return None
-
-    def save(
-        self,
-        client_id: str,
-        column_names: list[str],
-        mappings: list[dict],
-        file_label: str = "",
-        confirmed_by: str = "user",
-    ):
-        """Save confirmed mappings to cache.
-
-        Only call this AFTER user confirms in the review UI.
-
-        Args:
-            client_id: Company/client identifier
-            column_names: Column header names (for fingerprint)
-            mappings: List of {source, target, method, confidence}
-            file_label: Human-readable label (e.g., "tds_26q_working")
-            confirmed_by: Who confirmed ("user" or "auto")
-        """
-        fingerprint = self._compute_fingerprint(column_names)
-        cache_file = self.cache_dir / f"{self._safe_filename(client_id)}.yaml"
-
-        # Load existing
-        data = {"client_id": client_id, "mappings": []}
-        if cache_file.exists():
-            try:
-                with open(cache_file) as f:
-                    data = yaml.safe_load(f) or data
-            except Exception:
-                pass
-
-        # Remove existing entry with same fingerprint (update)
-        data["mappings"] = [
-            m for m in data.get("mappings", [])
-            if m.get("file_fingerprint") != fingerprint
+        return [
+            {
+                "source": c.source_column,
+                "target": c.mapped_to,
+                "confidence": c.confidence or 1.0,
+                "method": "cached",
+            }
+            for c in confirmed
         ]
 
-        # Add new entry
-        data["mappings"].append({
-            "file_fingerprint": fingerprint,
-            "file_label": file_label,
-            "confirmed_at": datetime.now().isoformat(),
-            "confirmed_by": confirmed_by,
-            "columns": [
-                {
-                    "source": m.get("source_name", ""),
-                    "target": m.get("target"),
-                    "method": m.get("method", "unknown"),
-                    "confidence": m.get("confidence", 0),
-                }
-                for m in mappings
-            ],
-        })
+    def save(self, company_id: str, file_type: str, mappings: list[dict]):
+        """Save confirmed mappings to DB.
 
-        # Write
-        with open(cache_file, "w") as f:
-            yaml.dump(data, f, default_flow_style=False, allow_unicode=True)
+        Only call this AFTER user confirms in the frontend.
+        Sets confirmed=True so future lookups hit the cache.
 
-    def _compute_fingerprint(self, column_names: list[str]) -> str:
-        """md5 hash of sorted lowercase column names."""
-        normalized = sorted(c.lower().strip().replace("\n", " ") for c in column_names if c.strip())
-        text = "|".join(normalized)
-        return hashlib.md5(text.encode()).hexdigest()[:12]
+        Args:
+            company_id: Company identifier
+            file_type: "tds" or "ledger"
+            mappings: List of {source_name, target, confidence, method}
+        """
+        if not company_id:
+            return
 
-    def _safe_filename(self, client_id: str) -> str:
-        """Convert client_id to safe filename."""
-        return "".join(c if c.isalnum() or c in "-_" else "_" for c in client_id)
+        for m in mappings:
+            target = m.get("target")
+            source = m.get("source_name") or m.get("source", "")
+
+            if not source or not target:
+                continue
+            if target in ("skip", "gst_column", "expense_head"):
+                continue  # Don't cache non-field mappings
+
+            self.db.column_maps.upsert(
+                company_id=company_id,
+                file_type=file_type,
+                source_column=source,
+                mapped_to=target,
+                confidence=m.get("confidence", 1.0),
+            )
+
+        # Mark all as confirmed
+        self._mark_confirmed(company_id, file_type)
+
+    def _mark_confirmed(self, company_id: str, file_type: str):
+        """Mark all mappings for this company+file_type as confirmed."""
+        try:
+            self.db._client.table("column_map").update(
+                {"confirmed": True}
+            ).eq("company_id", company_id).eq("file_type", file_type).execute()
+        except Exception as e:
+            print(f"[warn] Could not mark mappings as confirmed: {e}")
