@@ -540,21 +540,39 @@ def check_base_amount(match_entry: dict) -> dict | None:
 def check_thresholds(match_entries: list[dict], tally_data: dict = None) -> list[dict]:
     """Validate threshold limits across all matches.
 
-    Groups by vendor + section, checks if aggregate amounts breach thresholds.
-    Also cross-checks against total Tally books amount to avoid misleading findings.
+    For each vendor+section in Form 26, checks if TOTAL BOOKS EXPENSE
+    (not just Form 26 amount) is below the annual threshold.
+    If total books expense is above threshold → TDS is mandatory, no finding.
+    If total books expense is below threshold → TDS is voluntary, flag as info.
     """
     findings = []
 
-    # Group by (vendor_normalized, section) to compute aggregates from Form 26
+    # Build total books expense per vendor (normalized) from all Tally registers
+    books_totals = defaultdict(float)  # (vendor_norm) → total amount
+    if tally_data:
+        for e in tally_data.get("journal_register", {}).get("entries", []):
+            vendor = normalize_name(e.get("particulars", "") or e.get("loan_party", ""))
+            if vendor:
+                books_totals[vendor] += abs(e.get("gross_total", 0) or 0)
+        for e in tally_data.get("purchase_gst_exp_register", {}).get("entries", []):
+            vendor = normalize_name(e.get("particulars", ""))
+            if vendor:
+                books_totals[vendor] += abs(e.get("base_amount", 0) or 0)
+        for e in tally_data.get("purchase_register", {}).get("entries", []):
+            vendor = normalize_name(e.get("particulars", ""))
+            if vendor:
+                books_totals[vendor] += abs(e.get("gross_total", 0) or 0)
+
+    # Group Form 26 by (vendor_normalized, section)
     vendor_section_totals = defaultdict(lambda: {
-        "total_amount": 0, "entries": [], "vendor_name": "", "pan": "",
+        "f26_amount": 0, "entries": [], "vendor_name": "", "pan": "",
     })
 
     for m in match_entries:
         f26 = m["form26_entry"]
         key = (normalize_name(f26["vendor_name"]), f26["section"])
         vs = vendor_section_totals[key]
-        vs["total_amount"] += f26.get("amount_paid", 0)
+        vs["f26_amount"] += f26.get("amount_paid", 0)
         vs["entries"].append(f26)
         vs["vendor_name"] = f26["vendor_name"]
         vs["pan"] = f26.get("pan", "")
@@ -564,41 +582,35 @@ def check_thresholds(match_entries: list[dict], tally_data: dict = None) -> list
         if not thresholds:
             continue
 
-        total = vs["total_amount"]
+        f26_total = vs["f26_amount"]
         agg_limit = thresholds.get("aggregate_annual")
-        single_limit = thresholds.get("single_txn")
 
-        # Check: aggregate is below annual threshold but TDS still deducted
-        if agg_limit and total < agg_limit:
-            # Only report if we're confident total books amount is also below threshold.
-            # If total Tally expense for this vendor may be higher (additional unmatched
-            # entries in books), this finding would be misleading — skip it.
-            # The detect_missing_tds check will flag the uncovered books amount separately.
-            # For now, mark as info only if Form 26 amount is well below threshold (< 50%)
-            if total < agg_limit * 0.5:
-                findings.append({
-                    "check": "threshold_validation",
-                    "severity": "info",
-                    "vendor": vs["vendor_name"],
-                    "pan": vs["pan"],
-                    "form26_section": section,
-                    "aggregate_amount": total,
-                    "threshold_annual": agg_limit,
-                    "num_entries": len(vs["entries"]),
-                    "status": "below_threshold_but_deducted",
-                    "message": (f"{section} for {vs['vendor_name']}: Form 26 aggregate ₹{total:,} "
-                                f"is below annual threshold ₹{agg_limit:,}. "
-                                f"TDS deduction is voluntary. Note: verify total books expense "
-                                f"for this vendor is also below threshold."),
-                })
+        if not agg_limit:
+            continue
 
-        # Check: single payment exceeds single-txn threshold
-        if single_limit:
-            for entry in vs["entries"]:
-                amt = entry.get("amount_paid", 0)
-                if amt > single_limit:
-                    # This is fine — just noting it's over single threshold
-                    pass
+        # Use total books expense if available, otherwise fall back to Form 26 amount
+        total_books = books_totals.get(vendor_norm, f26_total)
+
+        # If total books expense is ABOVE threshold → TDS is mandatory, no finding needed
+        if total_books >= agg_limit:
+            continue
+
+        # Total books expense is below threshold → TDS is voluntary
+        findings.append({
+            "check": "threshold_validation",
+            "severity": "info",
+            "vendor": vs["vendor_name"],
+            "pan": vs["pan"],
+            "form26_section": section,
+            "aggregate_amount": f26_total,
+            "books_total": round(total_books, 2),
+            "threshold_annual": agg_limit,
+            "num_entries": len(vs["entries"]),
+            "status": "below_threshold_but_deducted",
+            "message": (f"{section} for {vs['vendor_name']}: total expenses in books ₹{total_books:,.0f} "
+                        f"is below annual threshold ₹{agg_limit:,}. "
+                        f"TDS deduction is voluntary (not wrong if deducted)."),
+        })
 
     return findings
 
@@ -1175,7 +1187,7 @@ def run(parsed_dir: str, results_dir: str, event_callback=None) -> dict:
 
     # ---- Threshold Validation ----
     emit("Checking threshold compliance across vendors...")
-    threshold_findings = check_thresholds(matches)
+    threshold_findings = check_thresholds(matches, tally_data)
     all_findings.extend(threshold_findings)
     below_count = sum(1 for f in threshold_findings if "below" in f.get("status", ""))
     if below_count:

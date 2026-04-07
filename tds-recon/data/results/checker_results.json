@@ -1,20 +1,20 @@
 {
-  "run_timestamp": "2026-04-07T10:10:52.172476",
+  "run_timestamp": "2026-04-07T10:14:50.874125",
   "summary": {
-    "total_findings": 120,
+    "total_findings": 127,
     "by_check": {
       "section_validation": 6,
       "rate_validation": 0,
       "pan_validation": 4,
       "base_amount_validation": 0,
-      "threshold_validation": 3,
+      "threshold_validation": 10,
       "missing_tds": 3,
       "tds_timing": 104
     },
     "by_severity": {
       "error": 109,
       "warning": 7,
-      "info": 4
+      "info": 11
     },
     "matches_checked": 79,
     "sections_in_scope": [
@@ -170,14 +170,119 @@
     {
       "check": "threshold_validation",
       "severity": "info",
-      "vendor": "SAHIB S CHOUDHARY & COMPANY",
-      "pan": "AEJPC0634D",
-      "form26_section": "194J(b)",
-      "aggregate_amount": 9000,
-      "threshold_annual": 30000,
-      "num_entries": 1,
+      "vendor": "Adi Debnath",
+      "pan": "AAAAA0001A",
+      "form26_section": "194A",
+      "aggregate_amount": 344553,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
       "status": "below_threshold_but_deducted",
-      "message": "194J(b) for SAHIB S CHOUDHARY & COMPANY: Form 26 aggregate \u20b99,000 is below annual threshold \u20b930,000. TDS deduction is voluntary. Note: verify total books expense for this vendor is also below threshold."
+      "message": "194A for Adi Debnath: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Asha Negi",
+      "pan": "AAAAA0002A",
+      "form26_section": "194A",
+      "aggregate_amount": 519695,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Asha Negi: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Manisha Kumari",
+      "pan": "AAAAA0003A",
+      "form26_section": "194A",
+      "aggregate_amount": 1019139,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Manisha Kumari: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Suresh Sethia",
+      "pan": "AAAAA0004A",
+      "form26_section": "194A",
+      "aggregate_amount": 1979192,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Suresh Sethia: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Rupa Khaitan",
+      "pan": "AAAAA0007A",
+      "form26_section": "194A",
+      "aggregate_amount": 81669,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Rupa Khaitan: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Akash Nagar",
+      "pan": "AAAAA0005A",
+      "form26_section": "194A",
+      "aggregate_amount": 1910028,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Akash Nagar: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Rahul Shah",
+      "pan": "AAAAA0006A",
+      "form26_section": "194A",
+      "aggregate_amount": 847707,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Rahul Shah: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Karan Kothari",
+      "pan": "AAAAA0008A",
+      "form26_section": "194A",
+      "aggregate_amount": 596293,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Karan Kothari: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
+    },
+    {
+      "check": "threshold_validation",
+      "severity": "info",
+      "vendor": "Ramesh Lohia",
+      "pan": "AAAAA0009A",
+      "form26_section": "194A",
+      "aggregate_amount": 311816,
+      "books_total": 0.0,
+      "threshold_annual": 5000,
+      "num_entries": 4,
+      "status": "below_threshold_but_deducted",
+      "message": "194A for Ramesh Lohia: total expenses in books \u20b90 is below annual threshold \u20b95,000. TDS deduction is voluntary (not wrong if deducted)."
     },
     {
       "check": "threshold_validation",
@@ -186,22 +291,11 @@
       "pan": "AAACR4896A",
       "form26_section": "194Q",
       "aggregate_amount": 1480982,
+      "books_total": 1480982,
       "threshold_annual": 5000000,
       "num_entries": 1,
       "status": "below_threshold_but_deducted",
-      "message": "194Q for Raymond Limited: Form 26 aggregate \u20b91,480,982 is below annual threshold \u20b95,000,000. TDS deduction is voluntary. Note: verify total books expense for this vendor is also below threshold."
-    },
-    {
-      "check": "threshold_validation",
-      "severity": "info",
-      "vendor": "Sai Boutique",
-      "pan": "AEPFS3230M",
-      "form26_section": "194Q",
-      "aggregate_amount": 381820,
-      "threshold_annual": 5000000,
-      "num_entries": 1,
-      "status": "below_threshold_but_deducted",
-      "message": "194Q for Sai Boutique: Form 26 aggregate \u20b9381,820 is below annual threshold \u20b95,000,000. TDS deduction is voluntary. Note: verify total books expense for this vendor is also below threshold."
+      "message": "194Q for Raymond Limited: total expenses in books \u20b91,480,982 is below annual threshold \u20b95,000,000. TDS deduction is voluntary (not wrong if deducted)."
     },
     {
       "check": "missing_tds",
