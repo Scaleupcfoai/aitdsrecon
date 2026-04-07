@@ -541,27 +541,64 @@ def check_thresholds(match_entries: list[dict], tally_data: dict = None) -> list
     """Validate threshold limits across all matches.
 
     For each vendor+section in Form 26, checks if TOTAL BOOKS EXPENSE
-    (not just Form 26 amount) is below the annual threshold.
-    If total books expense is above threshold → TDS is mandatory, no finding.
-    If total books expense is below threshold → TDS is voluntary, flag as info.
+    for that vendor IN THAT SECTION is below the annual threshold.
+    Uses classify_expense_head() to route each Tally entry to correct section.
     """
     findings = []
 
-    # Build total books expense per vendor (normalized) from all Tally registers
-    books_totals = defaultdict(float)  # (vendor_norm) → total amount
+    # Build total books expense per (vendor_normalized, section) from Tally
+    # Each entry is classified by its expense head to determine the TDS section
+    books_by_vendor_section = defaultdict(float)  # (vendor_norm, section) → total
+
+    # Map journal entry_type to section
+    JOURNAL_TYPE_TO_SECTION = {
+        "interest_payment": "194A",
+        "freight_expense": "194C",
+        "packing_expense": "194C",
+        "brokerage": "194H",
+        "professional_fees": "194J(b)",
+        "consultancy": "194J(b)",
+        "audit_fees": "194J(b)",
+        "rent": "194I",
+        "salary": "192",
+    }
+
     if tally_data:
+        # Journal Register — classify by entry_type, use posting amounts
         for e in tally_data.get("journal_register", {}).get("entries", []):
             vendor = normalize_name(e.get("particulars", "") or e.get("loan_party", ""))
-            if vendor:
-                books_totals[vendor] += abs(e.get("gross_total", 0) or 0)
+            if not vendor:
+                continue
+            entry_type = e.get("entry_type", "")
+            section = JOURNAL_TYPE_TO_SECTION.get(entry_type)
+            if section:
+                # Use posting amounts (not gross_total which can be 0 for interest entries)
+                postings = e.get("account_postings", {})
+                amount = abs(e.get("gross_total", 0) or 0)
+                if amount == 0:
+                    # Sum non-meta postings
+                    for k, v in postings.items():
+                        if k.lower() not in ("gross total", "value", "tds payable"):
+                            amount = max(amount, abs(v or 0))
+                books_by_vendor_section[(vendor, section)] += amount
+
+        # GST Exp Register — classify by expense heads
         for e in tally_data.get("purchase_gst_exp_register", {}).get("entries", []):
             vendor = normalize_name(e.get("particulars", ""))
-            if vendor:
-                books_totals[vendor] += abs(e.get("base_amount", 0) or 0)
+            if not vendor:
+                continue
+            heads = e.get("expense_heads", {})
+            for head in heads:
+                sections = classify_expense_head(head)
+                for sec in sections:
+                    if sec != "unknown":
+                        books_by_vendor_section[(vendor, sec)] += abs(heads.get(head, 0))
+
+        # Purchase Register — all are 194Q
         for e in tally_data.get("purchase_register", {}).get("entries", []):
             vendor = normalize_name(e.get("particulars", ""))
             if vendor:
-                books_totals[vendor] += abs(e.get("gross_total", 0) or 0)
+                books_by_vendor_section[(vendor, "194Q")] += abs(e.get("gross_total", 0) or 0)
 
     # Group Form 26 by (vendor_normalized, section)
     vendor_section_totals = defaultdict(lambda: {
@@ -588,8 +625,8 @@ def check_thresholds(match_entries: list[dict], tally_data: dict = None) -> list
         if not agg_limit:
             continue
 
-        # Use total books expense if available, otherwise fall back to Form 26 amount
-        total_books = books_totals.get(vendor_norm, f26_total)
+        # Use total books expense for this vendor IN THIS SECTION
+        total_books = books_by_vendor_section.get((vendor_norm, section), f26_total)
 
         # If total books expense is ABOVE threshold → TDS is mandatory, no finding needed
         if total_books >= agg_limit:
