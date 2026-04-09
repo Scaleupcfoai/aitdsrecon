@@ -6,7 +6,7 @@
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: #f0f0f0;
+    background: #e8e8e8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,215 +17,153 @@
     width: 1080px;
     height: 1080px;
     background: #FFFFFF;
-    display: flex;
     font-family: 'JetBrains Mono', monospace;
     color: #1F2937;
-    overflow: hidden;
-  }
-
-  /* ═══ LEFT: Pipeline ═══ */
-  .left {
-    flex: 1;
-    padding: 48px 36px 48px 48px;
+    padding: 56px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #E5E7EB;
   }
 
+  /* Brand */
   .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
+    gap: 14px;
+    margin-bottom: 40px;
   }
   .avatar {
-    width: 40px; height: 40px;
+    width: 44px; height: 44px;
     background: #467273;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 700; color: #fff;
+    font-size: 20px; font-weight: 700; color: #fff;
     font-family: 'Inter', sans-serif;
   }
-  .brand-name { font-size: 16px; font-weight: 700; color: #1F2937; font-family: 'Inter', sans-serif; }
-  .brand-sub { font-size: 10px; color: #9CA3AF; letter-spacing: 1.5px; text-transform: uppercase; }
+  .brand-name { font-size: 18px; font-weight: 700; color: #1F2937; font-family: 'Inter', sans-serif; }
+  .brand-sub { font-size: 10px; color: #9CA3AF; letter-spacing: 2px; text-transform: uppercase; }
 
-  .pipeline-label {
-    font-size: 10px;
-    color: #9CA3AF;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 28px;
-    margin-bottom: 20px;
-  }
-
-  .steps {
+  /* Architecture */
+  .arch {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 12px;
   }
 
-  .step {
+  /* Input row */
+  .input-row {
     display: flex;
-    align-items: flex-start;
-    gap: 14px;
+    gap: 12px;
+    margin-bottom: 8px;
   }
-
-  .step-line {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 14px;
-    padding-top: 3px;
-  }
-  .step-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #467273;
-    flex-shrink: 0;
-  }
-  .step-connector {
-    width: 1px;
+  .input-box {
     flex: 1;
-    background: #E5E7EB;
-    min-height: 20px;
-  }
-
-  .step-content {
-    flex: 1;
-    padding-bottom: 4px;
-  }
-  .step-title {
-    font-size: 12px;
-    font-weight: 500;
-    color: #9CA3AF;
-    margin-bottom: 2px;
-  }
-  .step-stat {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1F2937;
-  }
-
-  .result-box {
-    margin-top: 24px;
     border: 1px solid #E5E7EB;
     border-radius: 8px;
     padding: 14px 16px;
-    background: #F9FAFB;
+    text-align: center;
   }
-  .result-title {
-    font-size: 13px;
-    color: #467273;
-    font-weight: 700;
+  .input-label {
+    font-size: 9px;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     margin-bottom: 4px;
   }
-  .result-text {
-    font-size: 11px;
-    color: #9CA3AF;
+  .input-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1F2937;
   }
 
-  /* ═══ RIGHT: Excel Preview ═══ */
-  .right {
-    flex: 1;
-    padding: 48px 48px 48px 36px;
+  /* Arrow down */
+  .arrow-down {
+    text-align: center;
+    color: #D1D5DB;
+    font-size: 18px;
+    margin: 4px 0;
+  }
+
+  /* Agent blocks */
+  .agent-row {
     display: flex;
-    flex-direction: column;
+    gap: 12px;
   }
 
-  .excel-label {
-    font-size: 10px;
-    color: #9CA3AF;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    margin-top: 58px;
-  }
-
-  .excel-window {
+  .agent-block {
     flex: 1;
-    background: #F9FAFB;
     border: 1px solid #E5E7EB;
     border-radius: 8px;
-    overflow: hidden;
+    padding: 16px;
+    background: #F9FAFB;
     display: flex;
     flex-direction: column;
-  }
-
-  .excel-titlebar {
-    background: #FFFFFF;
-    padding: 10px 14px;
-    display: flex;
     align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid #E5E7EB;
-  }
-  .excel-titlebar .dots { display: flex; gap: 5px; }
-  .excel-titlebar .dots span { width: 8px; height: 8px; border-radius: 50%; background: #D1D5DB; }
-  .excel-filename {
-    font-size: 11px;
-    color: #9CA3AF;
-    flex: 1;
     text-align: center;
   }
-
-  .excel-tabs {
-    display: flex;
-    background: #FFFFFF;
-    border-bottom: 1px solid #E5E7EB;
+  .agent-block.wide {
+    flex: 2;
   }
-  .excel-tab {
-    padding: 7px 12px;
-    font-size: 9px;
-    color: #9CA3AF;
-    border-right: 1px solid #E5E7EB;
-    white-space: nowrap;
-  }
-  .excel-tab.active {
-    color: #467273;
-    font-weight: 600;
-    border-bottom: 2px solid #467273;
-  }
-
-  .sheet-summary {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .agent-block.full {
     flex: 1;
-    justify-content: center;
   }
 
-  .sheet-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 6px;
+  .agent-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #467273;
+    margin-bottom: 8px;
   }
-  .sheet-num {
+  .agent-name {
     font-size: 10px;
     color: #9CA3AF;
-    width: 16px;
-    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
   }
-  .sheet-info { flex: 1; }
-  .sheet-name {
-    font-size: 11px;
-    font-weight: 600;
-    color: #1F2937;
-    margin-bottom: 1px;
-  }
-  .sheet-detail {
-    font-size: 9px;
-    color: #9CA3AF;
-  }
-  .sheet-count {
+  .agent-stat {
     font-size: 13px;
     font-weight: 700;
+    color: #1F2937;
+  }
+  .agent-detail {
+    font-size: 9px;
+    color: #9CA3AF;
+    margin-top: 4px;
+  }
+
+  /* Output row */
+  .output-box {
+    border: 1px solid #467273;
+    border-radius: 8px;
+    padding: 16px 20px;
+    background: #F9FAFB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .output-label {
+    font-size: 9px;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .output-title {
+    font-size: 14px;
+    font-weight: 700;
     color: #467273;
+  }
+  .output-stat {
+    text-align: right;
+  }
+  .output-num {
+    font-size: 20px;
+    font-weight: 800;
+    color: #467273;
+  }
+  .output-sub {
+    font-size: 9px;
+    color: #9CA3AF;
   }
 </style>
 </head>
@@ -233,135 +171,104 @@
 
 <div class="post">
 
-  <div class="left">
-    <div class="brand">
-      <div class="avatar">L</div>
-      <div>
-        <div class="brand-name">Lekha AI</div>
-        <div class="brand-sub">AI TDS Reconciliation</div>
-      </div>
-    </div>
-
-    <div class="pipeline-label">Pipeline</div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
-        <div class="step-content">
-          <div class="step-title">Parse & Extract</div>
-          <div class="step-stat">109 entries · 6 sections</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
-        <div class="step-content">
-          <div class="step-title">Match & Reconcile</div>
-          <div class="step-stat">94% auto-matched</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
-        <div class="step-content">
-          <div class="step-title">Validate Compliance</div>
-          <div class="step-stat">Rates · Sections · PAN verified</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
-        <div class="step-content">
-          <div class="step-title">Detect Missing TDS</div>
-          <div class="step-stat">3 vendors flagged</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
-        <div class="step-content">
-          <div class="step-title">Check Timing</div>
-          <div class="step-stat">14 late deductions · ₹2,876 interest</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-line"><div class="step-dot"></div></div>
-        <div class="step-content">
-          <div class="step-title">Report & Act</div>
-          <div class="step-stat">6-sheet report · Follow-up triggered</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result-box">
-      <div class="result-title">✓ Complete in 30 seconds</div>
-      <div class="result-text">Replaces 2–3 days of manual Excel work.</div>
+  <div class="brand">
+    <div class="avatar">L</div>
+    <div>
+      <div class="brand-name">Lekha AI</div>
+      <div class="brand-sub">AI TDS Reconciliation</div>
     </div>
   </div>
 
-  <div class="right">
-    <div class="excel-label">Output Report</div>
+  <div class="arch">
 
-    <div class="excel-window">
-      <div class="excel-titlebar">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <div class="excel-filename">tds_recon_report.xlsx</div>
+    <!-- Inputs -->
+    <div class="input-row">
+      <div class="input-box">
+        <div class="input-label">Form 26</div>
+        <div class="input-value">85 entries</div>
       </div>
-      <div class="excel-tabs">
-        <div class="excel-tab active">Summary</div>
-        <div class="excel-tab">Issues</div>
-        <div class="excel-tab">Matched</div>
-        <div class="excel-tab">Zero TDS</div>
-        <div class="excel-tab">Late Ded.</div>
-        <div class="excel-tab">Late Dep.</div>
+      <div class="input-box">
+        <div class="input-label">Form 24</div>
+        <div class="input-value">24 entries</div>
       </div>
-
-      <div class="sheet-summary">
-        <div class="sheet-card">
-          <div class="sheet-num">1</div>
-          <div class="sheet-info">
-            <div class="sheet-name">Executive Summary</div>
-            <div class="sheet-detail">KPIs · Section-wise · Expense heads</div>
-          </div>
-        </div>
-        <div class="sheet-card">
-          <div class="sheet-num">2</div>
-          <div class="sheet-info">
-            <div class="sheet-name">Issues for Review</div>
-            <div class="sheet-detail">Missing TDS · Section misclassification</div>
-          </div>
-          <div class="sheet-count">14</div>
-        </div>
-        <div class="sheet-card">
-          <div class="sheet-num">3</div>
-          <div class="sheet-info">
-            <div class="sheet-name">TDS Matched</div>
-            <div class="sheet-detail">Reconciled entries with expense heads</div>
-          </div>
-          <div class="sheet-count">79</div>
-        </div>
-        <div class="sheet-card">
-          <div class="sheet-num">4</div>
-          <div class="sheet-info">
-            <div class="sheet-name">Zero TDS — Exempt</div>
-            <div class="sheet-detail">Below-threshold · Exempt entries</div>
-          </div>
-          <div class="sheet-count">203</div>
-        </div>
-        <div class="sheet-card">
-          <div class="sheet-num">5</div>
-          <div class="sheet-info">
-            <div class="sheet-name">Late TDS Deduction</div>
-            <div class="sheet-detail">Per-entry delay · Interest u/s 201(1A)</div>
-          </div>
-          <div class="sheet-count">14</div>
-        </div>
-        <div class="sheet-card">
-          <div class="sheet-num">6</div>
-          <div class="sheet-info">
-            <div class="sheet-name">Late TDS Deposit</div>
-            <div class="sheet-detail">Challan timing vs Rule 30</div>
-          </div>
-          <div class="sheet-count">✓</div>
-        </div>
+      <div class="input-box">
+        <div class="input-label">Tally Books</div>
+        <div class="input-value">1,564 entries</div>
+      </div>
+      <div class="input-box">
+        <div class="input-label">Challan</div>
+        <div class="input-value">24 deposits</div>
       </div>
     </div>
+
+    <div class="arrow-down">↓</div>
+
+    <!-- Parser -->
+    <div class="agent-row">
+      <div class="agent-block full">
+        <div class="agent-dot"></div>
+        <div class="agent-name">Parse & Classify</div>
+        <div class="agent-stat">109 entries · 6 TDS sections</div>
+        <div class="agent-detail">192 · 194A · 194C · 194H · 194J(b) · 194Q</div>
+      </div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <!-- Matcher -->
+    <div class="agent-row">
+      <div class="agent-block full">
+        <div class="agent-dot"></div>
+        <div class="agent-name">Match & Reconcile</div>
+        <div class="agent-stat">94% auto-matched</div>
+        <div class="agent-detail">Exact → GST-adjusted → Fuzzy name → Aggregated → Learned rules</div>
+      </div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <!-- Compliance checks -->
+    <div class="agent-row">
+      <div class="agent-block">
+        <div class="agent-dot"></div>
+        <div class="agent-name">Section</div>
+        <div class="agent-stat">Verified</div>
+        <div class="agent-detail">Expense head → TDS section</div>
+      </div>
+      <div class="agent-block">
+        <div class="agent-dot"></div>
+        <div class="agent-name">Rate</div>
+        <div class="agent-stat">Verified</div>
+        <div class="agent-detail">PAN entity type → Rate</div>
+      </div>
+      <div class="agent-block">
+        <div class="agent-dot"></div>
+        <div class="agent-name">Missing TDS</div>
+        <div class="agent-stat">3 flagged</div>
+        <div class="agent-detail">Books vs TDS report</div>
+      </div>
+      <div class="agent-block">
+        <div class="agent-dot"></div>
+        <div class="agent-name">Timing</div>
+        <div class="agent-stat">14 late</div>
+        <div class="agent-detail">₹2,876 interest</div>
+      </div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <!-- Output -->
+    <div class="output-box">
+      <div>
+        <div class="output-label">Output</div>
+        <div class="output-title">6-sheet reconciliation report</div>
+      </div>
+      <div class="output-stat">
+        <div class="output-num">30s</div>
+        <div class="output-sub">replaces 2–3 days</div>
+      </div>
+    </div>
+
   </div>
 
 </div>
