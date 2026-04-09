@@ -6,39 +6,37 @@
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: #0D1117;
+    background: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
   }
 
-  .linkedin-post {
+  .post {
     width: 1080px;
     height: 1080px;
-    background: #0D1117;
+    background: #FFFFFF;
     display: flex;
-    gap: 0;
     font-family: 'JetBrains Mono', monospace;
-    color: #E6EDF3;
+    color: #1F2937;
     overflow: hidden;
   }
 
   /* ═══ LEFT: Pipeline ═══ */
   .left {
     flex: 1;
-    padding: 40px 32px 40px 40px;
+    padding: 48px 36px 48px 48px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #21262D;
+    border-right: 1px solid #E5E7EB;
   }
 
   .brand {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .avatar {
     width: 40px; height: 40px;
@@ -48,16 +46,16 @@
     font-size: 18px; font-weight: 700; color: #fff;
     font-family: 'Inter', sans-serif;
   }
-  .brand-name { font-size: 16px; font-weight: 700; color: #E6EDF3; font-family: 'Inter', sans-serif; }
-  .brand-sub { font-size: 10px; color: #484F58; letter-spacing: 1.5px; text-transform: uppercase; }
+  .brand-name { font-size: 16px; font-weight: 700; color: #1F2937; font-family: 'Inter', sans-serif; }
+  .brand-sub { font-size: 10px; color: #9CA3AF; letter-spacing: 1.5px; text-transform: uppercase; }
 
   .pipeline-label {
     font-size: 10px;
-    color: #484F58;
+    color: #9CA3AF;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-top: 24px;
-    margin-bottom: 16px;
+    margin-top: 28px;
+    margin-bottom: 20px;
   }
 
   .steps {
@@ -70,29 +68,26 @@
   .step {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 14px;
   }
 
   .step-line {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 16px;
-    padding-top: 2px;
+    width: 14px;
+    padding-top: 3px;
   }
   .step-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
-    background: #30363D;
+    background: #467273;
     flex-shrink: 0;
   }
-  .step-dot.active { background: #3FB950; }
-  .step-dot.warn { background: #D29922; }
-  .step-dot.error { background: #F85149; }
   .step-connector {
     width: 1px;
     flex: 1;
-    background: #21262D;
+    background: #E5E7EB;
     min-height: 20px;
   }
 
@@ -101,55 +96,56 @@
     padding-bottom: 4px;
   }
   .step-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #8B949E;
+    font-size: 12px;
+    font-weight: 500;
+    color: #9CA3AF;
     margin-bottom: 2px;
   }
   .step-stat {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
-    color: #FFFFFF;
+    color: #1F2937;
   }
 
   .result-box {
-    margin-top: 20px;
-    border: 1px solid #21262D;
+    margin-top: 24px;
+    border: 1px solid #E5E7EB;
     border-radius: 8px;
     padding: 14px 16px;
-    background: #161B22;
+    background: #F9FAFB;
   }
   .result-title {
-    font-size: 11px;
-    color: #3FB950;
-    font-weight: 600;
+    font-size: 13px;
+    color: #467273;
+    font-weight: 700;
     margin-bottom: 4px;
   }
   .result-text {
-    font-size: 12px;
-    color: #484F58;
+    font-size: 11px;
+    color: #9CA3AF;
   }
 
   /* ═══ RIGHT: Excel Preview ═══ */
   .right {
     flex: 1;
-    padding: 40px 40px 40px 32px;
+    padding: 48px 48px 48px 36px;
     display: flex;
     flex-direction: column;
   }
 
   .excel-label {
     font-size: 10px;
-    color: #484F58;
+    color: #9CA3AF;
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 16px;
+    margin-top: 58px;
   }
 
   .excel-window {
     flex: 1;
-    background: #161B22;
-    border: 1px solid #30363D;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
     border-radius: 8px;
     overflow: hidden;
     display: flex;
@@ -157,129 +153,86 @@
   }
 
   .excel-titlebar {
-    background: #1C2128;
-    padding: 8px 12px;
+    background: #FFFFFF;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid #30363D;
+    border-bottom: 1px solid #E5E7EB;
   }
-  .excel-titlebar .dots { display: flex; gap: 4px; }
-  .excel-titlebar .dots span { width: 8px; height: 8px; border-radius: 50%; }
-  .excel-titlebar .dots span:nth-child(1) { background: #FF5F57; }
-  .excel-titlebar .dots span:nth-child(2) { background: #FEBC2E; }
-  .excel-titlebar .dots span:nth-child(3) { background: #28C840; }
+  .excel-titlebar .dots { display: flex; gap: 5px; }
+  .excel-titlebar .dots span { width: 8px; height: 8px; border-radius: 50%; background: #D1D5DB; }
   .excel-filename {
     font-size: 11px;
-    color: #8B949E;
+    color: #9CA3AF;
     flex: 1;
     text-align: center;
   }
 
   .excel-tabs {
     display: flex;
-    background: #1C2128;
-    border-bottom: 1px solid #30363D;
-    overflow-x: auto;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
   }
   .excel-tab {
-    padding: 8px 14px;
-    font-size: 10px;
-    color: #484F58;
-    border-right: 1px solid #30363D;
+    padding: 7px 12px;
+    font-size: 9px;
+    color: #9CA3AF;
+    border-right: 1px solid #E5E7EB;
     white-space: nowrap;
-    cursor: default;
   }
   .excel-tab.active {
-    background: #161B22;
-    color: #E6EDF3;
+    color: #467273;
     font-weight: 600;
     border-bottom: 2px solid #467273;
   }
-
-  .excel-body {
-    flex: 1;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .excel-sheet {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .excel-row {
-    display: grid;
-    grid-template-columns: 28px 1fr 1fr 80px;
-    border-bottom: 1px solid #21262D;
-    font-size: 10px;
-  }
-  .excel-row.header {
-    background: #1C2128;
-    font-weight: 600;
-    color: #8B949E;
-    position: sticky;
-    top: 0;
-  }
-  .excel-cell {
-    padding: 6px 8px;
-    border-right: 1px solid #21262D;
-    color: #8B949E;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .excel-cell.num { color: #484F58; font-family: 'JetBrains Mono', monospace; }
-  .excel-cell.row-num { color: #30363D; text-align: center; background: #1C2128; }
-  .excel-cell.green { color: #3FB950; }
-  .excel-cell.red { color: #F85149; }
 
   .sheet-summary {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    flex: 1;
+    justify-content: center;
   }
 
   .sheet-card {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: #0D1117;
-    border: 1px solid #21262D;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
     border-radius: 6px;
   }
-  .sheet-icon {
-    font-size: 14px;
-    width: 28px;
+  .sheet-num {
+    font-size: 10px;
+    color: #9CA3AF;
+    width: 16px;
     text-align: center;
   }
   .sheet-info { flex: 1; }
   .sheet-name {
     font-size: 11px;
     font-weight: 600;
-    color: #E6EDF3;
+    color: #1F2937;
     margin-bottom: 1px;
   }
   .sheet-detail {
-    font-size: 10px;
-    color: #484F58;
+    font-size: 9px;
+    color: #9CA3AF;
   }
   .sheet-count {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
-    color: #8B949E;
+    color: #467273;
   }
 </style>
 </head>
 <body>
 
-<div class="linkedin-post">
+<div class="post">
 
-  <!-- LEFT: Pipeline -->
   <div class="left">
     <div class="brand">
       <div class="avatar">L</div>
@@ -293,64 +246,42 @@
 
     <div class="steps">
       <div class="step">
-        <div class="step-line">
-          <div class="step-dot active"></div>
-          <div class="step-connector"></div>
-        </div>
+        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
         <div class="step-content">
           <div class="step-title">Parse & Extract</div>
           <div class="step-stat">109 entries · 6 sections</div>
         </div>
       </div>
-
       <div class="step">
-        <div class="step-line">
-          <div class="step-dot active"></div>
-          <div class="step-connector"></div>
-        </div>
+        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
         <div class="step-content">
           <div class="step-title">Match & Reconcile</div>
           <div class="step-stat">94% auto-matched</div>
         </div>
       </div>
-
       <div class="step">
-        <div class="step-line">
-          <div class="step-dot active"></div>
-          <div class="step-connector"></div>
-        </div>
+        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
         <div class="step-content">
           <div class="step-title">Validate Compliance</div>
           <div class="step-stat">Rates · Sections · PAN verified</div>
         </div>
       </div>
-
       <div class="step">
-        <div class="step-line">
-          <div class="step-dot warn"></div>
-          <div class="step-connector"></div>
-        </div>
+        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
         <div class="step-content">
           <div class="step-title">Detect Missing TDS</div>
           <div class="step-stat">3 vendors flagged</div>
         </div>
       </div>
-
       <div class="step">
-        <div class="step-line">
-          <div class="step-dot error"></div>
-          <div class="step-connector"></div>
-        </div>
+        <div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div>
         <div class="step-content">
           <div class="step-title">Check Timing</div>
           <div class="step-stat">14 late deductions · ₹2,876 interest</div>
         </div>
       </div>
-
       <div class="step">
-        <div class="step-line">
-          <div class="step-dot active"></div>
-        </div>
+        <div class="step-line"><div class="step-dot"></div></div>
         <div class="step-content">
           <div class="step-title">Report & Act</div>
           <div class="step-stat">6-sheet report · Follow-up triggered</div>
@@ -360,11 +291,10 @@
 
     <div class="result-box">
       <div class="result-title">✓ Complete in 30 seconds</div>
-      <div class="result-text">Replaces 2-3 days of manual Excel work.</div>
+      <div class="result-text">Replaces 2–3 days of manual Excel work.</div>
     </div>
   </div>
 
-  <!-- RIGHT: Excel Report Preview -->
   <div class="right">
     <div class="excel-label">Output Report</div>
 
@@ -373,72 +303,62 @@
         <div class="dots"><span></span><span></span><span></span></div>
         <div class="excel-filename">tds_recon_report.xlsx</div>
       </div>
-
       <div class="excel-tabs">
-        <div class="excel-tab active">Executive Summary</div>
+        <div class="excel-tab active">Summary</div>
         <div class="excel-tab">Issues</div>
-        <div class="excel-tab">TDS Matched</div>
+        <div class="excel-tab">Matched</div>
         <div class="excel-tab">Zero TDS</div>
         <div class="excel-tab">Late Ded.</div>
         <div class="excel-tab">Late Dep.</div>
       </div>
 
-      <div class="excel-body">
-        <div class="sheet-summary">
-
-          <div class="sheet-card">
-            <div class="sheet-icon">📋</div>
-            <div class="sheet-info">
-              <div class="sheet-name">Executive Summary</div>
-              <div class="sheet-detail">KPIs · Section-wise · Expense heads</div>
-            </div>
+      <div class="sheet-summary">
+        <div class="sheet-card">
+          <div class="sheet-num">1</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Executive Summary</div>
+            <div class="sheet-detail">KPIs · Section-wise · Expense heads</div>
           </div>
-
-          <div class="sheet-card">
-            <div class="sheet-icon">⚠️</div>
-            <div class="sheet-info">
-              <div class="sheet-name">Issues for Review</div>
-              <div class="sheet-detail">Missing TDS · Section misclassification</div>
-            </div>
-            <div class="sheet-count">14</div>
+        </div>
+        <div class="sheet-card">
+          <div class="sheet-num">2</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Issues for Review</div>
+            <div class="sheet-detail">Missing TDS · Section misclassification</div>
           </div>
-
-          <div class="sheet-card">
-            <div class="sheet-icon">✅</div>
-            <div class="sheet-info">
-              <div class="sheet-name">TDS Report — Matched</div>
-              <div class="sheet-detail">All reconciled entries with expense heads</div>
-            </div>
-            <div class="sheet-count">79</div>
+          <div class="sheet-count">14</div>
+        </div>
+        <div class="sheet-card">
+          <div class="sheet-num">3</div>
+          <div class="sheet-info">
+            <div class="sheet-name">TDS Matched</div>
+            <div class="sheet-detail">Reconciled entries with expense heads</div>
           </div>
-
-          <div class="sheet-card">
-            <div class="sheet-icon">🔓</div>
-            <div class="sheet-info">
-              <div class="sheet-name">Zero TDS — Exempt</div>
-              <div class="sheet-detail">Below-threshold · Exempt entries</div>
-            </div>
-            <div class="sheet-count">203</div>
+          <div class="sheet-count">79</div>
+        </div>
+        <div class="sheet-card">
+          <div class="sheet-num">4</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Zero TDS — Exempt</div>
+            <div class="sheet-detail">Below-threshold · Exempt entries</div>
           </div>
-
-          <div class="sheet-card">
-            <div class="sheet-icon">⏱️</div>
-            <div class="sheet-info">
-              <div class="sheet-name">Late TDS Deduction</div>
-              <div class="sheet-detail">Per-entry delay · Interest u/s 201(1A)</div>
-            </div>
-            <div class="sheet-count" style="color: #F85149;">14</div>
+          <div class="sheet-count">203</div>
+        </div>
+        <div class="sheet-card">
+          <div class="sheet-num">5</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Late TDS Deduction</div>
+            <div class="sheet-detail">Per-entry delay · Interest u/s 201(1A)</div>
           </div>
-
-          <div class="sheet-card">
-            <div class="sheet-icon">🏦</div>
-            <div class="sheet-info">
-              <div class="sheet-name">Late TDS Deposit</div>
-              <div class="sheet-detail">Challan timing vs Rule 30 due dates</div>
-            </div>
-            <div class="sheet-count" style="color: #3FB950;">✓</div>
+          <div class="sheet-count">14</div>
+        </div>
+        <div class="sheet-card">
+          <div class="sheet-num">6</div>
+          <div class="sheet-info">
+            <div class="sheet-name">Late TDS Deposit</div>
+            <div class="sheet-detail">Challan timing vs Rule 30</div>
           </div>
-
+          <div class="sheet-count">✓</div>
         </div>
       </div>
     </div>
