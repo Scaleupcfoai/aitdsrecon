@@ -1,0 +1,11 @@
+.venv
+__pycache__
+*.pyc
+.env
+.git
+node_modules
+ui/
+book-close-ui/
+tds-recon/
+*.md
+tests/
