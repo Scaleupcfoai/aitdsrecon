@@ -403,19 +403,24 @@ class ParserAgent(AgentBase):
         import uuid
 
         # Build structured mapping data for frontend
+        from app.ingestion.fingerprinter import detect_cross_column_relationships
+
         confirmation_data = {
             "type": "column_confirmation",
             "company_id": self.company_id,
-            "files": []
+            "files": [],
+            "relationships": [],
         }
 
         # Form 26 mappings
         for m in f26_mappings:
+            df = m["sheet"]["df"]
             file_data = {
                 "file_type": "tds",
                 "sheet_name": m["sheet"]["sheet_name"],
                 "total_rows": m["sheet"]["total_rows"],
-                "columns": []
+                "columns": [],
+                "preview_rows": self._get_preview_rows(df, m["mapping"], 3),
             }
             for r in m["mapping"]:
                 if r.target == "skip":
@@ -431,19 +436,33 @@ class ParserAgent(AgentBase):
                     "sample_values": r.sample_values,
                     "dtype": r.dtype_inferred,
                 })
+
+            # Detect cross-column relationships
+            from app.ingestion.fingerprinter import fingerprint_columns
+            fps = fingerprint_columns(df)
+            rels = detect_cross_column_relationships(df, fps)
+            rate_rels = [r for r in rels if r["type"] == "rate_product"]
+            if rate_rels:
+                confirmation_data["relationships"].extend([
+                    {"formula": r["formula"], "interpretation": r["interpretation"]}
+                    for r in rate_rels
+                ])
+
             confirmation_data["files"].append(file_data)
 
-        # Tally mappings (only structural columns, not 60+ expense heads)
+        # Tally mappings
         for m in tally_mappings:
+            df = m["sheet"]["df"]
             file_data = {
                 "file_type": "ledger",
                 "sheet_name": m["sheet"]["sheet_name"],
                 "total_rows": m["sheet"]["total_rows"],
-                "columns": []
+                "columns": [],
+                "preview_rows": self._get_preview_rows(df, m["mapping"], 3),
             }
             for r in m["mapping"]:
                 if r.target in ("skip",) or r.is_expense_head or r.is_gst_column:
-                    continue  # Don't show expense heads in confirmation UI
+                    continue
                 file_data["columns"].append({
                     "col_index": r.col_index,
                     "source_name": r.source_name,
@@ -456,7 +475,6 @@ class ParserAgent(AgentBase):
                     "dtype": r.dtype_inferred,
                 })
 
-            # Summary of non-structural columns
             gst_count = sum(1 for r in m["mapping"] if r.is_gst_column)
             exp_count = sum(1 for r in m["mapping"] if r.is_expense_head)
             file_data["gst_columns"] = gst_count
@@ -529,6 +547,43 @@ class ParserAgent(AgentBase):
             return True
 
         return False  # Timed out
+
+    @staticmethod
+    def _get_preview_rows(df, mapping: list, n: int = 3) -> list[dict]:
+        """Get N preview rows using the proposed mapping.
+
+        Returns data as the USER would see it — mapped field names as keys,
+        actual cell values. This lets the user visually verify the mapping
+        before confirming.
+        """
+        # Build field→column lookup (only mapped, non-skip fields)
+        field_to_col = {}
+        for m in mapping:
+            target = m.target if hasattr(m, 'target') else m.get('target')
+            source = m.source_name if hasattr(m, 'source_name') else m.get('source_name')
+            if target and target not in ("skip", "gst_column", "expense_head"):
+                is_exp = getattr(m, 'is_expense_head', False) if hasattr(m, 'is_expense_head') else m.get('is_expense_head', False)
+                is_gst = getattr(m, 'is_gst_column', False) if hasattr(m, 'is_gst_column') else m.get('is_gst_column', False)
+                if not is_exp and not is_gst:
+                    field_to_col[target] = source
+
+        if not field_to_col:
+            return []
+
+        rows = []
+        for _, row in df.head(n).iterrows():
+            preview = {}
+            for field, col_name in field_to_col.items():
+                val = row.get(col_name)
+                if val is None or (isinstance(val, float) and str(val) == 'nan'):
+                    preview[field] = ""
+                elif hasattr(val, 'isoformat'):
+                    preview[field] = str(val)[:10]
+                else:
+                    preview[field] = str(val)[:50]
+            rows.append(preview)
+
+        return rows
 
     # ─── Column mapping per sheet ────────────────────────────
 
