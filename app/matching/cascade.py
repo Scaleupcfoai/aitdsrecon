@@ -171,6 +171,12 @@ class CascadeMatcher:
         if l0_count > 0:
             self._log(f"L0 Template: {l0_count} columns resolved")
 
+        # L0.5: Hard fingerprint override
+        # If a column's values match PAN/TAN/Section regex, assign directly
+        hard_count = self._apply_hard_fingerprints()
+        if hard_count > 0:
+            self._log(f"Hard fingerprint: {hard_count} columns identified by value patterns")
+
         # L1: Exact match
         l1_count = self._l1_exact()
         if l1_count > 0:
@@ -310,6 +316,50 @@ class CascadeMatcher:
                     self.results[idx].reason = "Template: remaining = expense head"
                     self._resolved_indices.add(idx)
                     count += 1
+
+        return count
+
+    # ─── L1: Exact Match ─────────────────────────────────────
+
+    def _apply_hard_fingerprints(self) -> int:
+        """Apply bulletproof value-based identification.
+
+        If a column's values match PAN/TAN/Section regex with high confidence,
+        assign it directly — regardless of header name.
+        """
+        HARD_MATCH_TO_TARGET = {
+            "pan": "pan",
+            "tan": "tan",
+            "tds_section": "tds_section",
+            "financial_year": "financial_year",
+            "quarter": "quarter",
+        }
+
+        count = 0
+        for idx, fp in enumerate(self.fingerprints):
+            if idx in self._resolved_indices:
+                continue
+
+            hard_match = fp.get("hard_match")
+            if not hard_match:
+                continue
+
+            target = HARD_MATCH_TO_TARGET.get(hard_match)
+            if not target:
+                continue
+
+            # Verify this target field exists in our schema
+            target_exists = any(t["name"] == target for t in self.target_fields)
+            if not target_exists:
+                continue
+
+            self.results[idx].target = target
+            self.results[idx].confidence = 0.98
+            self.results[idx].method = "hard_fingerprint"
+            self.results[idx].tier = "HIGH"
+            self.results[idx].reason = f"Value pattern match: {hard_match} (data-verified, header-independent)"
+            self._resolved_indices.add(idx)
+            count += 1
 
         return count
 
