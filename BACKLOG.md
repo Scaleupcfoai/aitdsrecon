@@ -4,6 +4,17 @@
 
 ## P1 — High Priority (Demo & Product Critical)
 
+### P1.0 Memory Management + Orchestration Agent ⭐ TOP PRIORITY
+**Status:** Architecture discussed, JSON memory layer designed. Picking up next session.
+**What:** Stateful thinking orchestrator that reasons about reconciliation results like a CA
+**Components:**
+- **Memory layer** — `session.json` (chat + decisions), `run_history.json` (cross-run), `vendor_notes.json` (annotations)
+- **LLM orchestrator** (Gemini) — system prompt as CA identity, results + memory as context
+- **Action planning** — draft emails, suggest next steps, provide reasoned analysis
+- **Vendor context** — rich vendor profiles from HPC client (expense nature, typical edge cases per section)
+**Needs from client:** Vendor context data, section-wise edge case documentation
+**Depends on:** Gemini API key (user has it), HPC vendor context data (pending)
+
 ### P1.1 LLM Chat Integration (F1)
 **Status:** Ready to build — needs Gemini API key from user
 **What:** Replace keyword-matching chat with real LLM (Gemini) powered responses
