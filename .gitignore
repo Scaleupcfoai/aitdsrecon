@@ -39,3 +39,4 @@ venv/
 # Runtime data
 tds-recon/data/uploads/
 tds-recon/data/chat/
+data/debug/parser_output_*
