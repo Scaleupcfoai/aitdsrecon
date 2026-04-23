@@ -283,6 +283,9 @@ class ParserAgent(AgentBase):
         # Combine all issues for the orchestrator to evaluate
         all_issues = tds_issues + ledger_issues
 
+        # ═══ Dump debug output for review ═══
+        self._dump_debug_output(f26_mappings, tally_mappings, tds_entries, ledger_entries, all_issues)
+
         self.db.runs.update_status(self.run_id, "processing")
         self.events.success(self.agent_name, f"Parsed {tds_count} TDS + {ledger_count} ledger entries")
         if all_issues:
@@ -297,6 +300,215 @@ class ParserAgent(AgentBase):
             "company": company_info,
             "validation_issues": all_issues,
         }
+
+    # ─── Debug Dump ─────────────────────────────────────────
+
+    @staticmethod
+    def _dump_debug_output(f26_mappings, tally_mappings, tds_entries, ledger_entries, issues):
+        """Dump parser output to data/debug/ for manual review.
+
+        Creates a clean, readable file showing:
+        1. Column mappings (file column → DB field, confidence, method)
+        2. Sample parsed entries (first 10)
+        3. Validation issues (if any)
+        4. Summary stats
+
+        Review this file with your senior before trusting downstream results.
+        """
+        import json
+        from pathlib import Path
+        from datetime import datetime
+
+        debug_dir = Path("data/debug")
+        debug_dir.mkdir(parents=True, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filepath = debug_dir / f"parser_output_{timestamp}.json"
+
+        output = {
+            "generated_at": datetime.now().isoformat(),
+            "purpose": "Review this file to verify column mappings and parsed data before matching",
+
+            "column_mappings": {
+                "form26": [],
+                "tally": [],
+            },
+
+            "sample_entries": {
+                "tds": [],
+                "ledger": [],
+            },
+
+            "validation": {
+                "issues": issues,
+                "status": "CLEAN" if not issues else "ISSUES_FOUND",
+            },
+
+            "summary": {
+                "tds_entries_count": len(tds_entries),
+                "ledger_entries_count": len(ledger_entries),
+                "tds_sections": sorted(set(e.get("tds_section", "") for e in tds_entries if e.get("tds_section"))),
+            },
+        }
+
+        # Form 26 mappings
+        for m in f26_mappings:
+            sheet_data = {
+                "sheet_name": m["sheet"]["sheet_name"],
+                "header_row": m["sheet"]["header_row"],
+                "total_rows": m["sheet"]["total_rows"],
+                "mappings": [],
+            }
+            for r in m["mapping"]:
+                mapping_entry = {
+                    "file_column": r.source_name,
+                    "col_index": r.col_index,
+                    "mapped_to_db_field": r.target,
+                    "confidence": r.confidence,
+                    "method": r.method,
+                    "tier": r.tier,
+                }
+                if r.sample_values:
+                    mapping_entry["sample_values"] = r.sample_values
+                sheet_data["mappings"].append(mapping_entry)
+            output["column_mappings"]["form26"].append(sheet_data)
+
+        # Tally mappings
+        for m in tally_mappings:
+            sheet_data = {
+                "sheet_name": m["sheet"]["sheet_name"],
+                "header_row": m["sheet"]["header_row"],
+                "total_rows": m["sheet"]["total_rows"],
+                "structural_mappings": [],
+                "gst_columns": [],
+                "expense_head_columns": [],
+                "skipped_columns": [],
+            }
+            for r in m["mapping"]:
+                entry = {
+                    "file_column": r.source_name,
+                    "col_index": r.col_index,
+                    "mapped_to_db_field": r.target,
+                    "confidence": r.confidence,
+                    "method": r.method,
+                }
+                if r.is_gst_column:
+                    sheet_data["gst_columns"].append(r.source_name)
+                elif r.is_expense_head:
+                    sheet_data["expense_head_columns"].append(r.source_name)
+                elif r.target == "skip":
+                    sheet_data["skipped_columns"].append(r.source_name)
+                else:
+                    if r.sample_values:
+                        entry["sample_values"] = r.sample_values
+                    sheet_data["structural_mappings"].append(entry)
+            output["column_mappings"]["tally"].append(sheet_data)
+
+        # Sample TDS entries (first 10)
+        for e in tds_entries[:10]:
+            entry = {
+                "party_name": e.get("party_name"),
+                "pan": e.get("pan"),
+                "tds_section": e.get("tds_section"),
+                "gross_amount": e.get("gross_amount"),
+                "tds_amount": e.get("tds_amount"),
+                "date_of_deduction": e.get("date_of_deduction"),
+                "tax_rate": e.get("raw_data", {}).get("tax_rate_pct"),
+            }
+            output["sample_entries"]["tds"].append(entry)
+
+        # Sample Ledger entries (first 10)
+        for e in ledger_entries[:10]:
+            entry = {
+                "party_name": e.get("party_name"),
+                "amount": e.get("amount"),
+                "gst_amount": e.get("gst_amount"),
+                "expense_type": e.get("expense_type"),
+                "tds_section": e.get("tds_section"),
+                "invoice_number": e.get("invoice_number"),
+                "invoice_date": e.get("invoice_date"),
+            }
+            if e.get("raw_data", {}).get("base_amount"):
+                entry["base_amount"] = e["raw_data"]["base_amount"]
+            if e.get("raw_data", {}).get("expense_heads"):
+                entry["expense_heads"] = e["raw_data"]["expense_heads"]
+            output["sample_entries"]["ledger"].append(entry)
+
+        # Write the file
+        with open(filepath, "w") as f:
+            json.dump(output, f, indent=2, default=str)
+
+        # Also write a human-readable text version
+        txt_path = debug_dir / f"parser_output_{timestamp}.txt"
+        with open(txt_path, "w") as f:
+            f.write("PARSER OUTPUT — Review with Senior\n")
+            f.write(f"Generated: {datetime.now().isoformat()}\n")
+            f.write("=" * 70 + "\n\n")
+
+            f.write("FORM 26 COLUMN MAPPINGS:\n")
+            f.write("-" * 70 + "\n")
+            for sheet in output["column_mappings"]["form26"]:
+                f.write(f"Sheet: {sheet['sheet_name']} ({sheet['total_rows']} rows)\n\n")
+                f.write(f"{'File Column':<35} {'→ DB Field':<20} {'Conf':>5} {'Method':<10}\n")
+                f.write(f"{'-'*35} {'-'*20} {'-'*5} {'-'*10}\n")
+                for m in sheet["mappings"]:
+                    target = m["mapped_to_db_field"] or "skip"
+                    f.write(f"{m['file_column']:<35} → {target:<20} {m['confidence']:>4.0%} {m['method']:<10}\n")
+                f.write("\n")
+
+            f.write("\nTALLY COLUMN MAPPINGS:\n")
+            f.write("-" * 70 + "\n")
+            for sheet in output["column_mappings"]["tally"]:
+                f.write(f"Sheet: {sheet['sheet_name']} ({sheet['total_rows']} rows)\n\n")
+                f.write(f"{'File Column':<35} {'→ DB Field':<20} {'Conf':>5} {'Method':<10}\n")
+                f.write(f"{'-'*35} {'-'*20} {'-'*5} {'-'*10}\n")
+                for m in sheet["structural_mappings"]:
+                    target = m["mapped_to_db_field"] or "skip"
+                    f.write(f"{m['file_column']:<35} → {target:<20} {m['confidence']:>4.0%} {m['method']:<10}\n")
+                f.write(f"\n  GST columns ({len(sheet['gst_columns'])}): {', '.join(sheet['gst_columns'][:5])}\n")
+                f.write(f"  Expense heads ({len(sheet['expense_head_columns'])}): {', '.join(sheet['expense_head_columns'][:5])}...\n")
+                f.write(f"  Skipped ({len(sheet['skipped_columns'])}): {', '.join(sheet['skipped_columns'][:5])}\n\n")
+
+            f.write("\nSAMPLE TDS ENTRIES (first 10):\n")
+            f.write("-" * 70 + "\n")
+            f.write(f"{'Name':<25} {'PAN':<12} {'Sec':<6} {'Gross':>10} {'TDS':>8} {'Date':<12} {'Rate':>5}\n")
+            f.write(f"{'-'*25} {'-'*12} {'-'*6} {'-'*10} {'-'*8} {'-'*12} {'-'*5}\n")
+            for e in output["sample_entries"]["tds"]:
+                f.write(f"{str(e.get('party_name',''))[:24]:<25} "
+                        f"{str(e.get('pan','')):<12} "
+                        f"{str(e.get('tds_section','')):<6} "
+                        f"{e.get('gross_amount',0):>10.0f} "
+                        f"{e.get('tds_amount',0):>8.0f} "
+                        f"{str(e.get('date_of_deduction','')):<12} "
+                        f"{e.get('tax_rate',0) or 0:>4.0f}%\n")
+
+            f.write(f"\nSAMPLE LEDGER ENTRIES (first 10):\n")
+            f.write("-" * 70 + "\n")
+            f.write(f"{'Name':<25} {'Amount':>10} {'GST':>8} {'Type':<15} {'Sec':<6} {'Date':<12}\n")
+            f.write(f"{'-'*25} {'-'*10} {'-'*8} {'-'*15} {'-'*6} {'-'*12}\n")
+            for e in output["sample_entries"]["ledger"]:
+                f.write(f"{str(e.get('party_name',''))[:24]:<25} "
+                        f"{e.get('amount',0):>10.0f} "
+                        f"{e.get('gst_amount',0) or 0:>8.0f} "
+                        f"{str(e.get('expense_type',''))[:14]:<15} "
+                        f"{str(e.get('tds_section','')):<6} "
+                        f"{str(e.get('invoice_date','')):<12}\n")
+
+            f.write(f"\nVALIDATION: {output['validation']['status']}\n")
+            if issues:
+                for i in issues:
+                    f.write(f"  ✗ {i}\n")
+            else:
+                f.write("  ✓ All checks passed — data is clean\n")
+
+            f.write(f"\nSUMMARY:\n")
+            f.write(f"  TDS entries: {output['summary']['tds_entries_count']}\n")
+            f.write(f"  Ledger entries: {output['summary']['ledger_entries_count']}\n")
+            f.write(f"  Sections: {', '.join(output['summary']['tds_sections'])}\n")
+
+        print(f"\n  [DEBUG] Parser output dumped to:")
+        print(f"    JSON: {filepath}")
+        print(f"    TXT:  {txt_path}")
 
     # ─── Self-Validation ────────────────────────────────────
 
