@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     llm_temperature: float = 0.1  # low = more deterministic
     llm_max_tokens: int = 2000
 
+    # ── Feature Flags ──
+    enable_llm_column_mapping: bool = False  # L4 LLM stage in cascade matcher. Off = skip, rely on L0-L2 only.
+
     # ── File Storage ──
     storage_backend: Literal["local", "supabase"] = "local"
     local_storage_path: str = "data/uploads"

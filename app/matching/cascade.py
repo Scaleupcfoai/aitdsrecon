@@ -190,9 +190,13 @@ class CascadeMatcher:
         # Check if anything is still unresolved
         unresolved = [r for r in self.results if r.target is None and not r.is_gst_column and not r.is_expense_head]
         if unresolved:
-            # L4: LLM batch
-            l4_count = self._l4_llm(unresolved)
-            self._log(f"L4 LLM: {l4_count} columns resolved")
+            from app.config import settings
+            if settings.enable_llm_column_mapping:
+                # L4: LLM batch
+                l4_count = self._l4_llm(unresolved)
+                self._log(f"L4 LLM: {l4_count} columns resolved")
+            else:
+                self._log(f"L4 LLM: skipped (enable_llm_column_mapping=False). {len(unresolved)} columns unresolved.")
 
         # Final tier assignment
         for r in self.results:
