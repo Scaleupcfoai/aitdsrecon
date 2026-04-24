@@ -757,11 +757,8 @@ class ParserAgent(AgentBase):
 
         q_id = f"q_cols_{uuid.uuid4().hex[:8]}"
 
-        # Emit the confirmation data BEFORE the blocking question
-        # so the frontend has it when it renders the question UI
-        self.events.emit(self.agent_name, "Column mappings ready for review", "detail",
-                        data=confirmation_data)
-
+        # Include confirmation data directly in the question event's data
+        # so frontend receives everything in one event — no timing issues
         answer = self.events.question(
             agent=self.agent_name,
             message=message,
@@ -774,6 +771,7 @@ class ParserAgent(AgentBase):
             ],
             allow_text_input=False,
             multi_select=False,
+            extra_data=confirmation_data,
         )
 
         if answer:

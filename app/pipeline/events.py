@@ -116,6 +116,7 @@ class EventEmitter:
         allow_text_input: bool = True,
         multi_select: bool = False,
         timeout_seconds: int = 300,
+        extra_data: dict | None = None,
     ) -> dict | None:
         """Emit a question event and block until the user answers.
 
@@ -127,17 +128,22 @@ class EventEmitter:
             allow_text_input: allow free text answer
             multi_select: allow multiple selections
             timeout_seconds: how long to wait (default 300s = 5 minutes)
+            extra_data: additional data to include in the event (e.g., column_confirmation)
 
         Returns:
             User's answer: {selected: [ids], text_input: str | None}
             or None if timeout
         """
-        self.emit(agent, message, "question", {
+        event_data = {
             "question_id": question_id,
             "options": options,
             "allow_text_input": allow_text_input,
             "multi_select": multi_select,
-        })
+        }
+        if extra_data:
+            event_data.update(extra_data)
+
+        self.emit(agent, message, "question", event_data)
 
         # Block and wait for answer
         _pending_answers[question_id] = None
