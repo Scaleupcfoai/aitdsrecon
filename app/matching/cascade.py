@@ -31,7 +31,7 @@ CONFIG_DIR = Path(__file__).parent.parent / "config"
 
 def _load_yaml(filename: str) -> dict:
     path = CONFIG_DIR / filename
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
