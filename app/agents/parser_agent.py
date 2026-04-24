@@ -892,8 +892,12 @@ class ParserAgent(AgentBase):
     # ─── Build TDS entries from DataFrame ────────────────────
 
     def _build_tds_entries(self, df, mapping: list[MappingResult]) -> list[dict]:
-        """Build tds_entry dicts from DataFrame using cascade mapping results."""
-        # Build field → column_name lookup
+        """Build tds_entry dicts from DataFrame using cascade mapping results.
+
+        Form 26 has continuation rows where the section is on the first row
+        for a vendor and subsequent rows inherit it. We carry forward the
+        section from the previous row when it's empty.
+        """
         field_to_col = {}
         for m in mapping:
             if m.target and m.target not in ("skip", "gst_column", "expense_head"):
@@ -903,15 +907,26 @@ class ParserAgent(AgentBase):
             return []
 
         entries = []
+        last_section = None  # carry forward for continuation rows
+
         for _, row in df.iterrows():
             party_raw = row.get(field_to_col.get("party_name", ""), "")
             if not party_raw or str(party_raw).strip() == "":
                 continue
 
             parsed = clean_name(str(party_raw))
+
             section = str(row.get(field_to_col.get("tds_section", ""), "")).strip()
-            if not section:
-                continue  # Skip rows without section (continuation rows, subtotals)
+            # Clean up pandas NaN as string
+            if section in ("", "nan", "None", "NaT"):
+                section = ""
+
+            if section:
+                last_section = section  # remember for continuation rows
+            elif last_section:
+                section = last_section  # inherit from previous row
+            else:
+                continue  # no section and no previous section — skip
 
             entry = {
                 "reconciliation_run_id": self.run_id,
@@ -926,6 +941,7 @@ class ParserAgent(AgentBase):
                 "raw_data": {
                     "vendor_id": parsed["id"],
                     "tax_rate_pct": safe_float(row.get(field_to_col.get("tax_rate", ""))),
+                    "section_inherited": section != str(row.get(field_to_col.get("tds_section", ""), "")).strip(),
                 },
             }
             entries.append(entry)
