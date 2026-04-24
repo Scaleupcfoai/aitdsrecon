@@ -183,9 +183,11 @@ class StateMachineOrchestrator:
                 self.events.detail("Orchestrator", f"→ {next_state}")
             except Exception as e:
                 error_msg = f"Error in {current}: {str(e)}"
+                tb = traceback.format_exc()
                 self.events.error("Orchestrator", error_msg)
+                print(f"\n{'='*60}\nFULL TRACEBACK:\n{tb}{'='*60}\n")
                 self.state.errors.append({"state": current, "error": error_msg,
-                                          "traceback": traceback.format_exc()})
+                                          "traceback": tb})
                 self.state.current_state = "FAILED"
 
         # Finalize
