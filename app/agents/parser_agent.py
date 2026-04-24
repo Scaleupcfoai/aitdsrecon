@@ -435,12 +435,12 @@ class ParserAgent(AgentBase):
             output["sample_entries"]["ledger"].append(entry)
 
         # Write the file
-        with open(filepath, "w") as f:
-            json.dump(output, f, indent=2, default=str)
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(output, f, indent=2, default=str, ensure_ascii=False)
 
         # Also write a human-readable text version
         txt_path = debug_dir / f"parser_output_{timestamp}.txt"
-        with open(txt_path, "w") as f:
+        with open(txt_path, "w", encoding="utf-8") as f:
             f.write("PARSER OUTPUT — Review with Senior\n")
             f.write(f"Generated: {datetime.now().isoformat()}\n")
             f.write("=" * 70 + "\n\n")
