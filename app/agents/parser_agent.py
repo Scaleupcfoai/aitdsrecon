@@ -270,6 +270,18 @@ class ParserAgent(AgentBase):
             entries = self._build_tds_entries(m["sheet"]["df"], m["mapping"])
             tds_entries.extend(entries)
 
+        # ═══ Filter invalid entries ═══
+        # Remove rows with null required fields (subtotal rows, continuation rows)
+        before_tds = len(tds_entries)
+        tds_entries = [e for e in tds_entries if e.get("tds_section") and str(e["tds_section"]).strip() not in ("", "nan", "None")]
+        # Remove rows where party_name contains "total" (subtotal rows the Excel loader missed)
+        tds_entries = [e for e in tds_entries if not any(
+            kw in str(e.get("party_name", "")).lower() for kw in ["total", "grand total", "sub total"]
+        )]
+        filtered_tds = before_tds - len(tds_entries)
+        if filtered_tds > 0:
+            self.events.detail(self.agent_name, f"Filtered {filtered_tds} invalid/subtotal TDS rows")
+
         # ═══ Self-Validate TDS entries ═══
         tds_issues = self._validate_entries(tds_entries, "tds")
         if tds_issues:
@@ -280,15 +292,19 @@ class ParserAgent(AgentBase):
                 f"This may indicate incorrect column mappings.",
                 "warning", data={"validation_issues": tds_issues, "entry_type": "tds"})
 
-        tds_entries = [_sanitize_entry(e) for e in tds_entries]
-        tds_count = self.db.entries.bulk_insert_tds(tds_entries) if tds_entries else 0
-        sections = set(e["tds_section"] for e in tds_entries if e.get("tds_section"))
-        self.events.detail(self.agent_name, f"Form 26: {tds_count} entries across {len(sections)} sections")
-
         ledger_entries = []
         for m in tally_mappings:
             entries = self._build_ledger_entries(m["sheet"]["df"], m["mapping"], m["sheet"]["sheet_name"])
             ledger_entries.extend(entries)
+
+        # ═══ Filter invalid ledger entries ═══
+        before_ledger = len(ledger_entries)
+        ledger_entries = [e for e in ledger_entries if not any(
+            kw in str(e.get("party_name", "")).lower() for kw in ["total", "grand total", "sub total"]
+        )]
+        filtered_ledger = before_ledger - len(ledger_entries)
+        if filtered_ledger > 0:
+            self.events.detail(self.agent_name, f"Filtered {filtered_ledger} invalid/subtotal ledger rows")
 
         # ═══ Self-Validate Ledger entries ═══
         ledger_issues = self._validate_entries(ledger_entries, "ledger")
@@ -300,15 +316,21 @@ class ParserAgent(AgentBase):
                 f"This may indicate incorrect column mappings.",
                 "warning", data={"validation_issues": ledger_issues, "entry_type": "ledger"})
 
-        ledger_entries = [_sanitize_entry(e) for e in ledger_entries]
-        ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries) if ledger_entries else 0
-        self.events.detail(self.agent_name, f"Tally: {ledger_count} ledger entries")
-
         # Combine all issues for the orchestrator to evaluate
         all_issues = tds_issues + ledger_issues
 
-        # ═══ Dump debug output for review ═══
+        # ═══ Dump debug output BEFORE DB insert (always runs, even if insert fails) ═══
+        tds_entries = [_sanitize_entry(e) for e in tds_entries]
+        ledger_entries = [_sanitize_entry(e) for e in ledger_entries]
         self._dump_debug_output(f26_mappings, tally_mappings, tds_entries, ledger_entries, all_issues)
+
+        # ═══ Insert to DB ═══
+        tds_count = self.db.entries.bulk_insert_tds(tds_entries) if tds_entries else 0
+        sections = set(e["tds_section"] for e in tds_entries if e.get("tds_section"))
+        self.events.detail(self.agent_name, f"Form 26: {tds_count} entries across {len(sections)} sections")
+
+        ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries) if ledger_entries else 0
+        self.events.detail(self.agent_name, f"Tally: {ledger_count} ledger entries")
 
         self.db.runs.update_status(self.run_id, "processing")
         self.events.success(self.agent_name, f"Parsed {tds_count} TDS + {ledger_count} ledger entries")
