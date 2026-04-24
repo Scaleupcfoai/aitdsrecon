@@ -101,9 +101,21 @@ def safe_float(val) -> float:
 # ── Expense type classification ──
 
 def _build_expense_keywords() -> dict:
+    # Base keywords — always present regardless of knowledge base
+    base = {
+        "interest_payment": ["interest paid", "interest on loan", "interest on", "interest"],
+        "freight_expense": ["freight", "carriage", "transport", "logistics", "printing", "stationary"],
+        "packing_expense": ["packing"],
+        "brokerage": ["brokerage", "commission"],
+        "rent": ["rent", "shop rent", "office rent"],
+        "professional_fees": ["professional", "legal", "audit fees", "consultancy", "consulting"],
+        "salary": ["salary", "bonus", "director's salary"],
+        "tds_deduction": ["tds payable"],
+        "insurance": ["insurance", "motor car insurance"],
+        "purchase": ["purchase"],
+    }
     try:
         from app.knowledge import get_sections
-        keywords = {}
         section_to_type = {
             "194A": "interest_payment", "194C": "freight_expense",
             "194H": "brokerage", "194I_a": "rent", "194I_b": "rent",
@@ -113,21 +125,23 @@ def _build_expense_keywords() -> dict:
         for code, section in get_sections().items():
             exp_type = section_to_type.get(code, "other")
             if exp_type != "other":
-                keywords[exp_type] = section.get("expense_keywords", [])
-        keywords["tds_deduction"] = ["tds payable"]
-        keywords["salary"] = keywords.get("salary", []) + ["bonus", "director's salary"]
-        return keywords
+                kb_keywords = section.get("expense_keywords", [])
+                # Merge with base — don't replace
+                existing = set(base.get(exp_type, []))
+                existing.update(kb_keywords)
+                base[exp_type] = list(existing)
+        return base
     except Exception:
         return {
-            "interest_payment": ["interest paid", "interest on loan"],
-            "freight_expense": ["freight", "carriage", "transport", "logistics"],
+            "interest_payment": ["interest paid", "interest on loan", "interest on"],
+            "freight_expense": ["freight", "carriage", "transport", "logistics", "printing", "stationary"],
             "packing_expense": ["packing"],
             "brokerage": ["brokerage", "commission"],
             "rent": ["rent", "shop rent", "office rent"],
-            "professional_fees": ["professional", "legal", "audit fees"],
+            "professional_fees": ["professional", "legal", "audit fees", "consultancy", "consulting"],
             "salary": ["salary", "bonus", "director's salary"],
             "tds_deduction": ["tds payable"],
-            "insurance": ["insurance"],
+            "insurance": ["insurance", "motor car insurance"],
             "purchase": ["purchase"],
         }
 
