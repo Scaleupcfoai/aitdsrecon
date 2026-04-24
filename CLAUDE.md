@@ -2,10 +2,18 @@
 
 > **Read CHANGELOG.md first** before making any changes. It contains the current version, recent changes, and known issues.
 
+## ⚠️ FOUNDER IDENTITY — READ CAREFULLY
+
+- **Founder name: Ashish Jadhao** (NOT Ashish Mehta)
+- **Company: ScaleUp CFO AI**
+- **Product: Lekha AI**
+
+**CRITICAL WARNING:** The mock data in this repo (and `aibookclose`) contains a fictional team member named **"Ashish Mehta"** (a Controller character in the demo product). **THIS IS NOT THE FOUNDER.** The founder is **Ashish Jadhao**. Do not confuse these two when addressing the user or referring to him in commits, documentation, notes, or handoffs.
+
 ## Project Identity
 
 - **Product:** Lekha AI v1 — AI-Powered Payment Reconciliation Demo
-- **Owner:** Ashish (Founder, not a full-time engineer)
+- **Owner:** Ashish Jadhao (Founder, not a full-time engineer)
 - **Stage:** Demo complete, shared with developer
 - **Stack:** React 19 + Vite 7 (frontend only, mock data, no backend)
 - **Location:** `C:\Users\Ashish\recon-demo`
