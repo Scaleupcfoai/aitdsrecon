@@ -74,10 +74,15 @@ def to_date_str(val) -> str | None:
 
 
 def safe_float(val) -> float:
-    """Convert value to float. Handles None, strings with commas, text, negatives."""
+    """Convert value to float. Handles None, NaN, strings with commas, text, negatives."""
     if val is None:
         return 0.0
-    if isinstance(val, (int, float)):
+    if isinstance(val, float):
+        import math
+        if math.isnan(val) or math.isinf(val):
+            return 0.0
+        return val
+    if isinstance(val, int):
         return float(val)
     if isinstance(val, str):
         cleaned = val.replace(",", "").replace(" ", "").replace("₹", "").replace("Rs", "").replace("rs", "").strip()
@@ -134,6 +139,23 @@ EXPENSE_TO_SECTION = {
     "brokerage": "194H", "rent": "194I(b)", "consultancy": "194J(b)",
     "professional_fees": "194J(b)", "insurance": "194D", "purchase": "194Q",
 }
+
+
+def _sanitize_entry(entry: dict) -> dict:
+    """Remove NaN/inf values from entry dict before DB insert.
+    Supabase rejects JSON with NaN — replace with None or 0."""
+    import math
+    cleaned = {}
+    for k, v in entry.items():
+        if isinstance(v, float) and (math.isnan(v) or math.isinf(v)):
+            cleaned[k] = 0.0 if "amount" in k or k in ("gst_amount",) else None
+        elif isinstance(v, str) and v.strip().lower() in ("nan", "none", "nat"):
+            cleaned[k] = None
+        elif isinstance(v, dict):
+            cleaned[k] = _sanitize_entry(v)
+        else:
+            cleaned[k] = v
+    return cleaned
 
 
 def _looks_like_number(val: str) -> bool:
@@ -258,6 +280,7 @@ class ParserAgent(AgentBase):
                 f"This may indicate incorrect column mappings.",
                 "warning", data={"validation_issues": tds_issues, "entry_type": "tds"})
 
+        tds_entries = [_sanitize_entry(e) for e in tds_entries]
         tds_count = self.db.entries.bulk_insert_tds(tds_entries) if tds_entries else 0
         sections = set(e["tds_section"] for e in tds_entries if e.get("tds_section"))
         self.events.detail(self.agent_name, f"Form 26: {tds_count} entries across {len(sections)} sections")
@@ -277,6 +300,7 @@ class ParserAgent(AgentBase):
                 f"This may indicate incorrect column mappings.",
                 "warning", data={"validation_issues": ledger_issues, "entry_type": "ledger"})
 
+        ledger_entries = [_sanitize_entry(e) for e in ledger_entries]
         ledger_count = self.db.entries.bulk_insert_ledger(ledger_entries) if ledger_entries else 0
         self.events.detail(self.agent_name, f"Tally: {ledger_count} ledger entries")
 
