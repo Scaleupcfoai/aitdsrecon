@@ -757,6 +757,11 @@ class ParserAgent(AgentBase):
 
         q_id = f"q_cols_{uuid.uuid4().hex[:8]}"
 
+        # Emit the confirmation data BEFORE the blocking question
+        # so the frontend has it when it renders the question UI
+        self.events.emit(self.agent_name, "Column mappings ready for review", "detail",
+                        data=confirmation_data)
+
         answer = self.events.question(
             agent=self.agent_name,
             message=message,
@@ -770,11 +775,6 @@ class ParserAgent(AgentBase):
             allow_text_input=False,
             multi_select=False,
         )
-
-        # Attach the structured data to the question event
-        # The frontend reads this from event.data to render the table
-        self.events.emit(self.agent_name, "Column mappings ready for review", "detail",
-                        data=confirmation_data)
 
         if answer:
             selected = answer.get("selected", [])

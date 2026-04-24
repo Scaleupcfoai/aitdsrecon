@@ -115,6 +115,7 @@ class EventEmitter:
         options: list[dict],
         allow_text_input: bool = True,
         multi_select: bool = False,
+        timeout_seconds: int = 300,
     ) -> dict | None:
         """Emit a question event and block until the user answers.
 
@@ -125,10 +126,11 @@ class EventEmitter:
             options: [{id, label, description}, ...]
             allow_text_input: allow free text answer
             multi_select: allow multiple selections
+            timeout_seconds: how long to wait (default 300s = 5 minutes)
 
         Returns:
             User's answer: {selected: [ids], text_input: str | None}
-            or None if timeout (60 seconds)
+            or None if timeout
         """
         self.emit(agent, message, "question", {
             "question_id": question_id,
@@ -140,16 +142,16 @@ class EventEmitter:
         # Block and wait for answer
         _pending_answers[question_id] = None
 
-        # Poll for answer (max 60 seconds)
         import time
-        for _ in range(120):  # 120 * 0.5s = 60 seconds
+        polls = timeout_seconds * 2  # 0.5s per poll
+        for _ in range(polls):
             if _pending_answers.get(question_id) is not None:
                 answer = _pending_answers.pop(question_id)
                 self.emit(agent, f"User answered: {answer.get('selected', [])}", "info")
                 return answer
             time.sleep(0.5)
 
-        # Timeout — remove pending and return None
+        # Timeout
         _pending_answers.pop(question_id, None)
         self.emit(agent, "Question timed out — using default action", "warning")
         return None
