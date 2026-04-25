@@ -10,6 +10,7 @@ import queue
 import sys
 import threading
 import time
+from datetime import datetime
 from pathlib import Path
 
 import shutil
@@ -373,6 +374,59 @@ def _sse_generator(event_queue):
             yield f"data: {json.dumps(event, default=str)}\n\n"
         except queue.Empty:
             yield f"data: {json.dumps({'type': 'keepalive'})}\n\n"
+
+
+# ---------------------------------------------------------------------------
+# GST Reconciliation Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/api/gst/run/stream")
+def run_gst_pipeline_stream():
+    """Run all 3 GST reconciliation agents with SSE streaming."""
+    event_queue = queue.Queue()
+
+    def on_event(agent, message, type="detail"):
+        event_queue.put({
+            "agent": agent,
+            "type": type,
+            "message": message,
+            "timestamp": datetime.now().isoformat(),
+        })
+
+    def run_in_thread():
+        from agents.gst_recon_agents import run_all_gst_recons
+        base = Path(__file__).parent.parent
+        result = run_all_gst_recons(
+            str(base / "data" / "hpc"),
+            str(RESULTS_DIR),
+            event_callback=on_event
+        )
+        event_queue.put({
+            "type": "pipeline_complete",
+            "agent": "Pipeline",
+            "message": "GST reconciliation complete",
+            "results": result,
+        })
+        event_queue.put(None)
+
+    thread = threading.Thread(target=run_in_thread, daemon=True)
+    thread.start()
+
+    return StreamingResponse(
+        _sse_generator(event_queue),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+@app.get("/api/gst/results")
+def get_gst_results():
+    """Get GST reconciliation results."""
+    fpath = RESULTS_DIR / "gst_recon_results.json"
+    if not fpath.exists():
+        return {"error": "Run GST pipeline first"}
+    with open(fpath) as f:
+        return json.load(f)
 
 
 def _load_results() -> dict:
