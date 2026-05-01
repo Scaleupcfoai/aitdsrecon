@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python / backend
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+.env.local
+
+# Backend runtime data (keep dirs but not their contents)
+backend/data/sessions/*
+!backend/data/sessions/.gitkeep
+backend/data/traces/*
+!backend/data/traces/.gitkeep
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+backend/data/reports/*
+!backend/data/reports/.gitkeep
