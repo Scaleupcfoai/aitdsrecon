@@ -31,7 +31,7 @@ import sys
 import time
 from pathlib import Path
 
-from agents.event_logger import EventLogger, reset_logger
+from .agents.event_logger import EventLogger, reset_logger
 
 
 def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) -> dict:
@@ -379,7 +379,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     # ---- Step 1: Parser ----
     logger.agent_start("Parser Agent", "Starting Parser Agent...")
     if form26_path and tally_path:
-        from agents.parser_agent import run as parser_run
+        from .agents.parser_agent import run as parser_run
         parser_run(form26_path, tally_path, str(parsed_dir))
         logger.success("Parser Agent", "Parsed input files")
     else:
@@ -426,7 +426,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
 
     # ---- Step 2: Matcher ----
     logger.agent_start("Matcher Agent", "Starting Matcher Agent...")
-    from agents.matcher_agent import run as matcher_run
+    from .agents.matcher_agent import run as matcher_run
     match_results = matcher_run(str(parsed_dir), str(results_dir), rules_dir=str(rules_dir))
 
     # Emit matcher details from results
@@ -457,7 +457,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
 
     # ---- Step 3: TDS Checker ----
     logger.agent_start("TDS Checker", "Starting TDS Checker Agent...")
-    from agents.tds_checker_agent import run as checker_run
+    from .agents.tds_checker_agent import run as checker_run
     checker_results = checker_run(str(parsed_dir), str(results_dir))
 
     findings = checker_results.get("findings", [])
@@ -483,7 +483,7 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
 
     # ---- Step 4: Reporter ----
     logger.agent_start("Reporter Agent", "Generating reports...")
-    from agents.reporter_agent import run as reporter_run
+    from .agents.reporter_agent import run as reporter_run
     report = reporter_run(str(parsed_dir), str(results_dir))
     logger.detail("Reporter Agent", "reconciliation_summary.json — Executive summary")
     logger.detail("Reporter Agent", "reconciliation_report.csv — Full match report")

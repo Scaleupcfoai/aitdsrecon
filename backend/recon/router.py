@@ -1,29 +1,26 @@
-"""
-FastAPI bridge for TDS Reconciliation agents.
-Wraps the Python pipeline and exposes it to the React UI.
+"""TDS Reconciliation routes — mounted into the main backend API.
 
-Run: uvicorn api_server:app --reload --port 8000
+Originally lived at tds-recon/api_server.py as a standalone FastAPI app.
+Refactored into an APIRouter so the lekha tds-calculator backend and the
+TDS reconciliation backend can run as a single uvicorn process.
+
+Routes (mounted at /api/...):
+  GET  /api/status      → parsed/results/rules readiness
+  POST /api/run         → execute the full reconciliation pipeline
+  GET  /api/results     → cached match/checker/summary results
+  GET  /api/rules       → learned rules + summary
+  POST /api/review      → submit human review decisions
 """
+
+from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter
 from pydantic import BaseModel
 
-# Add parent to path so agents module is importable
-sys.path.insert(0, str(Path(__file__).parent))
-
-app = FastAPI(title="TDS Recon API")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+router = APIRouter(tags=["tds-recon"])
 
 BASE = Path(__file__).parent
 RESULTS_DIR = BASE / "data" / "results"
@@ -31,7 +28,7 @@ RULES_DIR = BASE / "data" / "rules"
 PARSED_DIR = BASE / "data" / "parsed"
 
 
-@app.get("/api/status")
+@router.get("/api/status")
 def get_status():
     """Check if parsed data and results exist."""
     return {
@@ -41,12 +38,11 @@ def get_status():
     }
 
 
-@app.post("/api/run")
+@router.post("/api/run")
 def run_pipeline():
     """Execute the full reconciliation pipeline and return events + results."""
-    from reconcile import run_pipeline as _run
+    from .reconcile import run_pipeline as _run
     result = _run()
-    # Also load the full results files for the UI
     results_data = {}
     for fname in ["match_results.json", "checker_results.json", "reconciliation_summary.json"]:
         fpath = RESULTS_DIR / fname
@@ -57,7 +53,7 @@ def run_pipeline():
     return result
 
 
-@app.get("/api/results")
+@router.get("/api/results")
 def get_results():
     """Read cached results from disk."""
     results = {}
@@ -69,10 +65,10 @@ def get_results():
     return results
 
 
-@app.get("/api/rules")
+@router.get("/api/rules")
 def get_rules():
     """Get current learned rules."""
-    from agents.learning_agent import load_rules, summarize_rules
+    from .agents.learning_agent import load_rules, summarize_rules
     db = load_rules(str(RULES_DIR))
     summary = summarize_rules(str(RULES_DIR))
     return {"rules": db, "summary": summary}
@@ -89,7 +85,7 @@ class ReviewRequest(BaseModel):
     decisions: list[ReviewDecision]
 
 
-@app.post("/api/review")
+@router.post("/api/review")
 def submit_review(request: ReviewRequest):
     """Submit human review decisions — apply corrections to affected entries only.
 
@@ -98,13 +94,8 @@ def submit_review(request: ReviewRequest):
     2. Applies corrections to current unmatched entries
     3. Re-runs only Checker + Reporter on updated results
     """
-    from agents.learning_agent import apply_corrections
+    from .agents.learning_agent import apply_corrections
 
     decisions = [d.model_dump() for d in request.decisions]
     result = apply_corrections(str(RULES_DIR), str(RESULTS_DIR), decisions)
     return result
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)

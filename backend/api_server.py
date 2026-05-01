@@ -50,13 +50,24 @@ app.add_middleware(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5173").split(","),
+    allow_origins=os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:5173,http://localhost:5174,http://localhost:5175",
+    ).split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(auth_router)
+
+# Mount the TDS Reconciliation routes (formerly served by tds-recon/api_server.py
+# on port 8001). They share /api/* with the calculator routes — paths are
+# disjoint so they coexist cleanly. These routes are not auth-gated to keep
+# the existing TdsRecon/GstRecon flows working without a session cookie.
+from recon.router import router as recon_router  # noqa: E402
+
+app.include_router(recon_router)
 
 
 @app.get("/api/health")
