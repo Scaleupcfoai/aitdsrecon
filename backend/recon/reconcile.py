@@ -34,12 +34,6 @@ from pathlib import Path
 from .agents.event_logger import EventLogger, reset_logger
 
 
-def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) -> dict:
-    """Run the full TDS reconciliation pipeline.
-
-    Returns a dict with: {events, summary, results_dir}
-    """
-    logger = reset_logger()
 # ---------------------------------------------------------------------------
 # Pipeline State — passed between stages
 # ---------------------------------------------------------------------------
@@ -362,8 +356,11 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     parsed_dir.mkdir(parents=True, exist_ok=True)
     results_dir.mkdir(parents=True, exist_ok=True)
 
+    # Reset the shared event logger so SSE consumers see only this run's events.
+    logger = reset_logger()
     state = _initial_state()
     pipeline_start = time.time()
+    start = pipeline_start
 
     print("=" * 60)
     print("TDS RECONCILIATION PIPELINE (v2 — Gated Orchestrator)")
