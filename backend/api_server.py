@@ -15,9 +15,19 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import sys
 import time
 from pathlib import Path
 from typing import Any
+
+# Force UTF-8 stdout/stderr so logging unicode chars (₹, ✓, ⚠) doesn't crash
+# the pipeline on Windows consoles (default cp1252 can't encode them).
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, "reconfigure") and getattr(stream, "encoding", "").lower() != "utf-8":
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
 
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, Depends, FastAPI, File, HTTPException, UploadFile
