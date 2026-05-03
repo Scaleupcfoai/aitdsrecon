@@ -304,7 +304,7 @@ def run(parsed_dir: str, results_dir: str) -> dict:
     report_file = results_path / "reconciliation_report.csv"
     if match_rows:
         fieldnames = list(match_rows[0].keys())
-        with open(report_file, "w", newline="") as f:
+        with open(report_file, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(match_rows)
@@ -315,7 +315,7 @@ def run(parsed_dir: str, results_dir: str) -> dict:
     findings_file = results_path / "findings_report.csv"
     if finding_rows:
         fieldnames = list(finding_rows[0].keys())
-        with open(findings_file, "w", newline="") as f:
+        with open(findings_file, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(finding_rows)
