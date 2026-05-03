@@ -31,7 +31,7 @@ import sys
 import time
 from pathlib import Path
 
-from .agents.event_logger import EventLogger, reset_logger
+from .agents.event_logger import EventLogger
 
 
 # ---------------------------------------------------------------------------
@@ -356,8 +356,8 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     parsed_dir.mkdir(parents=True, exist_ok=True)
     results_dir.mkdir(parents=True, exist_ok=True)
 
-    # Reset the shared event logger so SSE consumers see only this run's events.
-    logger = reset_logger()
+    from .agents.event_logger import get_logger
+    logger = get_logger()
     state = _initial_state()
     pipeline_start = time.time()
     start = pipeline_start
@@ -377,7 +377,12 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
     logger.agent_start("Parser Agent", "Starting Parser Agent...")
     if form26_path and tally_path:
         from .agents.parser_agent import run as parser_run
-        parser_run(form26_path, tally_path, str(parsed_dir))
+        try:
+            parser_run(form26_path, tally_path, str(parsed_dir))
+        except KeyError as e:
+            logger.error("Parser Agent", f"File parsing failed: {e}")
+            logger.agent_done("Parser Agent", "Parser failed")
+            return {"events": logger.get_events(), "error": str(e)}
         logger.success("Parser Agent", "Parsed input files")
     else:
         if not (parsed_dir / "parsed_form26.json").exists():
@@ -387,37 +392,36 @@ def run_pipeline(form26_path: str | None = None, tally_path: str | None = None) 
             logger.error("Parser Agent", "parsed_tally.json not found")
             return {"events": logger.get_events(), "error": "Missing parsed data"}
 
-        # Emit parsing details from existing files
-        with open(parsed_dir / "parsed_form26.json") as f:
-            f26 = json.load(f)
-        with open(parsed_dir / "parsed_tally.json") as f:
-            tally = json.load(f)
+    # Emit parsing details from parsed output
+    with open(parsed_dir / "parsed_form26.json") as f:
+        f26 = json.load(f)
+    with open(parsed_dir / "parsed_tally.json") as f:
+        tally = json.load(f)
 
-        f26_count = len(f26.get("entries", []))
-        sections = set(e["section"] for e in f26.get("entries", []))
-        jr_count = len(tally.get("journal_register", {}).get("entries", []))
-        gst_count = len(tally.get("purchase_gst_exp_register", {}).get("entries", []))
-        pr_count = len(tally.get("purchase_register", {}).get("entries", []))
+    f26_count = len(f26.get("entries", []))
+    sections = set(e["section"] for e in f26.get("entries", []))
+    jr_count = len(tally.get("journal_register", {}).get("entries", []))
+    gst_count = len(tally.get("purchase_gst_exp_register", {}).get("entries", []))
+    pr_count = len(tally.get("purchase_register", {}).get("entries", []))
 
-        logger.detail("Parser Agent", f"Form 26: {f26_count} entries across {len(sections)} sections")
-        logger.detail("Parser Agent", f"Sections found: {', '.join(sorted(sections))}")
-        logger.detail("Parser Agent", f"Tally Journal Register: {jr_count} entries")
-        logger.detail("Parser Agent", f"Tally GST Expense Register: {gst_count} entries")
-        logger.detail("Parser Agent", f"Tally Purchase Register: {pr_count} entries")
+    logger.detail("Parser Agent", f"Form 26: {f26_count} entries across {len(sections)} sections")
+    logger.detail("Parser Agent", f"Sections found: {', '.join(sorted(sections))}")
+    logger.detail("Parser Agent", f"Tally Journal Register: {jr_count} entries")
+    logger.detail("Parser Agent", f"Tally GST Expense Register: {gst_count} entries")
+    logger.detail("Parser Agent", f"Tally Purchase Register: {pr_count} entries")
 
-        # Count unique vendor names
-        vendors = set(e.get("vendor_name", "") for e in f26.get("entries", []))
-        tally_vendors = set()
-        for e in tally.get("journal_register", {}).get("entries", []):
-            if e.get("loan_party"):
-                tally_vendors.add(e["loan_party"])
-            if e.get("particulars"):
-                tally_vendors.add(e["particulars"])
-        for e in tally.get("purchase_gst_exp_register", {}).get("entries", []):
-            if e.get("particulars"):
-                tally_vendors.add(e["particulars"])
-        logger.detail("Parser Agent", f"Form 26 vendors: {len(vendors)} unique")
-        logger.detail("Parser Agent", f"Tally vendors: {len(tally_vendors)} unique")
+    vendors = set(e.get("vendor_name", "") for e in f26.get("entries", []))
+    tally_vendors = set()
+    for e in tally.get("journal_register", {}).get("entries", []):
+        if e.get("loan_party"):
+            tally_vendors.add(e["loan_party"])
+        if e.get("particulars"):
+            tally_vendors.add(e["particulars"])
+    for e in tally.get("purchase_gst_exp_register", {}).get("entries", []):
+        if e.get("particulars"):
+            tally_vendors.add(e["particulars"])
+    logger.detail("Parser Agent", f"Form 26 vendors: {len(vendors)} unique")
+    logger.detail("Parser Agent", f"Tally vendors: {len(tally_vendors)} unique")
 
     logger.agent_done("Parser Agent", "Parsing complete")
 

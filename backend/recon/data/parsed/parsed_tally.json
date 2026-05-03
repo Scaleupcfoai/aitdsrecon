@@ -1,6 +1,6 @@
 {
-  "source_file": "/home/user/aitdsrecon/data/hpc/Tally extract.xlsx",
-  "parsed_at": "2026-03-23T12:03:51.010250",
+  "source_file": "/Users/vvaibhav/Downloads/Personal-work/aitdsrecon/backend/recon/data/uploads/tally_uploaded.xlsx",
+  "parsed_at": "2026-05-03T14:11:23.352537",
   "journal_register": {
     "total_entries": 716,
     "entries_by_type": {

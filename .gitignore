@@ -41,3 +41,5 @@ backend/data/uploads/*
 !backend/data/uploads/.gitkeep
 backend/data/reports/*
 !backend/data/reports/.gitkeep
+
+backend/recon/data/uploads/

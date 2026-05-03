@@ -33,6 +33,23 @@ def to_serializable(obj):
     raise TypeError(f"Type {type(obj)} not serializable")
 
 
+def find_sheet(wb, expected_name: str):
+    """Find a worksheet by fuzzy name match (case-insensitive, whitespace-normalized)."""
+    norm = lambda s: re.sub(r'\s+', ' ', s.strip().lower())
+    target = norm(expected_name)
+    for name in wb.sheetnames:
+        if norm(name) == target:
+            return wb[name]
+    # Substring match as fallback
+    for name in wb.sheetnames:
+        if target in norm(name) or norm(name) in target:
+            return wb[name]
+    available = ", ".join(wb.sheetnames)
+    raise KeyError(
+        f"Worksheet '{expected_name}' not found. Available sheets: {available}"
+    )
+
+
 def clean_name(raw_name: str) -> dict:
     """Parse Form 26 name field: 'Adi Debnath (34); PAN: AAAAA0001A' → {name, id, pan}"""
     if not raw_name:
@@ -109,7 +126,7 @@ def parse_form26(filepath: str) -> list[dict]:
     Skips total/subtotal rows.
     """
     wb = openpyxl.load_workbook(filepath, data_only=True)
-    ws = wb["Deduction Details"]
+    ws = find_sheet(wb, "Deduction Details")
 
     entries = []
     for row in ws.iter_rows(min_row=5, max_row=ws.max_row):
@@ -444,7 +461,7 @@ def run(form26_path: str, tally_path: str, output_dir: str):
     wb = openpyxl.load_workbook(tally_path, data_only=True)
 
     print("  Parsing Journal Register...")
-    journal_entries = parse_journal_register(wb["Journal Register"])
+    journal_entries = parse_journal_register(find_sheet(wb, "Journal Register"))
     print(f"  → {len(journal_entries)} entries")
     # Count by type
     types = {}
@@ -455,11 +472,11 @@ def run(form26_path: str, tally_path: str, output_dir: str):
         print(f"    {t}: {count}")
 
     print("  Parsing Purchase GST Exp Register...")
-    gst_exp_entries = parse_purchase_gst_exp_register(wb["Purchase GST Exp. Register"])
+    gst_exp_entries = parse_purchase_gst_exp_register(find_sheet(wb, "Purchase GST Exp. Register"))
     print(f"  → {len(gst_exp_entries)} entries")
 
     print("  Parsing Purchase Register...")
-    purchase_entries = parse_purchase_register(wb["Purchase Register"])
+    purchase_entries = parse_purchase_register(find_sheet(wb, "Purchase Register"))
     print(f"  → {len(purchase_entries)} entries")
 
     wb.close()
