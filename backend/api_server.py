@@ -13,6 +13,7 @@ Endpoints:
 from __future__ import annotations
 
 import asyncio
+import io
 import json
 import os
 import sys
@@ -20,14 +21,24 @@ import time
 from pathlib import Path
 from typing import Any
 
-# Force UTF-8 stdout/stderr so logging unicode chars (₹, ✓, ⚠) doesn't crash
-# the pipeline on Windows consoles (default cp1252 can't encode them).
-for stream in (sys.stdout, sys.stderr):
-    if hasattr(stream, "reconfigure") and getattr(stream, "encoding", "").lower() != "utf-8":
-        try:
-            stream.reconfigure(encoding="utf-8", errors="replace")
-        except Exception:
-            pass
+# Force UTF-8 stdout/stderr at the buffer level so any print() containing
+# unicode (₹, ─, —, →, ≤, ✓, ⚠ ...) anywhere in the codebase can't crash
+# the pipeline on Windows consoles whose default code page is cp1252.
+# reconfigure() alone wasn't enough — uvicorn --reload subprocess sometimes
+# bypasses it. Wrapping the underlying buffer with errors='replace' is
+# bullet-proof: even unencodable chars become '?' instead of raising.
+for name in ("stdout", "stderr"):
+    stream = getattr(sys, name, None)
+    if stream is None or not hasattr(stream, "buffer"):
+        continue
+    try:
+        setattr(
+            sys,
+            name,
+            io.TextIOWrapper(stream.buffer, encoding="utf-8", errors="replace", line_buffering=True),
+        )
+    except Exception:
+        pass
 
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, Depends, FastAPI, File, HTTPException, UploadFile
