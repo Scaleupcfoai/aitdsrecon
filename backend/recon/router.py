@@ -183,7 +183,17 @@ def _stream_pipeline(form26_path: str | None, tally_path: str | None):
 
             await asyncio.sleep(0.1)
 
-    return StreamingResponse(gen(), media_type="text/event-stream")
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={
+            # Belt-and-braces against any reverse proxy (nginx, Cloudflare,
+            # corporate gateways) that might buffer SSE. Vite's dev proxy
+            # streams fine without these but they don't hurt.
+            "Cache-Control": "no-cache, no-transform",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @router.get("/api/run/stream")
