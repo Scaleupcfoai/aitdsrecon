@@ -26,9 +26,15 @@ class EventLogger:
         if data:
             event["data"] = data
         self.events.append(event)
-        # Also print for CLI usage
-        prefix = {"success": "✓", "warning": "⚠", "error": "✗", "detail": "  ├─"}.get(type, "●")
-        print(f"  {prefix} [{agent}] {message}")
+        # Also print for CLI usage. Wrapped in try/except because Windows
+        # consoles default to cp1252 which can't encode ₹/✓/⚠ — would crash
+        # the pipeline mid-run if we let UnicodeEncodeError escape.
+        prefix = {"success": "OK", "warning": "!", "error": "X", "detail": "  -"}.get(type, "*")
+        line = f"  {prefix} [{agent}] {message}"
+        try:
+            print(line)
+        except UnicodeEncodeError:
+            print(line.encode("ascii", errors="replace").decode("ascii"))
 
     def info(self, agent: str, message: str, **kwargs):
         self.emit(agent, message, "info", kwargs.get("data"))
