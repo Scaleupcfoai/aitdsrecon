@@ -1,0 +1,13 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.local
+data/sessions/*
+data/traces/*
+data/uploads/*
+data/reports/*
+recon/data/uploads/*
+recon/data/parsed/*
+recon/data/results/*
