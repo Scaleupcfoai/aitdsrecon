@@ -43,3 +43,4 @@ backend/data/reports/*
 !backend/data/reports/.gitkeep
 
 backend/recon/data/uploads/
+.claude
